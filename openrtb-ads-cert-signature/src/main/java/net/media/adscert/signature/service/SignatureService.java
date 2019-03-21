@@ -21,6 +21,10 @@ public class SignatureService {
 		this.publicKeyUrl = publicKeyUrl;
 	}
 
+	public SignatureService(PrivateKey privateKey) {
+		this.privateKey = privateKey;
+	}
+
 	public String generateSignature(String dsMap, Map<String, String> digestFields) throws InvalidDataException, ProcessException {
 		if (dsMap == null) {
 			throw new InvalidDataException("dsMap is empty");
