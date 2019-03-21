@@ -78,8 +78,8 @@ public class AdCertVerification {
       return queryParamJoiner.join(queryParamSplitter.splitToList(openRtb.getRequest().getSource().getDsmap()).stream()
         .map(key -> key + digestMap.get(key.substring(0, key.length()-1)).apply(openRtb))
         .collect(Collectors.toList()));
-    } catch (NullPointerException e) {
-      throw new InvalidDataException("OpenRtb.source.dsmap: bad dsmap provided");
+    } catch (Exception e) {
+      throw new InvalidDataException("OpenRtb.source.dsmap: bad dsmap provided", e);
     }
   }
 
@@ -94,7 +94,7 @@ public class AdCertVerification {
           .map(key -> key + digestFields.get(key.substring(0, key.length() - 1)))
           .collect(Collectors.toList()));
     } catch (Exception e) {
-      throw new InvalidDataException("Bad dsmap provided");
+      throw new InvalidDataException("Bad dsmap provided", e);
     }
   }
 
