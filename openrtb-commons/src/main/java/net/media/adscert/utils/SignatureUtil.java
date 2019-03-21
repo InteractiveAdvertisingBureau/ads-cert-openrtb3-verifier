@@ -11,7 +11,7 @@ import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
-public class ECDSAUtil {
+public class SignatureUtil {
 
   public static void main(String[] args) throws Exception {
 //    KeyPair kp = generateKeyPair();

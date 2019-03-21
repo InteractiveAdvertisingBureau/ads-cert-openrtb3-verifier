@@ -1,4 +1,4 @@
-package net.media.adscert.verification.utils;
+package net.media.adscert.utils;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -7,21 +7,17 @@ import net.media.adscert.models.OpenRTB;
 
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static net.media.adscert.verification.utils.CommonConstants.KEY_VALUE_SEPERATOR;
-import static net.media.adscert.verification.utils.CommonConstants.QUERY_PARAM_SEPERATOR;
-
-public class AdCertVerification {
+public class DigestUtil {
   private static final Map<String, Function<OpenRTB, String>> digestMap = new LinkedHashMap<>();
-  private static final Splitter queryParamSplitter = Splitter.on(QUERY_PARAM_SEPERATOR).trimResults().omitEmptyStrings();
-  private static final Splitter keyValueSplitter = Splitter.on(KEY_VALUE_SEPERATOR).trimResults().omitEmptyStrings();
-  private static final Joiner queryParamJoiner = Joiner.on(QUERY_PARAM_SEPERATOR).skipNulls();
+  private static final Splitter queryParamSplitter = Splitter.on(CommonConstants.QUERY_PARAM_SEPERATOR).trimResults().omitEmptyStrings();
+  private static final Splitter keyValueSplitter = Splitter.on(CommonConstants.KEY_VALUE_SEPERATOR).trimResults().omitEmptyStrings();
+  private static final Joiner queryParamJoiner = Joiner.on(CommonConstants.QUERY_PARAM_SEPERATOR).skipNulls();
 
   static {
     digestMap.put("bundle", t -> t.getRequest().getContext().getApp().getBundle());
@@ -136,11 +132,11 @@ public class AdCertVerification {
 //      }
 //    });
 //
-//    PrivateKey priv = ECDSAUtil.getPrivateKey(fileName);
+//    PrivateKey priv = SignatureUtil.getPrivateKey(fileName);
 //    String dsMap = dsMapBuilder.substring(0, dsMapBuilder.length() - 1);
 //    String digest = digestBuilder.substring(0, digestBuilder.length() - 1);
 //    openRtb.getRequest().getSource().setDsmap(dsMap);
-//    openRtb.getRequest().getSource().setDs(ECDSAUtil.signMessage(priv, digest));
+//    openRtb.getRequest().getSource().setDs(SignatureUtil.signMessage(priv, digest));
 //  }
 
 }

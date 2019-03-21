@@ -1,4 +1,4 @@
-package net.media.adscert.verification.utils;
+package net.media.adscert.utils;
 
 public class CommonConstants {
   public static final String JSON_CONTENT_TYPE = "application/json";

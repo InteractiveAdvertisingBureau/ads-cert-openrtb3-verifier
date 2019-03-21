@@ -4,8 +4,8 @@ import net.media.adscert.exceptions.InvalidDataException;
 import net.media.adscert.exceptions.ProcessException;
 import net.media.adscert.models.OpenRTB;
 import net.media.adscert.models.Source;
-import net.media.adscert.utils.ECDSAUtil;
-import net.media.adscert.verification.utils.AdCertVerification;
+import net.media.adscert.utils.SignatureUtil;
+import net.media.adscert.utils.DigestUtil;
 
 import java.security.PublicKey;
 import java.util.Map;
@@ -13,6 +13,7 @@ import java.util.Map;
 public class VerificationService {
 
 	public VerificationService() {
+
 	}
 
 	public Boolean verifyRequest(OpenRTB openRTB) throws InvalidDataException, ProcessException {
@@ -42,7 +43,7 @@ public class VerificationService {
 			throw new InvalidDataException("Filename of certificate is empty");
 		}
 		try {
-			PublicKey pub = ECDSAUtil.getPublicKeyFromUrl(cert);
+			PublicKey pub = SignatureUtil.getPublicKeyFromUrl(cert);
 			return verifyRequest(pub, dsMap, ds, digest, digestFields);
 		} catch (Exception e) {
 			throw new ProcessException(e);
@@ -69,10 +70,10 @@ public class VerificationService {
 
 		try {
 			digest = digest == null
-					? AdCertVerification.getDigestFromDsMap(dsMap, digestFields)
+					? DigestUtil.getDigestFromDsMap(dsMap, digestFields)
 					: digest;
 
-			return ECDSAUtil.verifySign(publicKey, digest, ds);
+			return SignatureUtil.verifySign(publicKey, digest, ds);
 		} catch (Exception e) {
 			throw new ProcessException("Error in verification", e);
 		}
@@ -109,15 +110,15 @@ public class VerificationService {
 
 		try {
 			String digest = debug
-					? AdCertVerification.getDigest(openRTB)
-					: AdCertVerification.getDigestFromDsMap(openRTB);
+					? DigestUtil.getDigest(openRTB)
+					: DigestUtil.getDigestFromDsMap(openRTB);
 
 
 			publicKey = publicKey == null
-					? ECDSAUtil.getPublicKeyFromUrl(source.getCert())
+					? SignatureUtil.getPublicKeyFromUrl(source.getCert())
 					: publicKey;
 
-			return ECDSAUtil.verifySign(publicKey, digest, source.getDs());
+			return SignatureUtil.verifySign(publicKey, digest, source.getDs());
 		} catch (Exception e) {
 			throw new ProcessException("Error in verification", e);
 		}
