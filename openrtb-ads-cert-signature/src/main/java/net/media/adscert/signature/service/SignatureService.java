@@ -3,14 +3,20 @@ package net.media.adscert.signature.service;
 import net.media.adscert.exceptions.InvalidDataException;
 import net.media.adscert.exceptions.ProcessException;
 import net.media.adscert.models.OpenRTB;
+import net.media.adscert.models.Request;
 import net.media.adscert.models.Source;
 import net.media.adscert.utils.DigestUtil;
 import net.media.adscert.utils.SignatureUtil;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.time.Instant;
 import java.util.Map;
 
+/**
+ *
+ */
 public class SignatureService {
 
 	private PrivateKey privateKey;
@@ -68,6 +74,17 @@ public class SignatureService {
 		} catch (Exception e) {
 			throw new ProcessException("Error in signing", e);
 		}
+	}
+
+	public static void main(String[] args) throws IOException, GeneralSecurityException {
+		PrivateKey privateKey = SignatureUtil.getPrivateKey("/home/pranava/Desktop/private.txt");
+		SignatureService signatureService = new SignatureService(privateKey);
+		OpenRTB openRTB = new OpenRTB();
+		openRTB.setRequest(new Request());
+		openRTB.getRequest().setSource(new Source());
+		openRTB.getRequest().getSource().setDsmap("domain=&ft=&tid=");
+		openRTB.getRequest().getSource().setDigest("domain=newsite.com&ft=d&tid=ABC7E92FBD6A");
+		System.out.println(signatureService.generateSignature(openRTB, true));
 	}
 
 }

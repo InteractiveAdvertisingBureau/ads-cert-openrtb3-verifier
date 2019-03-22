@@ -23,7 +23,7 @@ public class SignatureUtil {
   /**
    * Generate new KeyPair for ECDSA( prime256v1 )
    */
-  private static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
+  public static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
     KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
     SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
     keyGen.initialize(256, random);
@@ -87,6 +87,11 @@ public class SignatureUtil {
   public static PrivateKey getPrivateKey(String filename) throws IOException, GeneralSecurityException {
     String privateKeyPEM = Util.getKeyFromFile(filename);
     return getPrivateKeyFromString(privateKeyPEM);
+  }
+
+  public static PublicKey getPublicKey(String filename) throws IOException, GeneralSecurityException {
+    String publicKeyPEM = Util.getKeyFromFile(filename);
+    return getPublicKeyFromString(publicKeyPEM);
   }
 
   private static PrivateKey getPrivateKeyFromString(String privateKeyPEM) throws IOException, GeneralSecurityException {
