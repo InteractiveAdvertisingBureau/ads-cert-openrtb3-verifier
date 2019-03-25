@@ -1,15 +1,21 @@
 package net.media.adscert.utils;
 
-import net.media.adscert.exceptions.InvalidDataException;
+import net.media.adscert.exceptions.ProcessException;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SignatureUtil {
 
@@ -54,29 +60,23 @@ public class SignatureUtil {
   /**
    * Create a digital signature using private key
    */
-  public static String signMessage(PrivateKey priv, String message) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, UnsupportedEncodingException {
+  public static String signMessage(PrivateKey priv, String message) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
     Signature ecdsaSign = Signature.getInstance("SHA256withECDSA");
     ecdsaSign.initSign(priv);
-    ecdsaSign.update(message.getBytes("UTF-8"));
+    ecdsaSign.update(message.getBytes(UTF_8));
     byte[] sign = ecdsaSign.sign();
-    return new String(Base64.encodeBase64(sign), "UTF-8");
+    return new String(Base64.encodeBase64(sign), UTF_8);
   }
 
   /**
    * Now that all the data to be signed has been read in, generate a
    * signature for it
    */
-  public static boolean verifySign(PublicKey pub, String digest, String signature) throws NoSuchAlgorithmException, InvalidKeyException {
-    try {
-      Signature ecdsaVerify = Signature.getInstance("SHA256withECDSA");
-      ecdsaVerify.initVerify(pub);
-      ecdsaVerify.update(digest.getBytes("UTF-8"));
-      return ecdsaVerify.verify(Base64.decodeBase64(signature.getBytes("UTF-8")));
-    } catch (SignatureException e) {
-      throw new InvalidDataException("Invalid signature provided");
-    } catch (UnsupportedEncodingException e) {
-      throw new InvalidDataException("Invalid signature provided");
-    }
+  public static boolean verifySign(PublicKey pub, String digest, String signature) throws ProcessException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    Signature ecdsaVerify = Signature.getInstance("SHA256withECDSA");
+    ecdsaVerify.initVerify(pub);
+    ecdsaVerify.update(digest.getBytes(UTF_8));
+    return ecdsaVerify.verify(Base64.decodeBase64(signature.getBytes(UTF_8)));
   }
 
   public static PublicKey getPublicKeyFromUrl(String urlName) throws IOException, GeneralSecurityException {
@@ -94,21 +94,34 @@ public class SignatureUtil {
     return getPublicKeyFromString(publicKeyPEM);
   }
 
-  private static PrivateKey getPrivateKeyFromString(String privateKeyPEM) throws IOException, GeneralSecurityException {
+  private static Key getKey(String keyPEM, Function<byte[], KeySpec> f1, Function<KeySpec, Key> f2) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    byte[] encoded = Base64.decodeBase64(keyPEM);
+
+    KeyFactory kf = KeyFactory.getInstance("EC");
+    KeySpec keySpec = f1.apply(encoded);
+    return f2.apply(keySpec);
+  }
+
+  private static PrivateKey getPrivateKeyFromString(String privateKeyPEM) throws InvalidKeySpecException, GeneralSecurityException {
+//    KeyFactory kf = KeyFactory.getInstance("EC");
+//    return (PrivateKey) getKey(privateKeyPEM, PKCS8EncodedKeySpec::new, KeyFactory::generatePrivate);
     byte[] encoded = Base64.decodeBase64(privateKeyPEM);
 
     KeyFactory kf = KeyFactory.getInstance("EC");
     KeySpec privKeySpec = new PKCS8EncodedKeySpec(encoded);
     return kf.generatePrivate(privKeySpec);
+//    return null;
   }
 
   private static PublicKey getPublicKeyFromString(String publicKeyPEM) throws IOException, GeneralSecurityException {
+
     byte[] encoded = Base64.decodeBase64(publicKeyPEM);
 
     KeyFactory kf = KeyFactory.getInstance("EC");
     KeySpec pubKeySpec = new X509EncodedKeySpec(encoded);
     return kf.generatePublic(pubKeySpec);
   }
+
 //
 //  public static String encrypt(String rawText, PublicKey publicKey) throws IOException, GeneralSecurityException {
 //    Cipher cipher = Cipher.getInstance("RSA");
