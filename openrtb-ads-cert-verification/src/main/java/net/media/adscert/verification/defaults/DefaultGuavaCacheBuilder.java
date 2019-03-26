@@ -17,7 +17,7 @@ public class DefaultGuavaCacheBuilder {
 		this.expireTime = 20;
 	}
 
-	public DefaultGuavaCacheBuilder newBuilder() {
+	public static DefaultGuavaCacheBuilder newBuilder() {
 		return new DefaultGuavaCacheBuilder();
 	}
 
@@ -39,7 +39,7 @@ public class DefaultGuavaCacheBuilder {
 	public Cache<String, PublicKey> build() {
 		return CacheBuilder.newBuilder().maximumSize(this.maximumSize)
 				.expireAfterAccess(this.expireTime, TimeUnit.DAYS)
-				.refreshAfterWrite(refreshTime, TimeUnit.DAYS)
+				.refreshAfterWrite(this.refreshTime, TimeUnit.DAYS)
 				.build();
 	}
 }

@@ -50,7 +50,7 @@ public class DefaultJCacheBuilder {
 
 	}
 
-	public DefaultJCacheBuilder newBuilder() {
+	public static DefaultJCacheBuilder newBuilder() {
 		return new DefaultJCacheBuilder();
 	}
 

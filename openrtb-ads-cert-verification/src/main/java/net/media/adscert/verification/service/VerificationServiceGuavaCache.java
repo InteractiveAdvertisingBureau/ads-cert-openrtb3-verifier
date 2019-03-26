@@ -25,7 +25,7 @@ public class VerificationServiceGuavaCache extends VerificationService {
 	private PublicKey getKeyFromCache(String url) throws ExecutionException {
 		return this.publicKeyCache.get(url, new Callable<PublicKey>() {
 			@Override
-			public PublicKey call() throws Exception {
+			public PublicKey call() {
 				try {
 					return SignatureUtil.getPublicKeyFromUrl(url);
 				} catch (Exception e) {

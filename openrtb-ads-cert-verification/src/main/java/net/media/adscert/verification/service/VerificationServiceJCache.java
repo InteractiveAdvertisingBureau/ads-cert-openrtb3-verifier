@@ -10,7 +10,6 @@ import net.media.adscert.utils.SignatureUtil;
 import javax.cache.Cache;
 import java.security.PublicKey;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class VerificationServiceJCache extends VerificationService {
 	private Cache<String, PublicKey> publicKeyCache;
@@ -20,7 +19,7 @@ public class VerificationServiceJCache extends VerificationService {
 		this.publicKeyCache = publicKeyCache;
 	}
 
-	private PublicKey getKeyFromCache(String url) throws ExecutionException {
+	private PublicKey getKeyFromCache(String url) {
 		return this.publicKeyCache.get(url);
 	}
 
