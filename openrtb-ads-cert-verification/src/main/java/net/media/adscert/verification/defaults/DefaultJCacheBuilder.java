@@ -91,7 +91,7 @@ public class DefaultJCacheBuilder {
 			}
 		};
 
-		return cacheManager.createCache("publicKey", new MutableConfiguration<String, PublicKey>()
+		return cacheManager.createCache("publicKeyCache", new MutableConfiguration<String, PublicKey>()
 				.setReadThrough(true)
 				.setExpiryPolicyFactory(new FactoryBuilder.SingletonFactory<>(expiryPolicy))
 				.setCacheLoaderFactory(new FactoryBuilder.SingletonFactory<>(this.cacheLoader)));
