@@ -35,7 +35,7 @@ public class SignatureService {
 		if (dsMap == null) {
 			throw new InvalidDataException("dsMap is empty");
 		}
-		if (digestFields == null) {
+		if (digestFields == null || digestFields.isEmpty()) {
 			throw new InvalidDataException("Values for digest fields not provided");
 		}
 

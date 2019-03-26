@@ -52,7 +52,6 @@ public class VerificationService {
 		}
 
 		return verifyRequest(pub, dsMap, ds, digest, digestFields);
-
 	}
 
 	public Boolean verifyRequest(PublicKey publicKey,

@@ -12,6 +12,7 @@
         <module>openrtb-ads-cert-signature</module>
         <module>openrtb-ads-cert-verification</module>
         <module>openrtb-commons</module>
+        <module>openrtb-ads-cert-guava-cache</module>
     </modules>
     <packaging>pom</packaging>
 
