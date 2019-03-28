@@ -135,6 +135,26 @@ public class VerificationService {
 		}
 	}
 
+	public Boolean verifyRequest(PublicKey publicKey,
+	                             String ds,
+	                             String digest) throws InvalidDataException, ProcessException {
+		if (publicKey == null) {
+			throw new InvalidDataException("Public Key is null");
+		}
+		if (ds == null || ds.length() == 0) {
+			throw new InvalidDataException("Digital Signature is empty");
+		}
+		if (digest == null || digest.length() == 0) {
+			throw new InvalidDataException("Digest is empty");
+		}
+
+		try {
+			return SignatureUtil.verifySign(publicKey, digest, ds);
+		} catch (Exception e) {
+			throw new ProcessException(e);
+		}
+	}
+
 	/**
 	 *
 	 * @param openRTB
