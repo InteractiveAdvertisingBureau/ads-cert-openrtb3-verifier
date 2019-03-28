@@ -1,6 +1,8 @@
 package net.media.adscert.verification;
 
 import net.media.adscert.models.OpenRTB;
+import net.media.adscert.models.Request;
+import net.media.adscert.models.Source;
 import net.media.adscert.utils.DigestUtil;
 import net.media.adscert.utils.SignatureUtil;
 import net.media.adscert.verification.cache.DefaultJCacheBuilder;
@@ -13,11 +15,29 @@ import javax.cache.expiry.Duration;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 import java.security.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class VerificationServiceJCacheTest extends VerificationServiceTest {
+public class VerificationServiceJCacheTest {
 
+  public OpenRTB getOpenRTBObject() {
+    OpenRTB openRTB = new OpenRTB();
+    openRTB.setRequest(new Request());
+    openRTB.getRequest().setSource(new Source());
+    openRTB.getRequest().getSource().setDsmap("domain=&ft=&tid=");
+    openRTB.getRequest().getSource().setDigest("domain=newsite.com&ft=d&tid=ABC7E92FBD6A");
+    return openRTB;
+  }
+
+  public Map<String, String> getMapOfDigestFields() {
+    Map<String, String> digestFields = new HashMap<>();
+    digestFields.put("domain", "newsite.com");
+    digestFields.put("ft", "d");
+    digestFields.put("tid", "ABC7E92FBD6A");
+    return digestFields;
+  }
+  
   @Test
   public void test() throws NoSuchAlgorithmException, InterruptedException, SignatureException, InvalidKeyException {
     final KeyPair keyPair1 = SignatureUtil.generateKeyPair();
@@ -55,7 +75,6 @@ public class VerificationServiceJCacheTest extends VerificationServiceTest {
 
     openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(keyPair2.getPrivate(), digest));
     Assert.assertTrue(service.verifyRequest(openRTB, true));
-
 
   }
 
