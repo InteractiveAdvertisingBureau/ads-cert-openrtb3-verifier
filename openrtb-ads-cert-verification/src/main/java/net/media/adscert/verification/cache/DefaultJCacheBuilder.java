@@ -82,17 +82,17 @@ public class DefaultJCacheBuilder {
 		ExpiryPolicy expiryPolicy = new ExpiryPolicy() {
 			@Override
 			public Duration getExpiryForCreation() {
-				return null;
+				return expiryForCreation;
 			}
 
 			@Override
 			public Duration getExpiryForAccess() {
-				return null;
+				return expiryForAccess;
 			}
 
 			@Override
 			public Duration getExpiryForUpdate() {
-				return null;
+				return expiryForUpdate;
 			}
 		};
 
