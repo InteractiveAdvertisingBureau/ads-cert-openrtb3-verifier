@@ -17,7 +17,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class VerificationServiceTests {
+public class VerificationServiceTest {
 
 
 	public OpenRTB getOpenRTBObject() {
