@@ -37,7 +37,7 @@ public class VerificationServiceJCacheTest {
     digestFields.put("tid", "ABC7E92FBD6A");
     return digestFields;
   }
-  
+
   @Test
   public void test() throws NoSuchAlgorithmException, InterruptedException, SignatureException, InvalidKeyException {
     final KeyPair keyPair1 = SignatureUtil.generateKeyPair();
@@ -75,6 +75,7 @@ public class VerificationServiceJCacheTest {
 
     openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(keyPair2.getPrivate(), digest));
     Assert.assertTrue(service.verifyRequest(openRTB, true));
+
 
   }
 

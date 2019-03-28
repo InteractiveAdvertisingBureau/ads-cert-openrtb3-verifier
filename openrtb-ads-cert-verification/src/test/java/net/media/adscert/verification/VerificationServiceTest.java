@@ -65,10 +65,4 @@ public class VerificationServiceTest {
 		assertEquals(true, verificationService.verifyRequest(publicKey, dsMap, ds, getMapOfDigestFields()));
 		assertEquals(true, verificationService.verifyRequest(publicKey, dsMap, ds, digest, getMapOfDigestFields()));
 	}
-
-	@Test
-	public void verifySignatureFromOpenRTBJCache() {
-		VerificationServiceJCache verificationServiceJCache = new VerificationServiceJCache(DefaultJCacheBuilder.newBuilder().build());
-
-	}
 }
