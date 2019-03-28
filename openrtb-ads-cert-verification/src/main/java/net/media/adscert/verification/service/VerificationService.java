@@ -29,26 +29,10 @@ import java.util.Map;
  *
  */
 public class VerificationService {
-
-	/**
-	 * Verifies an {@link OpenRTB} request.
-	 *
-	 * @param openRTB {@link OpenRTB} request
-	 *
-	 * @return  a boolean stating whether the verification of the signature succeeded or not
-	 *
-	 * @throws InvalidDataException if the parameters are null or empty
-	 * @throws ProcessException if an exception is thrown during the verification process
-	 */
-	public Boolean verifyRequest(OpenRTB openRTB) throws InvalidDataException, ProcessException {
-		return verifyRequest(openRTB, false);
-	}
-
 	/**
 	 *	Verifies the digital signature using public key url and digest fields.
 	 *
 	 * @param publicKeyURL url of the public key of the signing authority
-	 * @param dsMap fields that were used for signing the request
 	 * @param ds  digital signature in the request
 	 * @param digestFields map of fields that were used for generating the signature and their values
 	 *
@@ -58,10 +42,17 @@ public class VerificationService {
 	 * @throws ProcessException if an exception is thrown during the verification process
 	 */
 	public Boolean verifyRequest(String publicKeyURL,
-	                             String dsMap,
 	                             String ds,
-	                             Map<String, String> digestFields) throws InvalidDataException, ProcessException {
-		return verifyRequest(publicKeyURL, dsMap, ds, null, digestFields);
+	                             String digest) throws InvalidDataException, ProcessException {
+		if (publicKeyURL == null || publicKeyURL.isEmpty()) {
+			throw new InvalidDataException("Filename of certificate is empty");
+		}
+		try {
+			PublicKey publicKey = SignatureUtil.getPublicKeyFromUrl(publicKeyURL);
+			return verifyRequest(publicKey, ds, digest);
+		} catch (Exception e) {
+			throw new ProcessException(e);
+		}
 	}
 
 	/**
@@ -81,7 +72,11 @@ public class VerificationService {
 	                             String dsMap,
 	                             String ds,
 	                             Map<String, String> digestFields) throws InvalidDataException, ProcessException {
-		return verifyRequest(publicKey, dsMap, ds, null, digestFields);
+		if (dsMap == null || dsMap.isEmpty()) {
+			throw new InvalidDataException("DsMap is null");
+		}
+		String digest = DigestUtil.getDigestFromDsMap(dsMap, digestFields);
+		return verifyRequest(publicKey, ds, digest);
 	}
 
 	/**
@@ -101,14 +96,13 @@ public class VerificationService {
 	public Boolean verifyRequest(String publicKeyURL,
 	                             String dsMap,
 	                             String ds,
-	                             String digest,
 	                             Map<String, String> digestFields) throws InvalidDataException, ProcessException {
-		if (publicKeyURL == null || publicKeyURL.length() == 0) {
+		if (publicKeyURL == null || publicKeyURL.isEmpty()) {
 			throw new InvalidDataException("Filename of certificate is empty");
 		}
 		try {
 			PublicKey publicKey = SignatureUtil.getPublicKeyFromUrl(publicKeyURL);
-			return verifyRequest(publicKey, dsMap, ds, digest, digestFields);
+			return verifyRequest(publicKey, dsMap, ds, digestFields);
 		} catch (Exception e) {
 			throw new ProcessException(e);
 		}
@@ -172,8 +166,22 @@ public class VerificationService {
 		try {
 			return SignatureUtil.verifySign(publicKey, digest, ds);
 		} catch (Exception e) {
-			throw new ProcessException(e);
+			throw new ProcessException("Error in verification", e);
 		}
+	}
+
+	/**
+	 * Verifies an {@link OpenRTB} request.
+	 *
+	 * @param openRTB {@link OpenRTB} request
+	 *
+	 * @return  a boolean stating whether the verification of the signature succeeded or not
+	 *
+	 * @throws InvalidDataException if the parameters are null or empty
+	 * @throws ProcessException if an exception is thrown during the verification process
+	 */
+	public Boolean verifyRequest(OpenRTB openRTB) throws InvalidDataException, ProcessException {
+		return verifyRequest(openRTB, false);
 	}
 
 	/**
