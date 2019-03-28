@@ -69,6 +69,11 @@ public class DefaultJCacheBuilder {
 		return this;
 	}
 
+	public DefaultJCacheBuilder setCacheLoader(CacheLoader<String, PublicKey> loader) {
+		this.cacheLoader = loader;
+		return this;
+	}
+
 
 	public Cache<String, PublicKey> build() {
 		CachingProvider cachingProvider = Caching.getCachingProvider();

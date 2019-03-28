@@ -87,16 +87,12 @@ public class VerificationService {
 		if (publicKeyURL == null || publicKeyURL.length() == 0) {
 			throw new InvalidDataException("Filename of certificate is empty");
 		}
-
-		PublicKey publicKey;
-
 		try {
-			publicKey = SignatureUtil.getPublicKeyFromUrl(publicKeyURL);
+			PublicKey publicKey = SignatureUtil.getPublicKeyFromUrl(publicKeyURL);
+			return verifyRequest(publicKey, dsMap, ds, digest, digestFields);
 		} catch (Exception e) {
 			throw new ProcessException(e);
 		}
-
-		return verifyRequest(publicKey, dsMap, ds, digest, digestFields);
 	}
 
 	/**

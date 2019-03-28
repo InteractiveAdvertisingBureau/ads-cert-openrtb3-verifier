@@ -5,6 +5,8 @@ import net.media.adscert.models.Request;
 import net.media.adscert.models.Source;
 import net.media.adscert.utils.DigestUtil;
 import net.media.adscert.utils.SignatureUtil;
+import net.media.adscert.verification.cache.DefaultJCacheBuilder;
+import net.media.adscert.verification.cache.VerificationServiceJCache;
 import net.media.adscert.verification.service.VerificationService;
 import org.junit.Test;
 
@@ -65,7 +67,8 @@ public class VerificationServiceTest {
 	}
 
 	@Test
-	public void verifySignatureFromOpenRTBGuava() {
+	public void verifySignatureFromOpenRTBJCache() {
+		VerificationServiceJCache verificationServiceJCache = new VerificationServiceJCache(DefaultJCacheBuilder.newBuilder().build());
 
 	}
 }
