@@ -10,23 +10,33 @@ import net.media.adscert.utils.DigestUtil;
 import java.security.PublicKey;
 import java.util.Map;
 
-
 /**
+ * A {@link VerificationService} provides means to verify digital signature. Following are <b>some</b> of the ways to verify:
+ * <ol>
+ *   <li>By passing {@link OpenRTB} request object</li>
+ *   <li>By passing Public Key URL, Fields used to generate Digital Signature, Digital Signature and Map of fields used to sign the request</li>
+ *   <li>By passing {@link PublicKey}, Fields used to generate Digital Signature, Digital Signature and Map of fields used to sign the request</li>
+ *   <li>By passing Public Key URL, Fields used to generate Digital Signature, Digital Signature, Digest and Map of fields used to sign the request</li>
+ *   <li>By passing {@link PublicKey}, Fields used to generate Digital Signature, Digital Signature, Digest and Map of fields used to sign the request</li>
+ * </ol>
+ *
+ * In addition, a debug flag can be used to decide whether the provided digest should be used or not.
+ *
+ * @author pranav.a
+ * @author anupam.v
+ *
+ * @since 1.0
  *
  */
 public class VerificationService {
 
 	/**
-	 * Constructor to create an instance of the service
-	 */
-	public VerificationService() {
-
-	}
-
-	/**
+	 * Verifies an {@link OpenRTB} request.
 	 *
-	 * @param openRTB OpenRTB object
-	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @param openRTB {@link OpenRTB} request
+	 *
+	 * @return  a boolean stating whether the verification of the signature succeeded or not
+	 *
 	 * @throws InvalidDataException if the parameters are null or empty
 	 * @throws ProcessException if an exception is thrown during the verification process
 	 */
@@ -35,12 +45,15 @@ public class VerificationService {
 	}
 
 	/**
+	 *	Verifies the digital signature using public key url and digest fields.
 	 *
-	 * @param publicKeyURL  Public Key of the signing authority
-	 * @param dsMap The fields that were used for signing the request
-	 * @param ds  Digital Signature in the request
-	 * @param digestFields  A map of fields that were used for generating the signature and their values
-	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @param publicKeyURL url of the public key of the signing authority
+	 * @param dsMap fields that were used for signing the request
+	 * @param ds  digital signature in the request
+	 * @param digestFields map of fields that were used for generating the signature and their values
+	 *
+	 * @return a boolean stating whether the verification of the signature succeeded or not
+	 *
 	 * @throws InvalidDataException if the parameters are null or empty
 	 * @throws ProcessException if an exception is thrown during the verification process
 	 */
@@ -52,12 +65,15 @@ public class VerificationService {
 	}
 
 	/**
+	 * Verifies the digital signature using {@link PublicKey} and digest fields.
 	 *
-	 * @param publicKey Public Key of the signing authority
-	 * @param dsMap The fields that were used for signing the request
-	 * @param ds  Digital Signature in the request
-	 * @param digestFields  A map of fields that were used for generating the signature and their values
-	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @param publicKey {@link PublicKey} of the signing authority
+	 * @param dsMap the fields that were used for signing the request
+	 * @param ds  digital signature in the request
+	 * @param digestFields  map of fields that were used for generating the signature and their values
+	 *
+	 * @return a boolean stating whether the verification of the signature succeeded or not
+	 *
 	 * @throws InvalidDataException if the parameters are null or empty
 	 * @throws ProcessException if an exception is thrown during the verification process
 	 */
@@ -69,13 +85,16 @@ public class VerificationService {
 	}
 
 	/**
+	 * Verifies the digital signature using public key url and digest fields.
 	 *
-	 * @param publicKeyURL
-	 * @param dsMap
-	 * @param ds
+	 * @param publicKeyURL url of the public key of the signing authority
+	 * @param dsMap the fields that were used for signing the request
+	 * @param ds  digital signature in the request
 	 * @param digest
-	 * @param digestFields
-	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @param digestFields  map of fields that were used for generating the signature and their values
+	 *
+	 * @return a boolean stating whether the verification of the signature succeeded or not
+	 *
 	 * @throws InvalidDataException if the parameters are null or empty
 	 * @throws ProcessException if an exception is thrown during the verification process
 	 */
@@ -97,12 +116,14 @@ public class VerificationService {
 
 	/**
 	 *
-	 * @param publicKey
-	 * @param dsMap
-	 * @param ds
+	 * @param publicKey {@link PublicKey} of the signing authority
+	 * @param dsMap the fields that were used for signing the request
+	 * @param ds  digital signature in the request
 	 * @param digest
-	 * @param digestFields
-	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @param digestFields  map of fields that were used for generating the signature and their values
+	 *
+	 * @return a boolean stating whether the verification of the signature succeeded or not
+	 *
 	 * @throws InvalidDataException if the parameters are null or empty
 	 * @throws ProcessException if an exception is thrown during the verification process
 	 */
@@ -157,9 +178,11 @@ public class VerificationService {
 
 	/**
 	 *
-	 * @param openRTB
+	 * @param openRTB {@link OpenRTB} request
 	 * @param debug
-	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 *
+	 * @return a boolean stating whether the verification of the signature succeeded or not
+	 *
 	 * @throws InvalidDataException if the parameters are null or empty
 	 * @throws ProcessException if an exception is thrown during the verification process
 	 */
@@ -170,9 +193,11 @@ public class VerificationService {
 
 	/**
 	 *
-	 * @param openRTB
-	 * @param publicKey
-	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @param openRTB {@link OpenRTB} request
+	 * @param publicKey {@link PublicKey} of the signing authority
+	 *
+	 * @return a boolean stating whether the verification of the signature succeeded or not
+	 *
 	 * @throws InvalidDataException if the parameters are null or empty
 	 * @throws ProcessException if an exception is thrown during the verification process
 	 */
@@ -183,10 +208,12 @@ public class VerificationService {
 
 	/**
 	 *
-	 * @param openRTB
+	 * @param openRTB {@link OpenRTB} request
 	 * @param debug
-	 * @param publicKey
-	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @param publicKey {@link PublicKey} of the signing authority
+	 *
+	 * @return a boolean stating whether the verification of the signature succeeded or not
+	 *
 	 * @throws InvalidDataException if the parameters are null or empty
 	 * @throws ProcessException if an exception is thrown during the verification process
 	 */
