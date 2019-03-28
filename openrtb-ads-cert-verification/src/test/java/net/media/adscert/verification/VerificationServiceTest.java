@@ -45,6 +45,6 @@ public class VerificationServiceTest {
 		String ds = SignatureUtil.signMessage(privateKey, digest);
 
 		assertEquals(true, verificationService.verifyRequest(publicKey, dsMap, ds, TestUtil.getMapOfDigestFields()));
-		assertEquals(true, verificationService.verifyRequest(publicKey, dsMap, ds, digest, TestUtil.getMapOfDigestFields()));
+		assertEquals(true, verificationService.verifyRequest(publicKey, ds, digest));
 	}
 }

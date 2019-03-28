@@ -20,55 +20,17 @@ public abstract class VerificationServiceWithCache extends VerificationService {
 	protected abstract PublicKey getKeyFromCache(String url) throws ProcessException;
 
 	@Override
-	public Boolean verifyRequest(String cert,
-	                             String dsMap,
+	public Boolean verifyRequest(String publicKeyURL,
 	                             String ds,
-	                             String digest,
-	                             Map<String, String> digestFields) throws InvalidDataException, ProcessException {
-		if (cert == null || cert.length() == 0) {
+	                             String digest) throws InvalidDataException, ProcessException {
+		if (publicKeyURL == null || publicKeyURL.isEmpty()) {
 			throw new InvalidDataException("Filename of certificate is empty");
 		}
 
 		try {
-			return verifyRequest(getKeyFromCache(cert), dsMap, ds, digest, digestFields);
+			return verifyRequest(getKeyFromCache(publicKeyURL), ds, digest);
 		} catch (Exception e) {
 			throw new ProcessException(e);
-		}
-	}
-
-	@Override
-	public Boolean verifyRequest(OpenRTB openRTB,
-	                             Boolean debug,
-	                             PublicKey publicKey) throws InvalidDataException, ProcessException {
-		if (openRTB == null) {
-			throw new InvalidDataException("OpenRTB object is null");
-		}
-
-		Source source = openRTB.getRequest().getSource();
-
-		if (publicKey == null && (source.getCert() == null || source.getCert().length() == 0)) {
-			throw new InvalidDataException("Filename of certificate is empty");
-		}
-		if (source.getDs() == null || source.getDs().length() == 0) {
-			throw new InvalidDataException("Digital signature is empty");
-		}
-		if (source.getDsmap() == null || source.getDsmap().length() == 0) {
-			throw new InvalidDataException("DsMap is empty");
-		}
-
-		try {
-			String digest = debug
-					? DigestUtil.getDigest(openRTB)
-					: DigestUtil.getDigestFromDsMap(openRTB);
-
-
-			publicKey = publicKey == null
-					? getKeyFromCache(source.getCert())
-					: publicKey;
-
-			return SignatureUtil.verifySign(publicKey, digest, source.getDs());
-		} catch (Exception e) {
-			throw new ProcessException("Error in verification", e);
 		}
 	}
 }

@@ -34,7 +34,7 @@ public class VerificationService {
 	 *
 	 * @param publicKeyURL url of the public key of the signing authority
 	 * @param ds  digital signature in the request
-	 * @param digestFields map of fields that were used for generating the signature and their values
+	 * @param digest
 	 *
 	 * @return a boolean stating whether the verification of the signature succeeded or not
 	 *
@@ -85,7 +85,6 @@ public class VerificationService {
 	 * @param publicKeyURL url of the public key of the signing authority
 	 * @param dsMap the fields that were used for signing the request
 	 * @param ds  digital signature in the request
-	 * @param digest
 	 * @param digestFields  map of fields that were used for generating the signature and their values
 	 *
 	 * @return a boolean stating whether the verification of the signature succeeded or not
@@ -100,56 +99,22 @@ public class VerificationService {
 		if (publicKeyURL == null || publicKeyURL.isEmpty()) {
 			throw new InvalidDataException("Filename of certificate is empty");
 		}
-		try {
-			PublicKey publicKey = SignatureUtil.getPublicKeyFromUrl(publicKeyURL);
-			return verifyRequest(publicKey, dsMap, ds, digestFields);
-		} catch (Exception e) {
-			throw new ProcessException(e);
-		}
+		String digest = DigestUtil.getDigestFromDsMap(dsMap, digestFields);
+		return verifyRequest(publicKeyURL, ds, digest);
 	}
 
 	/**
+	 * Verifies the digital signature using public key url and digest fields.
 	 *
 	 * @param publicKey {@link PublicKey} of the signing authority
-	 * @param dsMap the fields that were used for signing the request
 	 * @param ds  digital signature in the request
 	 * @param digest
-	 * @param digestFields  map of fields that were used for generating the signature and their values
 	 *
 	 * @return a boolean stating whether the verification of the signature succeeded or not
 	 *
 	 * @throws InvalidDataException if the parameters are null or empty
 	 * @throws ProcessException if an exception is thrown during the verification process
 	 */
-	public Boolean verifyRequest(PublicKey publicKey,
-	                             String dsMap,
-	                             String ds,
-	                             String digest,
-	                             Map<String, String> digestFields) throws InvalidDataException, ProcessException {
-		if (digest == null && digestFields == null) {
-			throw new InvalidDataException("Digest Field Map is null");
-		}
-		if (publicKey == null) {
-			throw new InvalidDataException("Public Key cannot be null");
-		}
-		if (ds == null || ds.length() == 0) {
-			throw new InvalidDataException("Digital signature is empty");
-		}
-		if (dsMap == null || dsMap.length() == 0) {
-			throw new InvalidDataException("DsMap is empty");
-		}
-
-		try {
-			digest = digest == null
-					? DigestUtil.getDigestFromDsMap(dsMap, digestFields)
-					: digest;
-
-			return SignatureUtil.verifySign(publicKey, digest, ds);
-		} catch (Exception e) {
-			throw new ProcessException("Error in verification", e);
-		}
-	}
-
 	public Boolean verifyRequest(PublicKey publicKey,
 	                             String ds,
 	                             String digest) throws InvalidDataException, ProcessException {
@@ -232,32 +197,28 @@ public class VerificationService {
 			throw new InvalidDataException("OpenRTB object is null");
 		}
 
+		if (openRTB.getRequest() == null) {
+			throw new InvalidDataException("OpenRTB.Request object is null");
+		}
+
 		Source source = openRTB.getRequest().getSource();
 
-		if (publicKey == null && (source.getCert() == null || source.getCert().length() == 0)) {
-			throw new InvalidDataException("Filename of certificate is empty");
+		if (source == null) {
+			throw new InvalidDataException("OpenRTB.Request.Source is null");
 		}
-		if (source.getDs() == null || source.getDs().length() == 0) {
-			throw new InvalidDataException("Digital signature is empty");
-		}
-		if (source.getDsmap() == null || source.getDsmap().length() == 0) {
-			throw new InvalidDataException("DsMap is empty");
+		String cert  = source.getCert();
+		String ds = source.getDs();
+		String dsMap = source.getDsmap();
+
+		String digest = debug
+				? DigestUtil.getDigest(openRTB)
+				: DigestUtil.getDigestFromDsMap(openRTB);
+
+		if (publicKey == null) {
+			return verifyRequest(cert, ds, digest);
 		}
 
-		try {
-			String digest = debug
-					? DigestUtil.getDigest(openRTB)
-					: DigestUtil.getDigestFromDsMap(openRTB);
-
-
-			publicKey = publicKey == null
-					? SignatureUtil.getPublicKeyFromUrl(source.getCert())
-					: publicKey;
-
-			return SignatureUtil.verifySign(publicKey, digest, source.getDs());
-		} catch (Exception e) {
-			throw new ProcessException("Error in verification", e);
-		}
+		return verifyRequest(publicKey, ds, digest);
 	}
 
 }
