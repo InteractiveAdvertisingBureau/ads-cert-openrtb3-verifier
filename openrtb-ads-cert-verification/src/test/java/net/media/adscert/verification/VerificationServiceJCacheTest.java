@@ -42,21 +42,24 @@ public class VerificationServiceJCacheTest {
   public void test() throws NoSuchAlgorithmException, InterruptedException, SignatureException, InvalidKeyException {
     final KeyPair keyPair1 = SignatureUtil.generateKeyPair();
     final KeyPair keyPair2 = SignatureUtil.generateKeyPair();
+    final KeyPair keyPair3 = SignatureUtil.generateKeyPair();
 
-    VerificationServiceJCache service = new VerificationServiceJCache(DefaultJCacheBuilder.newBuilder()
+    final Cache<String, PublicKey> cache = DefaultJCacheBuilder.newBuilder()
       .setExpiryForAccess(new Duration(TimeUnit.MILLISECONDS, 100))
       .setExpiryForCreation(new Duration(TimeUnit.MILLISECONDS, 100))
       .setExpiryForUpdate(new Duration(TimeUnit.MILLISECONDS, 100))
       .setCacheLoader(new CacheLoader<String, PublicKey>() {
         int count = 0;
+
         @Override
         public PublicKey load(String key) throws CacheLoaderException {
-          if(count == 0) {
-            ++count;
+          ++count;
+          if (count == 1) {
             return keyPair1.getPublic();
-          } else {
-            ++count;
+          } if(count == 2) {
             return keyPair2.getPublic();
+          } else {
+            return keyPair3.getPublic();
           }
         }
 
@@ -64,18 +67,26 @@ public class VerificationServiceJCacheTest {
         public Map<String, PublicKey> loadAll(Iterable<? extends String> keys) throws CacheLoaderException {
           return null;
         }
-      }).build());
+      }).build();
+    VerificationServiceJCache service = new VerificationServiceJCache(cache);
     OpenRTB openRTB = getOpenRTBObject();
     openRTB.getRequest().getSource().setCert("http://www.blahblahblah.com");
     String digest = DigestUtil.getDigest(openRTB);
-    openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(keyPair1.getPrivate(), digest));
 
+    openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(keyPair1.getPrivate(), digest));
     Assert.assertTrue(service.verifyRequest(openRTB, true));
+
     Thread.sleep(560);
 
+    // Testing refresh
     openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(keyPair2.getPrivate(), digest));
     Assert.assertTrue(service.verifyRequest(openRTB, true));
 
+    cache.clear();
+
+    // Testing cache clear operation
+    openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(keyPair3.getPrivate(), digest));
+    Assert.assertTrue(service.verifyRequest(openRTB, true));
 
   }
 
