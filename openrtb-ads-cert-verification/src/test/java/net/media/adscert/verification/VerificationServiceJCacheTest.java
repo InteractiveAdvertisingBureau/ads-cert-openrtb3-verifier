@@ -24,9 +24,9 @@ public class VerificationServiceJCacheTest extends VerificationServiceTest {
     final KeyPair keyPair2 = SignatureUtil.generateKeyPair();
 
     VerificationServiceJCache service = new VerificationServiceJCache(DefaultJCacheBuilder.newBuilder()
-      .setExpiryForAccess(new Duration(TimeUnit.SECONDS, 100))
-      .setExpiryForCreation(new Duration(TimeUnit.SECONDS, 100))
-      .setExpiryForUpdate(new Duration(TimeUnit.SECONDS, 100))
+      .setExpiryForAccess(new Duration(TimeUnit.MILLISECONDS, 100))
+      .setExpiryForCreation(new Duration(TimeUnit.MILLISECONDS, 100))
+      .setExpiryForUpdate(new Duration(TimeUnit.MILLISECONDS, 100))
       .setCacheLoader(new CacheLoader<String, PublicKey>() {
         int count = 0;
         @Override
