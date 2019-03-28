@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 public class DefaultGuavaCacheBuilder {
 	private Long maximumSize;
 	private Integer refreshTime;
+	private TimeUnit refreshTimeUnit;
 
 	private DefaultGuavaCacheBuilder() {
 		this.maximumSize = 1000L;
@@ -24,14 +25,15 @@ public class DefaultGuavaCacheBuilder {
 		return this;
 	}
 
-	public DefaultGuavaCacheBuilder setRefreshTime(Integer refreshTime) {
+	public DefaultGuavaCacheBuilder setRefreshTime(Integer refreshTime, TimeUnit timeUnit) {
 		this.refreshTime = refreshTime;
+		this.refreshTimeUnit = timeUnit;
 		return this;
 	}
 
 	public Cache<String, PublicKey> build() {
 		return CacheBuilder.newBuilder().maximumSize(this.maximumSize)
-				.refreshAfterWrite(this.refreshTime, TimeUnit.DAYS)
+				.refreshAfterWrite(this.refreshTime, this.refreshTimeUnit)
 				.build();
 	}
 }

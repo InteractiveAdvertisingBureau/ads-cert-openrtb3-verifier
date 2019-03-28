@@ -21,23 +21,6 @@ import java.util.concurrent.TimeUnit;
 
 public class VerificationServiceJCacheTest {
 
-  public OpenRTB getOpenRTBObject() {
-    OpenRTB openRTB = new OpenRTB();
-    openRTB.setRequest(new Request());
-    openRTB.getRequest().setSource(new Source());
-    openRTB.getRequest().getSource().setDsmap("domain=&ft=&tid=");
-    openRTB.getRequest().getSource().setDigest("domain=newsite.com&ft=d&tid=ABC7E92FBD6A");
-    return openRTB;
-  }
-
-  public Map<String, String> getMapOfDigestFields() {
-    Map<String, String> digestFields = new HashMap<>();
-    digestFields.put("domain", "newsite.com");
-    digestFields.put("ft", "d");
-    digestFields.put("tid", "ABC7E92FBD6A");
-    return digestFields;
-  }
-
   @Test
   public void test() throws NoSuchAlgorithmException, InterruptedException, SignatureException, InvalidKeyException {
     final KeyPair keyPair1 = SignatureUtil.generateKeyPair();
@@ -65,7 +48,7 @@ public class VerificationServiceJCacheTest {
           return null;
         }
       }).build());
-    OpenRTB openRTB = getOpenRTBObject();
+    OpenRTB openRTB = TestUtil.getOpenRTBObject();
     openRTB.getRequest().getSource().setCert("http://www.blahblahblah.com");
     String digest = DigestUtil.getDigest(openRTB);
     openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(keyPair1.getPrivate(), digest));

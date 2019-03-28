@@ -19,28 +19,10 @@ import static org.junit.Assert.assertEquals;
 
 public class VerificationServiceTest {
 
-
-	public OpenRTB getOpenRTBObject() {
-		OpenRTB openRTB = new OpenRTB();
-		openRTB.setRequest(new Request());
-		openRTB.getRequest().setSource(new Source());
-		openRTB.getRequest().getSource().setDsmap("domain=&ft=&tid=");
-		openRTB.getRequest().getSource().setDigest("domain=newsite.com&ft=d&tid=ABC7E92FBD6A");
-		return openRTB;
-	}
-
-	public Map<String, String> getMapOfDigestFields() {
-		Map<String, String> digestFields = new HashMap<>();
-		digestFields.put("domain", "newsite.com");
-		digestFields.put("ft", "d");
-		digestFields.put("tid", "ABC7E92FBD6A");
-		return digestFields;
-	}
-
 	@Test
 	public void verifySignatureFromOpenRTBObject() throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, SignatureException {
 		VerificationService verificationService = new VerificationService();
-		OpenRTB openRTB = getOpenRTBObject();
+		OpenRTB openRTB = TestUtil.getOpenRTBObject();
 		KeyPair keyPair = SignatureUtil.generateKeyPair();
 		PublicKey publicKey = keyPair.getPublic();
 		PrivateKey privateKey = keyPair.getPrivate();
@@ -62,7 +44,7 @@ public class VerificationServiceTest {
 		String digest = "domain=newsite.com&ft=d&tid=ABC7E92FBD6A";
 		String ds = SignatureUtil.signMessage(privateKey, digest);
 
-		assertEquals(true, verificationService.verifyRequest(publicKey, dsMap, ds, getMapOfDigestFields()));
-		assertEquals(true, verificationService.verifyRequest(publicKey, dsMap, ds, digest, getMapOfDigestFields()));
+		assertEquals(true, verificationService.verifyRequest(publicKey, dsMap, ds, TestUtil.getMapOfDigestFields()));
+		assertEquals(true, verificationService.verifyRequest(publicKey, dsMap, ds, digest, TestUtil.getMapOfDigestFields()));
 	}
 }
