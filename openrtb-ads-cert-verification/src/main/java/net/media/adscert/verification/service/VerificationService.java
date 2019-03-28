@@ -10,23 +10,57 @@ import net.media.adscert.utils.DigestUtil;
 import java.security.PublicKey;
 import java.util.Map;
 
+
+/**
+ *
+ */
 public class VerificationService {
 
+	/**
+	 * Constructor to create an instance of the service
+	 */
 	public VerificationService() {
 
 	}
 
+	/**
+	 *
+	 * @param openRTB OpenRTB object
+	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @throws InvalidDataException if the parameters are null or empty
+	 * @throws ProcessException if an exception is thrown during the verification process
+	 */
 	public Boolean verifyRequest(OpenRTB openRTB) throws InvalidDataException, ProcessException {
 		return verifyRequest(openRTB, false);
 	}
 
-	public Boolean verifyRequest(String cert,
+	/**
+	 *
+	 * @param publicKeyURL  Public Key of the signing authority
+	 * @param dsMap The fields that were used for signing the request
+	 * @param ds  Digital Signature in the request
+	 * @param digestFields  A map of fields that were used for generating the signature and their values
+	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @throws InvalidDataException if the parameters are null or empty
+	 * @throws ProcessException if an exception is thrown during the verification process
+	 */
+	public Boolean verifyRequest(String publicKeyURL,
 	                             String dsMap,
 	                             String ds,
 	                             Map<String, String> digestFields) throws InvalidDataException, ProcessException {
-		return verifyRequest(cert, dsMap, ds, null, digestFields);
+		return verifyRequest(publicKeyURL, dsMap, ds, null, digestFields);
 	}
 
+	/**
+	 *
+	 * @param publicKey Public Key of the signing authority
+	 * @param dsMap The fields that were used for signing the request
+	 * @param ds  Digital Signature in the request
+	 * @param digestFields  A map of fields that were used for generating the signature and their values
+	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @throws InvalidDataException if the parameters are null or empty
+	 * @throws ProcessException if an exception is thrown during the verification process
+	 */
 	public Boolean verifyRequest(PublicKey publicKey,
 	                             String dsMap,
 	                             String ds,
@@ -34,26 +68,48 @@ public class VerificationService {
 		return verifyRequest(publicKey, dsMap, ds, null, digestFields);
 	}
 
-	public Boolean verifyRequest(String cert,
+	/**
+	 *
+	 * @param publicKeyURL
+	 * @param dsMap
+	 * @param ds
+	 * @param digest
+	 * @param digestFields
+	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @throws InvalidDataException if the parameters are null or empty
+	 * @throws ProcessException if an exception is thrown during the verification process
+	 */
+	public Boolean verifyRequest(String publicKeyURL,
 	                             String dsMap,
 	                             String ds,
 	                             String digest,
 	                             Map<String, String> digestFields) throws InvalidDataException, ProcessException {
-		if (cert == null || cert.length() == 0) {
+		if (publicKeyURL == null || publicKeyURL.length() == 0) {
 			throw new InvalidDataException("Filename of certificate is empty");
 		}
 
-		PublicKey pub;
+		PublicKey publicKey;
 
 		try {
-			pub = SignatureUtil.getPublicKeyFromUrl(cert);
+			publicKey = SignatureUtil.getPublicKeyFromUrl(publicKeyURL);
 		} catch (Exception e) {
 			throw new ProcessException(e);
 		}
 
-		return verifyRequest(pub, dsMap, ds, digest, digestFields);
+		return verifyRequest(publicKey, dsMap, ds, digest, digestFields);
 	}
 
+	/**
+	 *
+	 * @param publicKey
+	 * @param dsMap
+	 * @param ds
+	 * @param digest
+	 * @param digestFields
+	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @throws InvalidDataException if the parameters are null or empty
+	 * @throws ProcessException if an exception is thrown during the verification process
+	 */
 	public Boolean verifyRequest(PublicKey publicKey,
 	                             String dsMap,
 	                             String ds,
@@ -83,16 +139,41 @@ public class VerificationService {
 		}
 	}
 
+	/**
+	 *
+	 * @param openRTB
+	 * @param debug
+	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @throws InvalidDataException if the parameters are null or empty
+	 * @throws ProcessException if an exception is thrown during the verification process
+	 */
 	public Boolean verifyRequest(OpenRTB openRTB,
 	                             Boolean debug) throws InvalidDataException, ProcessException {
 		return verifyRequest(openRTB, debug, null);
 	}
 
+	/**
+	 *
+	 * @param openRTB
+	 * @param publicKey
+	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @throws InvalidDataException if the parameters are null or empty
+	 * @throws ProcessException if an exception is thrown during the verification process
+	 */
 	public Boolean verifyRequest(OpenRTB openRTB,
 	                             PublicKey publicKey) throws InvalidDataException, ProcessException {
 		return verifyRequest(openRTB, false, publicKey);
 	}
 
+	/**
+	 *
+	 * @param openRTB
+	 * @param debug
+	 * @param publicKey
+	 * @return  a boolean stating whether the signature in the request is correct or forged
+	 * @throws InvalidDataException if the parameters are null or empty
+	 * @throws ProcessException if an exception is thrown during the verification process
+	 */
 	public Boolean verifyRequest(OpenRTB openRTB,
 	                             Boolean debug,
 	                             PublicKey publicKey) throws InvalidDataException, ProcessException {
