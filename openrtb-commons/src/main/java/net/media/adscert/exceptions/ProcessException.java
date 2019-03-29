@@ -1,6 +1,6 @@
 package net.media.adscert.exceptions;
 
-public class ProcessException extends RuntimeException {
+public class ProcessException extends VerificationServiceException {
 	public ProcessException(String message, Throwable cause) {
 		super(message, cause);
 	}

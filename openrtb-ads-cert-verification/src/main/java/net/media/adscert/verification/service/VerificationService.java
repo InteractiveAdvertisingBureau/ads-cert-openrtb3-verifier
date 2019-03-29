@@ -2,6 +2,7 @@ package net.media.adscert.verification.service;
 
 import net.media.adscert.exceptions.InvalidDataException;
 import net.media.adscert.exceptions.ProcessException;
+import net.media.adscert.exceptions.VerificationServiceException;
 import net.media.adscert.models.OpenRTB;
 import net.media.adscert.models.Source;
 import net.media.adscert.utils.SignatureUtil;
@@ -9,6 +10,7 @@ import net.media.adscert.utils.DigestUtil;
 
 import java.security.PublicKey;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A {@link VerificationService} provides means to verify digital signature. Following are <b>some</b> of the ways to verify:
@@ -29,6 +31,24 @@ import java.util.Map;
  *
  */
 public class VerificationService {
+
+	private int samplingRate = 100;
+
+	public VerificationService() {
+
+	}
+
+	public VerificationService(int samplingRate) {
+		if(samplingRate > 100 || samplingRate < 1) {
+			throw new VerificationServiceException("Sampling rate should be between 1 (inclusive) and 100 (inclusive)");
+		}
+		this.samplingRate = samplingRate;
+	}
+
+	public boolean toConsider() {
+		return ThreadLocalRandom.current().nextInt(1, samplingRate + 1) < samplingRate;
+	}
+
 	/**
 	 *	Verifies the digital signature using public key url and digest fields.
 	 *
@@ -44,6 +64,10 @@ public class VerificationService {
 	public Boolean verifyRequest(String publicKeyURL,
 	                             String ds,
 	                             String digest) throws InvalidDataException, ProcessException {
+		if(!toConsider()) {
+			return true;
+		}
+
 		if (publicKeyURL == null || publicKeyURL.isEmpty()) {
 			throw new InvalidDataException("Filename of certificate is empty");
 		}
@@ -72,6 +96,9 @@ public class VerificationService {
 	                             String dsMap,
 	                             String ds,
 	                             Map<String, String> digestFields) throws InvalidDataException, ProcessException {
+		if(!toConsider()) {
+			return true;
+		}
 		if (dsMap == null || dsMap.isEmpty()) {
 			throw new InvalidDataException("DsMap is null");
 		}
@@ -96,6 +123,9 @@ public class VerificationService {
 	                             String dsMap,
 	                             String ds,
 	                             Map<String, String> digestFields) throws InvalidDataException, ProcessException {
+		if(!toConsider()) {
+			return true;
+		}
 		if (publicKeyURL == null || publicKeyURL.isEmpty()) {
 			throw new InvalidDataException("Filename of certificate is empty");
 		}
@@ -118,6 +148,9 @@ public class VerificationService {
 	public Boolean verifyRequest(PublicKey publicKey,
 	                             String ds,
 	                             String digest) throws InvalidDataException, ProcessException {
+		if(!toConsider()) {
+			return true;
+		}
 		if (publicKey == null) {
 			throw new InvalidDataException("Public Key is null");
 		}
@@ -152,7 +185,7 @@ public class VerificationService {
 	/**
 	 *
 	 * @param openRTB {@link OpenRTB} request
-	 * @param debug
+	 * @param debug a boolean used to decide whether the digest from {@link OpenRTB} should be used or not
 	 *
 	 * @return a boolean stating whether the verification of the signature succeeded or not
 	 *
@@ -182,7 +215,7 @@ public class VerificationService {
 	/**
 	 *
 	 * @param openRTB {@link OpenRTB} request
-	 * @param debug
+	 * @param debug a boolean used to decide whether the digest from {@link OpenRTB} should be used or not
 	 * @param publicKey {@link PublicKey} of the signing authority
 	 *
 	 * @return a boolean stating whether the verification of the signature succeeded or not
@@ -193,6 +226,9 @@ public class VerificationService {
 	public Boolean verifyRequest(OpenRTB openRTB,
 	                             Boolean debug,
 	                             PublicKey publicKey) throws InvalidDataException, ProcessException {
+		if(!toConsider()) {
+			return true;
+		}
 		if (openRTB == null) {
 			throw new InvalidDataException("OpenRTB object is null");
 		}

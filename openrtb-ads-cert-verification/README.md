@@ -37,7 +37,9 @@ Cache<String, PublicKey> cache = DefaultGuavaCacheBuilder.newBuilder()
 VerificationServiceGuavaCache service = new VerificationServiceGuavaCache(cache)
 ```
 
-Both the default cache builders have default values for fields so it is not necessary to set the values. For example, you can write ``DefaultGuavaCacheBuilder.newBuilder().build()`` and it will return a cache with default parameters.
+Both the default cache builders have default values for fields so it is not necessary to set the values. For example, you can write 
+``DefaultGuavaCacheBuilder.newBuilder().build()`` 
+and it will return a cache with default parameters.
 
 The default values are listed below:
 
