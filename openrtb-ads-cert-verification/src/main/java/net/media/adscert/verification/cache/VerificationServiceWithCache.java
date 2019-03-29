@@ -17,6 +17,10 @@ public abstract class VerificationServiceWithCache extends VerificationService {
 		super();
 	}
 
+	public VerificationServiceWithCache(int samplingRate, long messageExpiryTimeInMillis) {
+		super(samplingRate, messageExpiryTimeInMillis);
+	}
+
 	protected abstract PublicKey getKeyFromCache(String url) throws ProcessException;
 
 	@Override

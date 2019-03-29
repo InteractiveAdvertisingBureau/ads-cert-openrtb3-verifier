@@ -15,6 +15,7 @@ public class TestUtil {
 		openRTB.getRequest().setSource(new Source());
 		openRTB.getRequest().getSource().setDsmap("domain=&ft=&tid=");
 		openRTB.getRequest().getSource().setDigest("domain=newsite.com&ft=d&tid=ABC7E92FBD6A");
+		openRTB.getRequest().getSource().setTs(System.currentTimeMillis());
 		return openRTB;
 	}
 

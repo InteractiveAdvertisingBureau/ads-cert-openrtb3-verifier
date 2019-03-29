@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertTrue;
+
 public class VerificationServiceJCacheTest {
 
   @Test
@@ -51,7 +53,7 @@ public class VerificationServiceJCacheTest {
           return null;
         }
       }).build();
-    VerificationServiceJCache service = new VerificationServiceJCache(cache);
+    VerificationServiceJCache service = new VerificationServiceJCache(cache, 100, 400l);
     OpenRTB openRTB = TestUtil.getOpenRTBObject();
     openRTB.getRequest().getSource().setCert("http://www.blahblahblah.com");
     String digest = DigestUtil.getDigest(openRTB);
@@ -71,6 +73,16 @@ public class VerificationServiceJCacheTest {
     openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(keyPair3.getPrivate(), digest));
     Assert.assertTrue(service.verifyRequest(openRTB, true));
 
+    // Testing message expiry
+    openRTB.getRequest().getSource().setTs(System.currentTimeMillis());
+    Thread.sleep(500l);
+
+    try {
+      service.verifyRequest(openRTB, true, true);
+      assertTrue("Timestamp check did not fail", false);
+    } catch (Exception e) {
+      assertTrue(true);
+    }
   }
 
 }

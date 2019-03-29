@@ -9,6 +9,14 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Builder to create a ready-to-use Guava cache.
+ *
+ * @author pranav.a
+ * @author anupam.v
+ *
+ * @since 1.0
+ */
 public class DefaultGuavaCacheBuilder {
 	private Long maximumSize;
 	private Duration expireAfterAccess;

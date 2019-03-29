@@ -16,12 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class VerificationServiceTest {
 
 	@Test
-	public void verifySignatureFromOpenRTBObject() throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, SignatureException {
-		VerificationService verificationService = new VerificationService();
+	public void verifySignatureFromOpenRTBObject() throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, SignatureException, InterruptedException {
+		VerificationService verificationService = new VerificationService(100, 500l);
 		OpenRTB openRTB = TestUtil.getOpenRTBObject();
 		KeyPair keyPair = SignatureUtil.generateKeyPair();
 		PublicKey publicKey = keyPair.getPublic();
@@ -30,7 +31,16 @@ public class VerificationServiceTest {
 		String digest = DigestUtil.getDigest(openRTB);
 		openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(privateKey, digest));
 
-		assertEquals(true, verificationService.verifyRequest(openRTB, true, publicKey));
+		assertEquals(true, verificationService.verifyRequest(openRTB, true, publicKey, false));
+
+		Thread.sleep(600l);
+
+		try {
+			verificationService.verifyRequest(openRTB, true, publicKey, true);
+			assertTrue("Timestamp check did not fail", false);
+		} catch (Exception e) {
+			assertTrue(true);
+		}
 	}
 
 	@Test

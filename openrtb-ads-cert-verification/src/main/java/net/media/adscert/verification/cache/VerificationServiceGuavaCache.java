@@ -31,6 +31,13 @@ public class VerificationServiceGuavaCache extends VerificationServiceWithCache 
 		this.keyLoader = keyLoader;
 	}
 
+	public VerificationServiceGuavaCache(Cache<String, PublicKey> publicKeyCache, Function<String, Callable<PublicKey>> keyLoader,
+																			 int samplingRate, long messageExpiryTimeInMillis) {
+		super(samplingRate, messageExpiryTimeInMillis);
+		this.publicKeyCache = publicKeyCache;
+		this.keyLoader = keyLoader;
+	}
+
 	@Override
 	protected PublicKey getKeyFromCache(String url) throws ProcessException {
 		try {

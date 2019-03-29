@@ -16,6 +16,14 @@ import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Builder to create a ready-to-use JSR 107 compliant cache.
+ *
+ * @author pranav.a
+ * @author anupam.v
+ *
+ * @since 1.0
+ */
 public class DefaultJCacheBuilder {
 	private Duration expiryForAccess;
 	private Duration expiryForCreation;

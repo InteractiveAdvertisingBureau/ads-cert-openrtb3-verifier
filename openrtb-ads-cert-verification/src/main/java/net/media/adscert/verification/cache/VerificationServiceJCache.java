@@ -14,6 +14,12 @@ public class VerificationServiceJCache extends VerificationServiceWithCache {
 		this.publicKeyCache = publicKeyCache;
 	}
 
+	public VerificationServiceJCache(Cache<String, PublicKey> publicKeyCache,
+																	 int samplingRate, long messageExpiryTimeInMillis) {
+		super(samplingRate, messageExpiryTimeInMillis);
+		this.publicKeyCache = publicKeyCache;
+	}
+
 	@Override
 	protected PublicKey getKeyFromCache(String url) throws ProcessException {
 		try {

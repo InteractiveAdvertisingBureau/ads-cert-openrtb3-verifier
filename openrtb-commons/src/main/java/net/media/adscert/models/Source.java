@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 public class Source {
   @NotEmpty
   private String tid;
-  private Integer ts;
+  private Long ts;
   @NotEmpty
   private String ds;
   private String dsmap;

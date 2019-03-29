@@ -1,5 +1,6 @@
 package net.media.adscert.verification.service;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.media.adscert.exceptions.InvalidDataException;
 import net.media.adscert.exceptions.ProcessException;
 import net.media.adscert.exceptions.VerificationServiceException;
@@ -32,17 +33,24 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class VerificationService {
 
-	private int samplingRate = 100;
+	protected int samplingRate = 100;
+	protected long messageExpiryTimeInMillis = 1000l;
 
 	public VerificationService() {
 
 	}
 
-	public VerificationService(int samplingRate) {
+	public VerificationService(int samplingRate, long messageExpiryTimeInMillis) {
 		if(samplingRate > 100 || samplingRate < 1) {
 			throw new VerificationServiceException("Sampling rate should be between 1 (inclusive) and 100 (inclusive)");
 		}
 		this.samplingRate = samplingRate;
+
+		if(messageExpiryTimeInMillis < 0) {
+      throw new VerificationServiceException("Message Expiry Time (In Millis) should be greater than 0");
+    }
+
+		this.messageExpiryTimeInMillis = messageExpiryTimeInMillis;
 	}
 
 	public boolean toConsider() {
@@ -71,13 +79,43 @@ public class VerificationService {
 		if (publicKeyURL == null || publicKeyURL.isEmpty()) {
 			throw new InvalidDataException("Filename of certificate is empty");
 		}
+    if (ds == null || ds.length() == 0) {
+      throw new InvalidDataException("Digital Signature is empty");
+    }
+    if (digest == null || digest.length() == 0) {
+      throw new InvalidDataException("Digest is empty");
+    }
 		try {
 			PublicKey publicKey = SignatureUtil.getPublicKeyFromUrl(publicKeyURL);
-			return verifyRequest(publicKey, ds, digest);
+      return SignatureUtil.verifySign(publicKey, digest, ds);
 		} catch (Exception e) {
 			throw new ProcessException(e);
 		}
 	}
+
+  /**
+   * Verifies the digital signature using public key url and digest fields.
+   *
+   * @param publicKeyURL url of the public key of the signing authority
+   * @param dsMap the fields that were used for signing the request
+   * @param ds  digital signature in the request
+   * @param digestFields  map of fields that were used for generating the signature and their values
+   *
+   * @return a boolean stating whether the verification of the signature succeeded or not
+   *
+   * @throws InvalidDataException if the parameters are null or empty
+   * @throws ProcessException if an exception is thrown during the verification process
+   */
+  public Boolean verifyRequest(String publicKeyURL,
+                               String dsMap,
+                               String ds,
+                               Map<String, String> digestFields) throws InvalidDataException, ProcessException {
+    if (publicKeyURL == null || publicKeyURL.isEmpty()) {
+      throw new InvalidDataException("Filename of certificate is empty");
+    }
+    String digest = DigestUtil.getDigestFromDsMap(dsMap, digestFields);
+    return verifyRequest(publicKeyURL, ds, digest);
+  }
 
 	/**
 	 * Verifies the digital signature using {@link PublicKey} and digest fields.
@@ -96,41 +134,11 @@ public class VerificationService {
 	                             String dsMap,
 	                             String ds,
 	                             Map<String, String> digestFields) throws InvalidDataException, ProcessException {
-		if(!toConsider()) {
-			return true;
-		}
 		if (dsMap == null || dsMap.isEmpty()) {
 			throw new InvalidDataException("DsMap is null");
 		}
 		String digest = DigestUtil.getDigestFromDsMap(dsMap, digestFields);
 		return verifyRequest(publicKey, ds, digest);
-	}
-
-	/**
-	 * Verifies the digital signature using public key url and digest fields.
-	 *
-	 * @param publicKeyURL url of the public key of the signing authority
-	 * @param dsMap the fields that were used for signing the request
-	 * @param ds  digital signature in the request
-	 * @param digestFields  map of fields that were used for generating the signature and their values
-	 *
-	 * @return a boolean stating whether the verification of the signature succeeded or not
-	 *
-	 * @throws InvalidDataException if the parameters are null or empty
-	 * @throws ProcessException if an exception is thrown during the verification process
-	 */
-	public Boolean verifyRequest(String publicKeyURL,
-	                             String dsMap,
-	                             String ds,
-	                             Map<String, String> digestFields) throws InvalidDataException, ProcessException {
-		if(!toConsider()) {
-			return true;
-		}
-		if (publicKeyURL == null || publicKeyURL.isEmpty()) {
-			throw new InvalidDataException("Filename of certificate is empty");
-		}
-		String digest = DigestUtil.getDigestFromDsMap(dsMap, digestFields);
-		return verifyRequest(publicKeyURL, ds, digest);
 	}
 
 	/**
@@ -194,7 +202,24 @@ public class VerificationService {
 	 */
 	public Boolean verifyRequest(OpenRTB openRTB,
 	                             Boolean debug) throws InvalidDataException, ProcessException {
-		return verifyRequest(openRTB, debug, null);
+		return verifyRequest(openRTB, debug, null, false);
+	}
+
+	/**
+	 *
+	 * @param openRTB {@link OpenRTB} request
+	 * @param debug a boolean used to decide whether the digest from {@link OpenRTB} should be used or not
+	 * @param checkMessageExpiry flag to decide whether message expiry checks be performed or not
+	 *
+	 * @return a boolean stating whether the verification of the signature succeeded or not
+	 *
+	 * @throws InvalidDataException if the parameters are null or empty
+	 * @throws ProcessException if an exception is thrown during the verification process
+	 */
+	public Boolean verifyRequest(OpenRTB openRTB,
+															 Boolean debug,
+															 Boolean checkMessageExpiry) throws InvalidDataException, ProcessException {
+		return verifyRequest(openRTB, debug, null, checkMessageExpiry);
 	}
 
 	/**
@@ -209,7 +234,7 @@ public class VerificationService {
 	 */
 	public Boolean verifyRequest(OpenRTB openRTB,
 	                             PublicKey publicKey) throws InvalidDataException, ProcessException {
-		return verifyRequest(openRTB, false, publicKey);
+		return verifyRequest(openRTB, false, publicKey, false);
 	}
 
 	/**
@@ -217,6 +242,7 @@ public class VerificationService {
 	 * @param openRTB {@link OpenRTB} request
 	 * @param debug a boolean used to decide whether the digest from {@link OpenRTB} should be used or not
 	 * @param publicKey {@link PublicKey} of the signing authority
+   * @param checkMessageExpiry flag to decide whether message expiry checks be performed or not
 	 *
 	 * @return a boolean stating whether the verification of the signature succeeded or not
 	 *
@@ -225,10 +251,17 @@ public class VerificationService {
 	 */
 	public Boolean verifyRequest(OpenRTB openRTB,
 	                             Boolean debug,
-	                             PublicKey publicKey) throws InvalidDataException, ProcessException {
+	                             PublicKey publicKey,
+                               boolean checkMessageExpiry) throws InvalidDataException, ProcessException {
 		if(!toConsider()) {
 			return true;
 		}
+		if(checkMessageExpiry) {
+		  long diff = System.currentTimeMillis() - openRTB.getRequest().getSource().getTs();
+		  if(diff > messageExpiryTimeInMillis) {
+		    throw new ProcessException("Message has expired. Time Difference (in millis):" + diff);
+      }
+    }
 		if (openRTB == null) {
 			throw new InvalidDataException("OpenRTB object is null");
 		}

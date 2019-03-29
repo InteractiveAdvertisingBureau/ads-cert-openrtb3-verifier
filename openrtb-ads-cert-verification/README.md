@@ -40,6 +40,18 @@ VerificationServiceGuavaCache service = new VerificationServiceGuavaCache(cache)
 Both the default cache builders have default values set for fields. So it is not necessary to set the values. For example, you can write ``` DefaultGuavaCacheBuilder.newBuilder().build() ``` 
 and it will return a cache created with parameters set to default values.
 
+Finally, a support has been provided to check message expiry. If the difference between timestamp in the ORTB request and current system timestamp exceeds by a pre-defined margin, the service can fail the verification.
+```
+new VerificationService(100, 2000l).verifyRequest(OpenRTB openRTB, Boolean debug, PublicKey publicKey,  sboolean checkMessageExpiry
+```
+
+**Bulk verification**
+
+Bulk verification can be performed by passing path to the input file containing JSONs of OpenRTB requests (each line has complete json of one request), along with the path to the file to which output should be written
+
+```
+FileVerificationService.verify("input.txt", "output.txt");
+```
 
 ##Requirements
 Java 8
