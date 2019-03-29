@@ -14,7 +14,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DigestUtil {
-  private static final Map<String, Function<OpenRTB, String>> digestMap = new LinkedHashMap<>();
+  private static final LinkedHashMap<String, Function<OpenRTB, String>> digestMap = new LinkedHashMap<>();
   private static final Splitter queryParamSplitter = Splitter.on(CommonConstants.QUERY_PARAM_SEPERATOR).trimResults().omitEmptyStrings();
   private static final Splitter keyValueSplitter = Splitter.on(CommonConstants.KEY_VALUE_SEPERATOR).trimResults().omitEmptyStrings();
   private static final Joiner queryParamJoiner = Joiner.on(CommonConstants.QUERY_PARAM_SEPERATOR).skipNulls();

@@ -40,7 +40,7 @@ VerificationServiceGuavaCache service = new VerificationServiceGuavaCache(cache)
 Both the default cache builders have default values set for fields. So it is not necessary to set the values. For example, you can write ``` DefaultGuavaCacheBuilder.newBuilder().build() ``` 
 and it will return a cache created with parameters set to default values.
 
-Finally, a support has been provided to check message expiry. If the difference between timestamp in the ORTB request and current system timestamp exceeds by a pre-defined margin, the service can fail the verification.
+Finally, a support has been provided to check message expiry. The timestamp in ORTB is assumed to be the time elapsed since UTC epoch. If the difference between timestamp in the ORTB request and current system timestamp exceeds by a pre-defined margin, the service can fail the verification.
 ```
 new VerificationService(100, 2000l).verifyRequest(OpenRTB openRTB, Boolean debug, PublicKey publicKey,  sboolean checkMessageExpiry
 ```
