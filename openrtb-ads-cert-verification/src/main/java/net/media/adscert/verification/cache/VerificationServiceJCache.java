@@ -21,7 +21,7 @@ public class VerificationServiceJCache extends VerificationServiceWithCache {
 	}
 
 	@Override
-	protected PublicKey getKeyFromCache(String url) throws ProcessException {
+	public PublicKey getPublicKey(String url) throws ProcessException {
 		try {
 			return this.publicKeyCache.get(url);
 		} catch (Exception e) {

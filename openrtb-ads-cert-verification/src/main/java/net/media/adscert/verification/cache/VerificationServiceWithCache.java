@@ -21,7 +21,7 @@ public abstract class VerificationServiceWithCache extends VerificationService {
 		super(samplingRate, messageExpiryTimeInMillis);
 	}
 
-	protected abstract PublicKey getKeyFromCache(String url) throws ProcessException;
+	/*protected abstract PublicKey getKeyFromCache(String url) throws ProcessException;
 
 	@Override
 	public Boolean verifyRequest(String publicKeyURL,
@@ -36,5 +36,5 @@ public abstract class VerificationServiceWithCache extends VerificationService {
 		} catch (Exception e) {
 			throw new ProcessException(e);
 		}
-	}
+	}*/
 }

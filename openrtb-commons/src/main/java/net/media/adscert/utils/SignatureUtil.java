@@ -72,7 +72,8 @@ public class SignatureUtil {
    * Now that all the data to be signed has been read in, generate a
    * signature for it
    */
-  public static boolean verifySign(PublicKey pub, String digest, String signature) throws ProcessException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+  public static boolean verifySign(PublicKey pub, String digest, String signature)
+    throws ProcessException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
     Signature ecdsaVerify = Signature.getInstance("SHA256withECDSA");
     ecdsaVerify.initVerify(pub);
     ecdsaVerify.update(digest.getBytes(UTF_8));
@@ -94,7 +95,7 @@ public class SignatureUtil {
     return getPublicKeyFromString(publicKeyPEM);
   }
 
-  private static Key getKey(String keyPEM, Function<byte[], KeySpec> f1, Function<KeySpec, Key> f2) throws InvalidKeySpecException, NoSuchAlgorithmException {
+  private static Key getKey(String keyPEM, Function<byte[], KeySpec> f1, Function<KeySpec, Key> f2) throws NoSuchAlgorithmException {
     byte[] encoded = Base64.decodeBase64(keyPEM);
 
     KeyFactory kf = KeyFactory.getInstance("EC");
@@ -102,7 +103,7 @@ public class SignatureUtil {
     return f2.apply(keySpec);
   }
 
-  private static PrivateKey getPrivateKeyFromString(String privateKeyPEM) throws InvalidKeySpecException, GeneralSecurityException {
+  private static PrivateKey getPrivateKeyFromString(String privateKeyPEM) throws GeneralSecurityException {
 //    KeyFactory kf = KeyFactory.getInstance("EC");
 //    return (PrivateKey) getKey(privateKeyPEM, PKCS8EncodedKeySpec::new, KeyFactory::generatePrivate);
     byte[] encoded = Base64.decodeBase64(privateKeyPEM);
@@ -113,8 +114,7 @@ public class SignatureUtil {
 //    return null;
   }
 
-  private static PublicKey getPublicKeyFromString(String publicKeyPEM) throws IOException, GeneralSecurityException {
-
+  private static PublicKey getPublicKeyFromString(String publicKeyPEM) throws GeneralSecurityException {
     byte[] encoded = Base64.decodeBase64(publicKeyPEM);
 
     KeyFactory kf = KeyFactory.getInstance("EC");
@@ -122,16 +122,4 @@ public class SignatureUtil {
     return kf.generatePublic(pubKeySpec);
   }
 
-//
-//  public static String encrypt(String rawText, PublicKey publicKey) throws IOException, GeneralSecurityException {
-//    Cipher cipher = Cipher.getInstance("RSA");
-//    cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-//    return Base64.encodeBase64String(cipher.doFinal(rawText.getBytes("UTF-8")));
-//  }
-//
-//  public static String decrypt(String cipherText, PrivateKey privateKey) throws IOException, GeneralSecurityException {
-//    Cipher cipher = Cipher.getInstance("RSA");
-//    cipher.init(Cipher.DECRYPT_MODE, privateKey);
-//    return new String(cipher.doFinal(Base64.decodeBase64(cipherText)), "UTF-8");
-//  }
 }

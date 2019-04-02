@@ -14,7 +14,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DigestUtil {
-  private static final LinkedHashMap<String, Function<OpenRTB, String>> digestMap = new LinkedHashMap<>();
+  private static final LinkedHashMap<String, Function<OpenRTB, Object>> digestMap = new LinkedHashMap<>();
   private static final Splitter queryParamSplitter = Splitter.on(CommonConstants.QUERY_PARAM_SEPERATOR).trimResults().omitEmptyStrings();
   private static final Splitter keyValueSplitter = Splitter.on(CommonConstants.KEY_VALUE_SEPERATOR).trimResults().omitEmptyStrings();
   private static final Joiner queryParamJoiner = Joiner.on(CommonConstants.QUERY_PARAM_SEPERATOR).skipNulls();
@@ -69,74 +69,38 @@ public class DigestUtil {
     return openRtb.getRequest().getSource().getDigest();
   }
 
-  public static String getDigestFromDsMap(OpenRTB openRtb) throws InvalidDataException {
+  public static Map<String, Object> getDigestFromDsMap(OpenRTB openRtb) throws InvalidDataException {
+    return getDigestFromDsMap(openRtb, digestMap);
+  }
+
+  public static Map<String, Object> getDigestFromDsMap(OpenRTB openRtb, LinkedHashMap<String, Function<OpenRTB, Object>> digestMap) throws InvalidDataException {
     try {
-      return queryParamJoiner.join(queryParamSplitter.splitToList(openRtb.getRequest().getSource().getDsmap()).stream()
+      return queryParamSplitter.splitToList(openRtb.getRequest().getSource().getDsmap()).stream()
+        .collect(Collectors.toMap(key -> key.substring(0, key.length() - 1),
+          key -> digestMap.get(key.substring(0, key.length() - 1)).apply(openRtb)));
+      /*return queryParamJoiner.join(queryParamSplitter.splitToList(openRtb.getRequest().getSource().getDsmap()).stream()
         .map(key -> key + digestMap.get(key.substring(0, key.length()-1)).apply(openRtb))
-        .collect(Collectors.toList()));
+        .collect(Collectors.toList()));*/
     } catch (Exception e) {
       throw new InvalidDataException("OpenRtb.source.dsmap: bad dsmap provided", e);
     }
   }
 
-  public static String getDigestFromDsMap(String dsMap, Map<String, String> digestFields) throws InvalidDataException {
+  public static String getDigestFromDsMap(String dsMap, Map<String, Object> digestFields) throws InvalidDataException {
     try {
-      return queryParamJoiner.join(queryParamSplitter.splitToList(dsMap).stream()
-          .filter(key -> {
-            if (!digestFields.containsKey(key.substring(0, key.length() - 1)))
-              throw new InvalidDataException("Bad dsmap provided");
-            return true;
-          })
-          .map(key -> key + digestFields.get(key.substring(0, key.length() - 1)))
-          .collect(Collectors.toList()));
+      return queryParamJoiner.join(
+          queryParamSplitter.splitToList(dsMap)
+              .stream().filter(
+                  key -> {
+                    if (!digestFields.containsKey(key.substring(0, key.length() - 1))) {
+                      throw new InvalidDataException("Bad dsmap provided");
+                    }
+                    return true;
+                  })
+              .map(key -> key + digestFields.get(key.substring(0, key.length() - 1)))
+              .collect(Collectors.toList()));
     } catch (Exception e) {
       throw new InvalidDataException("Bad dsmap provided", e);
     }
   }
-
-  public static String getDigestFromOpenRtb(OpenRTB openRtb) throws InvalidDataException {
-    if(openRtb.getRequest().getSource().getDsmap() != null) {
-      return getDigestFromDsMap(openRtb);
-    }
-    StringBuilder dsMapBuilder = new StringBuilder();
-    StringBuilder digestBuilder = new StringBuilder();
-    digestMap.forEach((k,v) -> {
-      try {
-        String val = v.apply(openRtb);
-        if (!val.isEmpty()) {
-          dsMapBuilder.append(k).append("=&");
-          digestBuilder.append(k).append("=").append(val).append("&");
-        }
-      } catch (NullPointerException e) {
-
-      }
-    });
-    String dsMap = dsMapBuilder.substring(0, dsMapBuilder.length() - 1);
-    openRtb.getRequest().getSource().setDsmap(dsMap);
-    return digestBuilder.substring(0, digestBuilder.length() - 1);
-  }
-
-//  public static void signSource(OpenRTB openRtb, String fileName) throws IOException, GeneralSecurityException {
-//    openRtb.getRequest().getSource().setTid(Instant.now().toString());
-//    StringBuilder dsMapBuilder = new StringBuilder();
-//    StringBuilder digestBuilder = new StringBuilder();
-//    digestMap.forEach((k,v) -> {
-//      try {
-//        String val = v.apply(openRtb);
-//        if (!val.isEmpty()) {
-//          dsMapBuilder.append(k).append("=&");
-//          digestBuilder.append(k).append("=").append(val).append("&");
-//        }
-//      } catch (NullPointerException e) {
-//
-//      }
-//    });
-//
-//    PrivateKey priv = SignatureUtil.getPrivateKey(fileName);
-//    String dsMap = dsMapBuilder.substring(0, dsMapBuilder.length() - 1);
-//    String digest = digestBuilder.substring(0, digestBuilder.length() - 1);
-//    openRtb.getRequest().getSource().setDsmap(dsMap);
-//    openRtb.getRequest().getSource().setDs(SignatureUtil.signMessage(priv, digest));
-//  }
-
 }
