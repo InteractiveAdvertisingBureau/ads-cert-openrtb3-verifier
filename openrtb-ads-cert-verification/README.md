@@ -68,6 +68,10 @@ VerificationServiceJCache serviceWithCustomSampling = new VerificationServiceJCa
 // with custom message expiry 
 long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
 VerificationServiceJCache serviceWithCustomSamplingAndExpiry = new VerificationServiceJCache(cache, samplingRate, messageExpiryTimeInMillis);
+
+// with Metrics Manager
+MetricsManager metricsManager = new MetricsManager();
+VerificationServiceJCache serviceWithMetricSupport = new VerificationServiceJCache(cache, samplingRate, messageExpiryTimeInMillis, metricsManager);
 ```
 
 ***Guava:***
@@ -88,6 +92,10 @@ VerificationServiceGuavaCache serviceWithCustomSampling = new VerificationServic
 // with custom message expiry 
 long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
 VerificationServiceGuavaCache serviceWithCustomSamplingAndExpiry = new VerificationServiceJCache(cache, samplingRate, messageExpiryTimeInMillis);
+
+// with Metrics Manager
+MetricsManager metricsManager = new MetricsManager();
+VerificationServiceGuavaCache serviceWithMetricSupport = new VerificationServiceGuavaCache(cache, samplingRate, messageExpiryTimeInMillis, metricsManager);
 ```
 
 Both the default cache builders have default values set for fields. For example, one can write ``` DefaultGuavaCacheBuilder.newBuilder().build() ``` 
