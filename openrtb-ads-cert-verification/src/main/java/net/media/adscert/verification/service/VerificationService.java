@@ -30,7 +30,7 @@ public class VerificationService {
 
 	protected int samplingRate = 100;
 	protected long messageExpiryTimeInMillis = 1000l;
-	private MetricsManager metricsManager = new MetricsManager();
+	protected MetricsManager metricsManager = new MetricsManager();
 
 	public VerificationService() {
 	}

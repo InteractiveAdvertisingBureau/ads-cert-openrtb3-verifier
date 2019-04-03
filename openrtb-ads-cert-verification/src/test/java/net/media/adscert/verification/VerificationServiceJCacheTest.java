@@ -1,5 +1,6 @@
 package net.media.adscert.verification;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.media.adscert.models.OpenRTB;
 import net.media.adscert.models.Request;
 import net.media.adscert.models.Source;
@@ -14,6 +15,7 @@ import javax.cache.Cache;
 import javax.cache.expiry.Duration;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
+import java.io.IOException;
 import java.security.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,25 +55,43 @@ public class VerificationServiceJCacheTest {
           return null;
         }
       }).build();
-    VerificationServiceJCache service = new VerificationServiceJCache(cache, 100, 400l);
+    MetricsManager metricsManager = new MetricsManager();
+    metricsManager.setJsonHandler(
+      json -> {
+        try {
+          ObjectMapper objectMapper = new ObjectMapper();
+          final Map map = objectMapper.readValue(json, Map.class);
+          assertTrue(map.size() == 4);
+          assertTrue(map.get("domain").toString().equals("newsite.com"));
+          assertTrue(map.get("ft").toString().equals("d"));
+          assertTrue(map.get("tid").toString().equals("ABC7E92FBD6A"));
+          assertTrue(map.get("status").toString().equals("success"));
+        } catch (IOException e) {
+          Assert.fail(e.getMessage());
+        }
+      });
+    VerificationServiceJCache service = new VerificationServiceJCache(cache, 100, 400l, metricsManager);
     OpenRTB openRTB = TestUtil.getOpenRTBObject();
-    openRTB.getRequest().getSource().setCert("http://www.blahblahblah.com");
+    openRTB.getRequest().getSource().setCert("ads1.cert");
     String digest = DigestUtil.getDigest(openRTB);
 
     openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(keyPair1.getPrivate(), digest));
     Assert.assertTrue(service.verifyRequest(openRTB, true));
+    Assert.assertTrue(service.verifyRequest(openRTB, false));
 
     Thread.sleep(560);
 
     // Testing refresh
     openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(keyPair2.getPrivate(), digest));
     Assert.assertTrue(service.verifyRequest(openRTB, true));
+    Assert.assertTrue(service.verifyRequest(openRTB, false));
 
     cache.clear();
 
     // Testing cache clear operation
     openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(keyPair3.getPrivate(), digest));
     Assert.assertTrue(service.verifyRequest(openRTB, true));
+    Assert.assertTrue(service.verifyRequest(openRTB, false));
 
     // Testing message expiry
     openRTB.getRequest().getSource().setTs(System.currentTimeMillis());
@@ -79,6 +99,7 @@ public class VerificationServiceJCacheTest {
 
     try {
       service.verifyRequest(openRTB, true, true);
+      service.verifyRequest(openRTB, false);
       assertTrue("Timestamp check did not fail", false);
     } catch (Exception e) {
       assertTrue(true);

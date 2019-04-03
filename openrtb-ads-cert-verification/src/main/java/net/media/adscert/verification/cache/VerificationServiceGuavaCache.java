@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import net.media.adscert.exceptions.InvalidDataException;
 import net.media.adscert.exceptions.ProcessException;
 import net.media.adscert.utils.SignatureUtil;
+import net.media.adscert.verification.MetricsManager;
 
 import java.security.PublicKey;
 import java.util.concurrent.Callable;
@@ -20,22 +21,25 @@ public class VerificationServiceGuavaCache extends VerificationServiceWithCache 
 		}
 	};
 
-	public VerificationServiceGuavaCache(Cache<String, PublicKey> publicKeyCache) {
+	public VerificationServiceGuavaCache(Cache<String, PublicKey> publicKeyCache, MetricsManager metricsManager) {
 		super();
 		this.publicKeyCache = publicKeyCache;
+		this.metricsManager = metricsManager;
 	}
 
-	public VerificationServiceGuavaCache(Cache<String, PublicKey> publicKeyCache, Function<String, Callable<PublicKey>> keyLoader) {
+	public VerificationServiceGuavaCache(Cache<String, PublicKey> publicKeyCache, Function<String, Callable<PublicKey>> keyLoader, MetricsManager metricsManager) {
 		super();
 		this.publicKeyCache = publicKeyCache;
 		this.keyLoader = keyLoader;
+		this.metricsManager = metricsManager;
 	}
 
 	public VerificationServiceGuavaCache(Cache<String, PublicKey> publicKeyCache, Function<String, Callable<PublicKey>> keyLoader,
-																			 int samplingRate, long messageExpiryTimeInMillis) {
+																			 int samplingRate, long messageExpiryTimeInMillis, MetricsManager metricsManager) {
 		super(samplingRate, messageExpiryTimeInMillis);
 		this.publicKeyCache = publicKeyCache;
 		this.keyLoader = keyLoader;
+		this.metricsManager = metricsManager;
 	}
 
 	@Override

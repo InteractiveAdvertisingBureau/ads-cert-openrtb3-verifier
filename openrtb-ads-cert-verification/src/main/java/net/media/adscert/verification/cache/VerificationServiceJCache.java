@@ -1,6 +1,7 @@
 package net.media.adscert.verification.cache;
 
 import net.media.adscert.exceptions.ProcessException;
+import net.media.adscert.verification.MetricsManager;
 
 import javax.cache.Cache;
 import java.security.PublicKey;
@@ -15,9 +16,10 @@ public class VerificationServiceJCache extends VerificationServiceWithCache {
 	}
 
 	public VerificationServiceJCache(Cache<String, PublicKey> publicKeyCache,
-																	 int samplingRate, long messageExpiryTimeInMillis) {
+																	 int samplingRate, long messageExpiryTimeInMillis, MetricsManager metricsManager) {
 		super(samplingRate, messageExpiryTimeInMillis);
 		this.publicKeyCache = publicKeyCache;
+		this.metricsManager = metricsManager;
 	}
 
 	@Override

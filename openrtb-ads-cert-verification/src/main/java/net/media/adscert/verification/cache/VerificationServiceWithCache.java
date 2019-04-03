@@ -20,21 +20,4 @@ public abstract class VerificationServiceWithCache extends VerificationService {
 	public VerificationServiceWithCache(int samplingRate, long messageExpiryTimeInMillis) {
 		super(samplingRate, messageExpiryTimeInMillis);
 	}
-
-	/*protected abstract PublicKey getKeyFromCache(String url) throws ProcessException;
-
-	@Override
-	public Boolean verifyRequest(String publicKeyURL,
-	                             String ds,
-	                             String digest) throws InvalidDataException, ProcessException {
-		if (publicKeyURL == null || publicKeyURL.isEmpty()) {
-			throw new InvalidDataException("Filename of certificate is empty");
-		}
-
-		try {
-			return verifyRequest(getKeyFromCache(publicKeyURL), ds, digest);
-		} catch (Exception e) {
-			throw new ProcessException(e);
-		}
-	}*/
 }
