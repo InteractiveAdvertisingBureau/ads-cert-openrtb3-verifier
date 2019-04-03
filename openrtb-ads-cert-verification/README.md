@@ -23,7 +23,7 @@ VerificationService service = new VerificationServiceJCache(samplingRate);
 
 Support has also been provided to optionally check message expiry. The timestamp in OpenRTB is assumed to be the time elapsed since UTC epoch. If the difference between timestamp in the OpenRTB request and current system timestamp exceeds a pre-defined margin, the service will fail the verification.
 
-```
+```java
 int samplingRate = 50; // Sampling Percentage is 50.
 long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
 new VerificationService(samplingRate, messageExpiryTimeInMillis).verifyRequest(OpenRTB openRTB, Boolean debug, PublicKey publicKey, boolean checkMessageExpiry
@@ -33,7 +33,7 @@ new VerificationService(samplingRate, messageExpiryTimeInMillis).verifyRequest(O
 
 A reporting hook through ``` MetricsManager ``` has been provided for collecting and pushing metrics to a suitable data sink. One can pass an implementation of ``` MetricsManager ``` to the constructor of ``` VerificationService ``` as below:
 
-```
+```java
 MetricsManager metricsManager = new MetricsManager();
 VerificationService service = new VerificationServiceJCache(metricsManager);
 
@@ -51,7 +51,7 @@ Additionally, default implementations for both caches are also provided. You can
 
 ***JCache:***
 
-```
+```java
 Cache<String, PublicKey> cache = DefaultJCacheBuilder.newBuilder()
                                        .setExpiryForAccess(...)
                                        .setExpiryForCreation(...)
@@ -76,7 +76,7 @@ VerificationServiceJCache serviceWithMetricSupport = new VerificationServiceJCac
 
 ***Guava:***
 
-```
+```java
 Cache<String, PublicKey> cache = DefaultGuavaCacheBuilder.newBuilder()
                                         .setMaximumSize(...)
                                         .setExpireAfterAccess(...)
