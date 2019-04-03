@@ -15,6 +15,17 @@ public class VerificationServiceJCache extends VerificationServiceWithCache {
 		this.publicKeyCache = publicKeyCache;
 	}
 
+	public VerificationServiceJCache(Cache<String, PublicKey> publicKeyCache, int samplingRate) {
+		super(samplingRate, 1000l);
+		this.publicKeyCache = publicKeyCache;
+	}
+
+	public VerificationServiceJCache(Cache<String, PublicKey> publicKeyCache,
+																	 int samplingRate, long messageExpiryTimeInMillis) {
+		super(samplingRate, messageExpiryTimeInMillis);
+		this.publicKeyCache = publicKeyCache;
+	}
+
 	public VerificationServiceJCache(Cache<String, PublicKey> publicKeyCache, MetricsManager metricsManager) {
 		super();
 		this.publicKeyCache = publicKeyCache;

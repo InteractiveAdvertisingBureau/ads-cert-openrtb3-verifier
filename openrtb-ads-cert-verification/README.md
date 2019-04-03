@@ -6,7 +6,42 @@ This service can be used for verification of the digital signature in ORTB reque
 
 ## Usage
 
-Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The class VerificationService is thread-safe, and can be used as a singleton. Aditionally, a sampling percentage can be provided while instantiation to control the percentage of requests for which verification is desired. The default value of sampling percentage is 100, which means that all requests will be verified. 
+Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The class VerificationService is thread-safe, and can be used as a singleton. 
+
+## Features
+
+### Sampling
+
+Aditionally, a sampling percentage can be provided while instantiation to control the percentage of requests for which verification is desired. The default value of sampling percentage is 100, which means that all requests will be verified.
+
+```
+int samplingRate = 50; // Sampling Percentage is 50.
+VerificationService service = new VerificationServiceJCache(samplingRate);
+```
+
+### Message Expiry
+
+Support has also been provided to optionally check message expiry. The timestamp in OpenRTB is assumed to be the time elapsed since UTC epoch. If the difference between timestamp in the OpenRTB request and current system timestamp exceeds a pre-defined margin, the service will fail the verification.
+
+```
+int samplingRate = 50; // Sampling Percentage is 50.
+long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
+new VerificationService(samplingRate, messageExpiryTimeInMillis).verifyRequest(OpenRTB openRTB, Boolean debug, PublicKey publicKey, boolean checkMessageExpiry
+```
+
+### Metrics and Reporting
+
+A reporting hook through ``` MetricsManager ``` has been provided for collecting and pushing metrics to a suitable data sink. One can pass an implementation of ``` MetricsManager ``` to the constructor of ``` VerificationService ``` as below:
+
+```
+MetricsManager metricsManager = new MetricsManager();
+VerificationService service = new VerificationServiceJCache(metricsManager);
+
+// with custom sampling and message expiry time
+int samplingRate = 50; // Sampling Percentage is 50.
+long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
+VerificationService serviceWithCustomSamplingAndExpiry = new VerificationService(samplingRate, messageExpiryTimeInMillis, metricsManager);
+```
 
 ### Cache
 
@@ -23,8 +58,16 @@ Cache<String, PublicKey> cache = DefaultJCacheBuilder.newBuilder()
                                        .setExpiryForUpdate(...)
                                        .setCacheLoader(...)
                                        .build();
-                                       
+// without sampling and message expiry                                       
 VerificationServiceJCache service = new VerificationServiceJCache(cache);
+
+// with custom sampling
+int samplingRate = 50; // Sampling Percentage is 50.
+VerificationServiceJCache serviceWithCustomSampling = new VerificationServiceJCache(cache, samplingRate);
+
+// with custom message expiry 
+long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
+VerificationServiceJCache serviceWithCustomSamplingAndExpiry = new VerificationServiceJCache(cache, samplingRate, messageExpiryTimeInMillis);
 ```
 
 ***Guava:***
@@ -36,18 +79,20 @@ Cache<String, PublicKey> cache = DefaultGuavaCacheBuilder.newBuilder()
                                         .setExpireAfterWrite(...)
                                         .build();
 
-VerificationServiceGuavaCache service = new VerificationServiceGuavaCache(cache)
+VerificationServiceGuavaCache service = new VerificationServiceGuavaCache(cache);
+
+// with custom sampling
+int samplingRate = 50; // Sampling Percentage is 50.
+VerificationServiceGuavaCache serviceWithCustomSampling = new VerificationServiceJCache(cache, samplingRate);
+
+// with custom message expiry 
+long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
+VerificationServiceGuavaCache serviceWithCustomSamplingAndExpiry = new VerificationServiceJCache(cache, samplingRate, messageExpiryTimeInMillis);
 ```
 
 Both the default cache builders have default values set for fields. For example, one can write ``` DefaultGuavaCacheBuilder.newBuilder().build() ``` 
 and it will return a cache created with parameters set to default values.
 
-### Message Expiry
-
-Support has also been provided to optionally check message expiry. The timestamp in OpenRTB is assumed to be the time elapsed since UTC epoch. If the difference between timestamp in the OpenRTB request and current system timestamp exceeds a pre-defined margin, the service will fail the verification.
-```
-new VerificationService(100, 2000l).verifyRequest(OpenRTB openRTB, Boolean debug, PublicKey publicKey, boolean checkMessageExpiry
-```
 
 ### Bulk verification
 
@@ -56,10 +101,6 @@ Bulk verification can be performed by passing the path to the input file contain
 ```
 FileVerificationService.verify("input.txt", "output.txt");
 ```
-
-### Metrics and Reporting
-
-A reporting hook through ``` MetricsManager ``` has been provided for collecting and pushing metrics to a suitable data sink. One can pass an implementation of ``` MetricsManager ``` to the constructor of ``` VerificationService ```, ``` VerificationServiceGuavaCache ``` or ``` VerificationServiceJCache ```. 
 
 ## Requirements
 Java 8

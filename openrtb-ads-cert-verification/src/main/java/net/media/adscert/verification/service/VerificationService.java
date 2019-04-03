@@ -20,8 +20,8 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * In addition, a debug flag can be used to decide whether the provided digest should be used or not.
  *
- * @author pranav.a
  * @author anupam.v
+ * @author pranav.a
  *
  * @since 1.0
  *
@@ -33,6 +33,14 @@ public class VerificationService {
 	protected MetricsManager metricsManager = new MetricsManager();
 
 	public VerificationService() {
+	}
+
+	public VerificationService(MetricsManager metricsManager) {
+		this.metricsManager = metricsManager;
+	}
+
+	public VerificationService(int samplingRate) {
+		this(samplingRate, 1000l);
 	}
 
 	public VerificationService(int samplingRate, long messageExpiryTimeInMillis, MetricsManager metricsManager) {
