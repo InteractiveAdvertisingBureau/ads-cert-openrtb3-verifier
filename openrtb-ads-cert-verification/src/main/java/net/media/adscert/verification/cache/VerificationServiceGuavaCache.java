@@ -21,6 +21,11 @@ public class VerificationServiceGuavaCache extends VerificationServiceWithCache 
 		}
 	};
 
+	public VerificationServiceGuavaCache(Cache<String, PublicKey> publicKeyCache) {
+		super();
+		this.publicKeyCache = publicKeyCache;
+	}
+
 	public VerificationServiceGuavaCache(Cache<String, PublicKey> publicKeyCache, MetricsManager metricsManager) {
 		super();
 		this.publicKeyCache = publicKeyCache;
