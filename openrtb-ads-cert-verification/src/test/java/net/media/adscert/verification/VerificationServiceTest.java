@@ -1,5 +1,6 @@
 package net.media.adscert.verification;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.media.adscert.models.OpenRTB;
 import net.media.adscert.models.Request;
 import net.media.adscert.models.Source;
@@ -8,8 +9,10 @@ import net.media.adscert.utils.SignatureUtil;
 import net.media.adscert.verification.cache.DefaultJCacheBuilder;
 import net.media.adscert.verification.cache.VerificationServiceJCache;
 import net.media.adscert.verification.service.VerificationService;
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.util.HashMap;
@@ -21,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 public class VerificationServiceTest {
 
 	@Test
-	public void verifySignatureFromOpenRTBObject() throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, SignatureException, InterruptedException {
+	public void verifySignatureFromOpenRTBObject() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, InterruptedException {
 		VerificationService verificationService = new VerificationService(100, 500l);
 		OpenRTB openRTB = TestUtil.getOpenRTBObject();
 		KeyPair keyPair = SignatureUtil.generateKeyPair();
@@ -46,7 +49,22 @@ public class VerificationServiceTest {
 
 	@Test
 	public void verifySignatureFromSpecificFields() throws NoSuchAlgorithmException, SignatureException, InvalidKeyException {
-		VerificationService verificationService = new VerificationService();
+		MetricsManager metricsManager = new MetricsManager();
+    metricsManager.setJsonHandler(
+        json -> {
+					try {
+						ObjectMapper objectMapper = new ObjectMapper();
+						final Map map = objectMapper.readValue(json, Map.class);
+						assertTrue(map.size() == 4);
+						assertTrue(map.get("domain").toString().equals("newsite.com"));
+						assertTrue(map.get("ft").toString().equals("d"));
+						assertTrue(map.get("tid").toString().equals("ABC7E92FBD6A"));
+						assertTrue(map.get("status").toString().equals("success"));
+					} catch (IOException e) {
+						Assert.fail(e.getMessage());
+					}
+				});
+		VerificationService verificationService = new VerificationService(100, 1000l, metricsManager);
 		KeyPair keyPair = SignatureUtil.generateKeyPair();
 		PublicKey publicKey = keyPair.getPublic();
 		PrivateKey privateKey = keyPair.getPrivate();

@@ -17,6 +17,30 @@ public class MetricsManager {
   private Consumer<String> jsonHandler;
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
+  public Set<String> getFieldsAsMetrics() {
+    return fieldsAsMetrics;
+  }
+
+  public void setFieldsAsMetrics(Set<String> fieldsAsMetrics) {
+    this.fieldsAsMetrics = fieldsAsMetrics;
+  }
+
+  public int getSamplingRate() {
+    return samplingRate;
+  }
+
+  public void setSamplingRate(int samplingRate) {
+    this.samplingRate = samplingRate;
+  }
+
+  public Consumer<String> getJsonHandler() {
+    return jsonHandler;
+  }
+
+  public void setJsonHandler(Consumer<String> jsonHandler) {
+    this.jsonHandler = jsonHandler;
+  }
+
   public boolean toConsider() {
     return ThreadLocalRandom.current().nextInt(1, samplingRate + 1) < samplingRate;
   }
