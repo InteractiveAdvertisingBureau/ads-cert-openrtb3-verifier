@@ -66,7 +66,7 @@ public class VerificationService {
 	 *
 	 * @param publicKeyURL url of the public key of the signing authority
 	 * @param ds  digital signature in the request
-	 * @param digest
+	 * @param digest a string with concatenated field and value pairs (f1=v1&f2=v2)
 	 *
 	 * @return a boolean stating whether the verification of the signature succeeded or not
 	 *
@@ -160,7 +160,7 @@ public class VerificationService {
 	 *
 	 * @param publicKey {@link PublicKey} of the signing authority
 	 * @param ds  digital signature in the request
-	 * @param digest
+	 * @param digest a string with concatenated field and value pairs (f1=v1&f2=v2)
 	 *
 	 * @return a boolean stating whether the verification of the signature succeeded or not
 	 *

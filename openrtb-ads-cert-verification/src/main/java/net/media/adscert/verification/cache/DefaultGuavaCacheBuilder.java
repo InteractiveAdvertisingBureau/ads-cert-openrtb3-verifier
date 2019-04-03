@@ -27,25 +27,54 @@ public class DefaultGuavaCacheBuilder {
 		this.expireAfterWrite = Duration.of(30, ChronoUnit.DAYS);
 	}
 
+	/**
+	 * Creates a {@link DefaultGuavaCacheBuilder} for creating a {@link Cache} with default settings.
+	 *
+	 * @return {@link DefaultGuavaCacheBuilder}
+	 */
 	public static DefaultGuavaCacheBuilder newBuilder() {
 		return new DefaultGuavaCacheBuilder();
 	}
 
+	/**
+	 * See {@link CacheBuilder#maximumSize(long)}.
+	 *
+	 * @param maximumSize maximum entries the cache can hold
+	 * @return {@link DefaultGuavaCacheBuilder}
+	 */
 	public DefaultGuavaCacheBuilder setMaximumSize(Long maximumSize) {
 		this.maximumSize = maximumSize;
 		return this;
 	}
 
+	/**
+	 * See {@link CacheBuilder#expireAfterAccess(Duration)}.
+	 *
+	 * @param expireAfterAccess represents duration of time after which an entry should be removed
+	 * @return {@link DefaultGuavaCacheBuilder}
+	 */
 	public DefaultGuavaCacheBuilder setExpireAfterAccess(Duration expireAfterAccess) {
 		this.expireAfterAccess = expireAfterAccess;
 		return this;
 	}
 
+	/**
+	 * See {@link CacheBuilder#expireAfterWrite(Duration)}.
+	 *
+	 * @param expireAfterWrite represents duration of time that should elapse since an entry's
+	 *                          creation or latest replacement of its value before the entry is removed
+	 * @return {@link DefaultGuavaCacheBuilder}
+	 */
 	public DefaultGuavaCacheBuilder setExpireAfterWrite(Duration expireAfterWrite) {
 		this.expireAfterWrite = expireAfterWrite;
 		return this;
 	}
 
+	/**
+	 * Calls {@link CacheBuilder#build()} with the values configured for various
+	 *
+	 * @return
+	 */
 	public Cache<String, PublicKey> build() {
 		return CacheBuilder.newBuilder().maximumSize(this.maximumSize)
 				.expireAfterAccess(this.expireAfterAccess)
