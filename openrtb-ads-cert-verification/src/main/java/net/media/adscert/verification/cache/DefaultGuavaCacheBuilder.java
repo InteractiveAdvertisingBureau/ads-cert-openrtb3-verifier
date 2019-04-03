@@ -71,9 +71,9 @@ public class DefaultGuavaCacheBuilder {
 	}
 
 	/**
-	 * Calls {@link CacheBuilder#build()} with the values configured for various
+	 * Calls {@link CacheBuilder#build()} with the values configured via {@link DefaultGuavaCacheBuilder}.
 	 *
-	 * @return
+	 * @return {@link Cache}
 	 */
 	public Cache<String, PublicKey> build() {
 		return CacheBuilder.newBuilder().maximumSize(this.maximumSize)

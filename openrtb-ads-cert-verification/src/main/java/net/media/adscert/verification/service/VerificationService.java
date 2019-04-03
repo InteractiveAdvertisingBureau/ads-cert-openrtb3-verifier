@@ -311,7 +311,16 @@ public class VerificationService {
 			}
 
 			if (publicKey == null) {
-				flag = verifyRequest("http://www." + domain + "/" + cert, ds, digest);
+				String publicKeyUrlToUse = cert;
+				if(!cert.startsWith("http")) {
+					if(!cert.startsWith("www")) {
+						publicKeyUrlToUse = "http://www." + domain + "/" + cert;
+					} else {
+						publicKeyUrlToUse = "http://" + cert;
+					}
+				}
+
+				flag = verifyRequest(publicKeyUrlToUse, ds, digest);
 				status = flag ? "success" : "failed";
 				return flag;
 			}
