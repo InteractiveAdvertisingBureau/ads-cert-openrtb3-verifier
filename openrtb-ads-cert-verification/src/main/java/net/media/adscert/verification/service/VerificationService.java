@@ -320,7 +320,7 @@ public class VerificationService {
 			status = flag ? "success" : "failed";
 			return flag;
 		} finally{
-			if(map == null) {
+			if(map != null) {
 				metricsManager.pushMetrics(map, status);
 			}
 		}
