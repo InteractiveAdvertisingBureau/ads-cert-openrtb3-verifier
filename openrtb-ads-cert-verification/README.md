@@ -10,7 +10,7 @@ The signing service generates the Digital Signature using the digest and the pri
 The request is sent to the Exchanges/DSP’s including the Digital Signature, DsMap and other fields
 The Signature Checking Service verifies the signature about fields used to create the digital signature. Usually for offline purposes.
 
-<ADD DIAGRAM HERE>
+..ADD DIAGRAM HERE..
 
 Read about Ads.Cert - Signed Bid Requests here: [IAB Ads.Cert](https://github.com/InteractiveAdvertisingBureau/openrtb/blob/master/ads.cert:%20Signed%20Bid%20Requests%201.0%20BETA.md)
 
