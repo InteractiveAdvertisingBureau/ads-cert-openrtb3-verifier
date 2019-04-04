@@ -28,7 +28,7 @@ public class DefaultGuavaCacheBuilder {
 	}
 
 	/**
-	 * Creates a {@link DefaultGuavaCacheBuilder} for creating a {@link Cache} with default settings.
+	 * Constructs a {@link DefaultGuavaCacheBuilder} for creating a {@link Cache} with default settings.
 	 *
 	 * @return {@link DefaultGuavaCacheBuilder}
 	 */

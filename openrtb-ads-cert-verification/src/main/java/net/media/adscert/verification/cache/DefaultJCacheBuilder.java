@@ -58,6 +58,11 @@ public class DefaultJCacheBuilder {
 
 	}
 
+	/**
+	 * Constructs a {@link DefaultJCacheBuilder} for creating a JSR-107 compliant {@link Cache}.
+	 *
+	 * @return {@link DefaultJCacheBuilder}
+	 */
 	public static DefaultJCacheBuilder newBuilder() {
 		return new DefaultJCacheBuilder();
 	}
