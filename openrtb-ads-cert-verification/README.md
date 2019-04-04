@@ -1,21 +1,32 @@
 # Verification Service for Signed Bid Requests
 
-Ad Fraud has always been a big problem in the ad industry. Ads.txt solves the issue to some extent with the authorized sellers of inventory listed on publisher’s domain. Inventory spoofing is a problem which still exists where a request can be modified by a node in the supply chain to pose it as premium inventory. This is the problem which ads.cert tries to solve.
+Ad Fraud has always been a big problem in the ad industry. Inventory spoofing is a problem that still exists where a request can be modified by anyy entity in the supply chain to pose it as premium inventory. This is the problem which ads.cert tries to solve.
 
 How ads.cert works?
 
-1) The publisher or the signing authority maintains the private key 
-2) A small set of essential fields and values are used for the Digest
-3) The signing service creates the digital signature using the digest and the private key
-4) The request is sent to the Exchanges/DSP’s including the Digital Signature, DsMap and other fields
-5) The verifier service, which verifies the signature about fields used to create the digital signature. Usually for offline purposes.
+The publisher or the signing authority maintains the private key 
+A small set of essential fields and values in the request are used for the Digest
+The signing service generates the Digital Signature using the digest and the private key
+The request is sent to the Exchanges/DSP’s including the Digital Signature, DsMap and other fields
+The Signature Checking Service verifies the signature about fields used to create the digital signature. Usually for offline purposes.
 
+<ADD DIAGRAM HERE>
 
 Read about Ads.Cert - Signed Bid Requests here: [IAB Ads.Cert](https://github.com/InteractiveAdvertisingBureau/openrtb/blob/master/ads.cert:%20Signed%20Bid%20Requests%201.0%20BETA.md)
 
-ADD DIAGRAM
 
-This service can be used for verification of the digital signature in ORTB requests by checking whether the values of the fields using which the signature was created were forged or not.
+## Offering from media.net:
+
+To allow for fast-track boarding for ads.cert, media.net is offering the verification service as an open-source solution. The below features are supported. This service can be used for verification of the digital signature in ORTB requests by checking whether the values of the fields using which the signature was created were forged or not.
+
+
+## Features:
+
+Digital Signature Verification - through OpenRTB 3.0 object or Digest 
+Support for Sampling 
+Support for Offline Verification 
+Hooks for reporting which can be used for internal reporting purposes
+Minimizing latencies for public key lookup through in-memory caching
 
 ## Usage
 
