@@ -4,11 +4,11 @@ Ad Fraud has always been a big problem in the ad industry. Inventory spoofing is
 
 How ads.cert works?
 
-The publisher or the signing authority maintains the private key 
-A small set of essential fields and values in the request are used for the Digest
-The signing service generates the Digital Signature using the digest and the private key
-The request is sent to the Exchanges/DSP’s including the Digital Signature, DsMap and other fields
-The Signature Checking Service verifies the signature about fields used to create the digital signature. Usually for offline purposes.
+ - The publisher or the signing authority maintains the private key 
+ - A small set of essential fields and values in the request are used for the Digest
+ - The signing service generates the Digital Signature using the digest and the private key
+ - The request is sent to the Exchanges/DSP’s including the Digital Signature, DsMap and other fields
+ - The Signature Checking Service verifies the signature about fields used to create the digital signature. Usually for offline purposes.
 
 ..ADD DIAGRAM HERE..
 
@@ -22,11 +22,11 @@ To allow for fast-track boarding for ads.cert, media.net is offering the verific
 
 ## Features:
 
-Digital Signature Verification - through OpenRTB 3.0 object or Digest 
-Support for Sampling 
-Support for Offline Verification 
-Hooks for reporting which can be used for internal reporting purposes
-Minimizing latencies for public key lookup through in-memory caching
+ - Digital Signature Verification - through OpenRTB 3.0 object or Digest 
+ - Support for Sampling 
+ - Support for Offline Verification 
+ - Hooks for reporting which can be used for internal reporting purposes
+ - Minimizing latencies for public key lookup through in-memory caching
 
 ## Usage
 
