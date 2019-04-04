@@ -115,7 +115,7 @@ Java 8
 
 ## Flow
 
-[![N|Solid](sequence_ads_cert.png)]
+![N|Solid](sequence_ads_cert.png)
 
 
 
