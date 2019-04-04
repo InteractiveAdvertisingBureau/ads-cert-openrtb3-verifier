@@ -45,7 +45,7 @@ VerificationService serviceWithCustomSamplingAndExpiry = new VerificationService
 
 ### Cache
 
-Two more implementations are provided for VerificationService which support the use of caches such as JCache and Guava. The cache stores the Public Keys fetched from ads.cert files from different domains. The corresponding classes are ``` VerificationServiceJCache ``` and ``` VerificationServiceGuavaCache ```. 
+We have also provided the functionality to fetch and cache the Public Keys for different domains. So that, one can save time during verification. Cache will expire after a preconfigured time (default 30 days). Two different cache implementations, using JCache and Guava, are provided for VerificationService. The corresponding classes are ``` VerificationServiceJCache ``` and ``` VerificationServiceGuavaCache ```. 
 
 Additionally, default implementations for both caches are also provided. You can either use them or pass your own cache object to the constructor.
 
