@@ -19,12 +19,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class DefaultGuavaCacheBuilder {
 	private Long maximumSize;
-	private Duration expireAfterAccess;
-	private Duration expireAfterWrite;
+	private Duration expireAfterAccess = Duration.of(30, ChronoUnit.DAYS);
+	private Duration expireAfterWrite = Duration.of(30, ChronoUnit.DAYS);
 
 	private DefaultGuavaCacheBuilder() {
 		this.maximumSize = 1000L;
-		this.expireAfterWrite = Duration.of(30, ChronoUnit.DAYS);
 	}
 
 	/**

@@ -2,41 +2,43 @@
 
 Ad Fraud has always been a big problem in the ad industry. Inventory spoofing is a problem that still exists where a request can be modified by any entity in the supply chain to pose it as premium inventory. This is the problem which ads.cert tries to solve.
 
-How ads.cert works?
+## How ads.cert works?
 
  - The publisher or the signing authority maintains the private key 
- - A small set of essential fields and values in the request are used for the Digest
- - The signing service generates the Digital Signature using the digest and the private key
- - The request is sent to the Exchanges/DSP’s including the Digital Signature, DsMap and other fields
- - The Signature Checking Service verifies the signature about fields used to create the digital signature. Usually for offline purposes.
+ - A small set of essential fields (DsMap) and values in the request is used to generate the digest
+ - The Signing Service generates the Digital Signature (ds) using the digest and the private key
+ - The request is sent to the Exchanges/DSPs including the Digital Signature, DsMap and other fields
+ - The Signature Verification Service creates a new digest from the request it receives using the fields present in the DsMap and the respective values
+ - The digest and the public key (hosted on publisher domain) are then used to verify the Digital Signature present in the OpenRTB request
 
-..ADD DIAGRAM HERE..
+![N|Solid](flow.png)
 
 Read about Ads.Cert - Signed Bid Requests here: [IAB Ads.Cert](https://github.com/InteractiveAdvertisingBureau/openrtb/blob/master/ads.cert:%20Signed%20Bid%20Requests%201.0%20BETA.md)
 
 
-## Offering from media.net:
+## Goal of this library:
 
-To allow for fast-track boarding for ads.cert, media.net is offering the verification service as an open-source solution. The below features are supported. This service can be used for verification of the digital signature in ORTB requests by checking whether the values of the fields using which the signature was created were forged or not.
+To allow for fast-track on-boarding for ads.cert, media.net is offering the verification service as an open-source solution. The below features are supported. This service can be used for verification of the digital signature in OpenRTB requests.
 
 
 ## Features:
 
- - Digital Signature Verification - through OpenRTB 3.0 object or Digest 
- - Support for Sampling 
+ - Digital Signature Verification (via OpenRTB 3.0 object or Digest or Map of key-values)
+ - Support for Sampling
+ - Support for Message Expiry checks 
  - Support for Offline Verification 
- - Hooks for reporting which can be used for internal reporting purposes
- - Minimizing latencies for public key lookup through in-memory caching
+ - Hooks for reporting 
+ - Support for in-memory caching to minimize latencies
 
 ## Usage
 
-Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The class VerificationService is thread-safe, and can be used as a singleton. 
+Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The class VerificationService is thread-safe and can be used as a singleton. 
 
 ## Features
 
 ### Sampling
 
-Aditionally, a sampling percentage can be provided while instantiation to control the percentage of requests for which verification is desired. The default value of sampling percentage is 100, which means that all requests will be verified.
+Aditionally, a sampling percentage can be provided during instantiation to control the percentage of requests for which verification is desired. The default value of sampling percentage is 100, which means that all requests will be verified.
 
 ```java
 int samplingPercentage = 50; // Sampling Percentage is 50.
@@ -50,7 +52,7 @@ Support has also been provided to optionally check message expiry. The timestamp
 ```java
 int samplingPercentage = 50; // Sampling Percentage is 50.
 long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
-new VerificationService(samplingPercentage, messageExpiryTimeInMillis).verifyRequest(OpenRTB openRTB, Boolean debug, PublicKey publicKey, boolean checkMessageExpiry
+new VerificationService(samplingPercentage, messageExpiryTimeInMillis).verifyRequest(openRTB, debug, publicKey, checkMessageExpiry
 ```
 
 ### Metrics and Reporting
@@ -69,7 +71,7 @@ VerificationService serviceWithCustomSamplingAndExpiry = new VerificationService
 
 ### Cache
 
-We have also provided the functionality to fetch and cache the Public Keys for different domains. So that, one can save time during verification. Cache will expire after a preconfigured time (default 30 days). Two different cache implementations, using JCache and Guava, are provided for VerificationService. The corresponding classes are ``` VerificationServiceJCache ``` and ``` VerificationServiceGuavaCache ```. 
+We have also provided the functionality to fetch and cache the Public Keys for different domains,  saving time required for verification. Cache will expire after a preconfigured time (default 30 days). Two different cache implementations, using JCache and Guava, are provided for VerificationService. The corresponding classes are ``` VerificationServiceJCache ``` and ``` VerificationServiceGuavaCache ```. 
 
 Additionally, default implementations for both caches are also provided. You can either use them or pass your own cache object to the constructor.
 

@@ -15,6 +15,7 @@ import javax.cache.spi.CachingProvider;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Builder to create a ready-to-use JSR 107 compliant cache.
@@ -25,9 +26,9 @@ import java.util.Map;
  * @since 1.0
  */
 public class DefaultJCacheBuilder {
-	private Duration expiryForAccess;
-	private Duration expiryForCreation;
-	private Duration expiryForUpdate;
+	private Duration expiryForAccess = new Duration(TimeUnit.DAYS, 30);
+	private Duration expiryForCreation = new Duration(TimeUnit.DAYS, 30);
+	private Duration expiryForUpdate = new Duration(TimeUnit.DAYS, 30);
 	private CacheLoader<String, PublicKey> cacheLoader;
 
 	private DefaultJCacheBuilder() {
