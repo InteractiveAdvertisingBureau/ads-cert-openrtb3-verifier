@@ -68,7 +68,8 @@ int samplingPercentage = 50; // Sampling Percentage is 50.
 long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
 VerificationService serviceWithCustomSamplingAndExpiry = new VerificationService(samplingPercentage, messageExpiryTimeInMillis, metricsManager);
 ```
-
+ ![N|Solid](ads-cert-non-cache.png)
+ 
 ### Cache
 
 We have also provided the functionality to fetch and cache the Public Keys for different domains,  saving time required for verification. Cache will expire after a preconfigured time (default 30 days). Two different cache implementations, using JCache and Guava, are provided for VerificationService. The corresponding classes are ``` VerificationServiceJCache ``` and ``` VerificationServiceGuavaCache ```. 
@@ -139,9 +140,9 @@ FileVerificationService.verify("input.txt", "output.txt");
 ## Requirements
 Java 8
 
-## Flow
 
-![N|Solid](sequence_ads_cert.png)
+
+
 
 
 
