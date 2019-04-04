@@ -28,7 +28,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class VerificationService {
 
-	protected int samplingRate = 100;
+	protected int samplingPercentage = 100;
 	protected long messageExpiryTimeInMillis = 1000l;
 	protected MetricsManager metricsManager = new MetricsManager();
 
@@ -39,20 +39,20 @@ public class VerificationService {
 		this.metricsManager = metricsManager;
 	}
 
-	public VerificationService(int samplingRate) {
-		this(samplingRate, 1000l);
+	public VerificationService(int samplingPercentage) {
+		this(samplingPercentage, 1000l);
 	}
 
-	public VerificationService(int samplingRate, long messageExpiryTimeInMillis, MetricsManager metricsManager) {
-		this(samplingRate, messageExpiryTimeInMillis);
+	public VerificationService(int samplingPercentage, long messageExpiryTimeInMillis, MetricsManager metricsManager) {
+		this(samplingPercentage, messageExpiryTimeInMillis);
 		this.metricsManager = metricsManager;
 	}
 
-	public VerificationService(int samplingRate, long messageExpiryTimeInMillis) {
-		if(samplingRate > 100 || samplingRate < 1) {
+	public VerificationService(int samplingPercentage, long messageExpiryTimeInMillis) {
+		if(samplingPercentage > 100 || samplingPercentage < 1) {
 			throw new VerificationServiceException("Sampling rate should be between 1 (inclusive) and 100 (inclusive)");
 		}
-		this.samplingRate = samplingRate;
+		this.samplingPercentage = samplingPercentage;
 
 		if(messageExpiryTimeInMillis < 0) {
 			throw new VerificationServiceException("Message Expiry Time (In Millis) should be greater than 0");
@@ -62,7 +62,7 @@ public class VerificationService {
 	}
 
 	public boolean toConsider() {
-		return ThreadLocalRandom.current().nextInt(1, samplingRate + 1) < samplingRate;
+		return ThreadLocalRandom.current().nextInt(1, samplingPercentage + 1) < samplingPercentage;
 	}
 
 	public PublicKey getPublicKey(String url) throws IOException, GeneralSecurityException {
