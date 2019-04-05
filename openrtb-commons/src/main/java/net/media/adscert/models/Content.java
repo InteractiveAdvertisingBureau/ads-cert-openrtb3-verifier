@@ -1,5 +1,8 @@
 package net.media.adscert.models;
 
+import java.util.Collection;
+import java.util.Map;
+
 public class Content {
 
   private String id;
@@ -12,8 +15,8 @@ public class Content {
   private String album;
   private String isrc;
   private String url;
-  private String[] cat;
-  private Integer cattax;
+  private Collection<String> cat;
+  private Integer cattax = 2;
   private Integer prodq;
   private Integer context;
   private String rating;
@@ -26,8 +29,8 @@ public class Content {
   private String lang;
   private Integer embed;
   private Producer producer;
-  private Data[] data;
-  private Ext ext;
+  private Collection<Data> data;
+  private Map<String, Object> ext;
 
   public String getId() {
     return this.id;
@@ -69,7 +72,7 @@ public class Content {
     return this.url;
   }
 
-  public String[] getCat() {
+  public Collection<String> getCat() {
     return this.cat;
   }
 
@@ -125,11 +128,11 @@ public class Content {
     return this.producer;
   }
 
-  public Data[] getData() {
+  public Collection<Data> getData() {
     return this.data;
   }
 
-  public Ext getExt() {
+  public Map<String, Object> getExt() {
     return this.ext;
   }
 
@@ -173,7 +176,7 @@ public class Content {
     this.url = url;
   }
 
-  public void setCat(String[] cat) {
+  public void setCat(Collection<String> cat) {
     this.cat = cat;
   }
 
@@ -229,11 +232,11 @@ public class Content {
     this.producer = producer;
   }
 
-  public void setData(Data[] data) {
+  public void setData(Collection<Data> data) {
     this.data = data;
   }
 
-  public void setExt(Ext ext) {
+  public void setExt(Map<String, Object> ext) {
     this.ext = ext;
   }
 }

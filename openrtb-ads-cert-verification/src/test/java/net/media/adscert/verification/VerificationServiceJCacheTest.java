@@ -71,7 +71,8 @@ public class VerificationServiceJCacheTest {
         }
       });
     VerificationServiceJCache service = new VerificationServiceJCache(cache, 100, 400l, metricsManager);
-    OpenRTB openRTB = TestUtil.getOpenRTBObject();
+    TestUtil testUtil = new TestUtil();
+    OpenRTB openRTB = testUtil.getOpenRTBObject();
     openRTB.getRequest().getSource().setCert("ads1.cert");
     String digest = DigestUtil.getDigest(openRTB);
 
@@ -94,7 +95,7 @@ public class VerificationServiceJCacheTest {
     Assert.assertTrue(service.verifyRequest(openRTB, false));
 
     // Testing message expiry
-    openRTB.getRequest().getSource().setTs(System.currentTimeMillis());
+    openRTB.getRequest().getSource().setTs((int)System.currentTimeMillis());
     Thread.sleep(500l);
 
     try {
