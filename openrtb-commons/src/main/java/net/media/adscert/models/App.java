@@ -1,34 +1,39 @@
 package net.media.adscert.models;
 
+import java.util.Collection;
+import java.util.Map;
+
 public class App extends DistributionChannel {
 
+  private static final Integer DEFAULT_PAID = 0;
+
   private String domain;
-  private String[] cat;
-  private String[] sectcat;
-  private String[] pagecat;
-  private Integer cattax;
+  private Collection<String> cat;
+  private Collection<String> sectcat;
+  private Collection<String> pagecat;
+  private Integer cattax = 2;
   private Integer privpolicy;
   private String keywords;
   private String bundle;
   private String storeid;
   private String storeurl;
   private String ver;
-  private Integer paid;
-  private Ext ext;
+  private Integer paid = DEFAULT_PAID;
+  private Map<String, Object> ext;
 
   public String getDomain() {
     return this.domain;
   }
 
-  public String[] getCat() {
+  public Collection<String> getCat() {
     return this.cat;
   }
 
-  public String[] getSectcat() {
+  public Collection<String> getSectcat() {
     return this.sectcat;
   }
 
-  public String[] getPagecat() {
+  public Collection<String> getPagecat() {
     return this.pagecat;
   }
 
@@ -64,7 +69,7 @@ public class App extends DistributionChannel {
     return this.paid;
   }
 
-  public Ext getExt() {
+  public Map<String, Object> getExt() {
     return this.ext;
   }
 
@@ -72,15 +77,15 @@ public class App extends DistributionChannel {
     this.domain = domain;
   }
 
-  public void setCat(String[] cat) {
+  public void setCat(Collection<String> cat) {
     this.cat = cat;
   }
 
-  public void setSectcat(String[] sectcat) {
+  public void setSectcat(Collection<String> sectcat) {
     this.sectcat = sectcat;
   }
 
-  public void setPagecat(String[] pagecat) {
+  public void setPagecat(Collection<String> pagecat) {
     this.pagecat = pagecat;
   }
 
@@ -116,7 +121,7 @@ public class App extends DistributionChannel {
     this.paid = paid;
   }
 
-  public void setExt(Ext ext) {
+  public void setExt(Map<String, Object> ext) {
     this.ext = ext;
   }
 }
