@@ -4,12 +4,12 @@ Ad Fraud has always been a big problem in the ad industry. Inventory spoofing is
 
 ## How ads.cert works?
 
- - The publisher or the signing authority maintains the private key 
+ - The publisher or the signing authority maintains the private key
  - A small set of essential fields (DsMap) and values in the request is used to generate the digest
  - The Signing Service generates the Digital Signature (ds) using the digest and the private key
  - The request is sent to the Exchanges/DSPs including the Digital Signature, DsMap and other fields
  - The Signature Verification Service creates a new digest from the request it receives using the fields present in the DsMap and the respective values
- - The digest and the public key (hosted on publisher domain) are then used to verify the Digital Signature present in the OpenRTB request using ECDSA SHA 256 algorithm 
+ - The digest and the public key (hosted on publisher domain) are then used to verify the Digital Signature present in the OpenRTB request using ECDSA SHA 256 algorithm
 
 ![N|Solid](flow.png)
 
@@ -28,14 +28,14 @@ To allow for fast-track on-boarding for ads.cert, media.net is offering the veri
 
  - Digital Signature Verification (via OpenRTB 3.0 object or Digest or Map of key-values)
  - Support for Sampling
- - Support for Message Expiry checks 
- - Support for Offline Verification 
- - Hooks for reporting 
+ - Support for Message Expiry checks
+ - Support for Offline Verification
+ - Hooks for reporting
  - Support for in-memory caching to minimize latencies
 
 ## Usage
 
-Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The class VerificationService is thread-safe and can be used as a singleton. 
+Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The class VerificationService is thread-safe and can be used as a singleton.
 
 ## Features
 
@@ -71,11 +71,12 @@ int samplingPercentage = 50; // Sampling Percentage is 50.
 long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
 VerificationService serviceWithCustomSamplingAndExpiry = new VerificationService(samplingPercentage, messageExpiryTimeInMillis, metricsManager);
 ```
- ![N|Solid](ads-cert-non-cache.png)
- 
+
+ Refer to the sequence diagram in the wiki here: [Non Cache Sequence Diagram](https://github.com/media-net/ads-cert-openrtb3-verifier/wiki/Sequence-Diagrams#non-cache)
+
 ### Cache
 
-We have also provided the functionality to fetch and cache the Public Keys for different domains,  saving time required for verification. Cache will expire after a preconfigured time (default 30 days). Two different cache implementations, using JCache and Guava, are provided for VerificationService. The corresponding classes are ``` VerificationServiceJCache ``` and ``` VerificationServiceGuavaCache ```. 
+We have also provided the functionality to fetch and cache the Public Keys for different domains,  saving time required for verification. Cache will expire after a preconfigured time (default 30 days). Two different cache implementations, using JCache and Guava, are provided for VerificationService. The corresponding classes are ``` VerificationServiceJCache ``` and ``` VerificationServiceGuavaCache ```.
 
 Additionally, default implementations for both caches are also provided. You can either use them or pass your own cache object to the constructor.
 
@@ -95,7 +96,7 @@ VerificationServiceJCache service = new VerificationServiceJCache(cache);
 int samplingPercentage = 50; // Sampling Percentage is 50.
 VerificationServiceJCache serviceWithCustomSampling = new VerificationServiceJCache(cache, samplingPercentage);
 
-// with custom message expiry 
+// with custom message expiry
 long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
 VerificationServiceJCache serviceWithCustomSamplingAndExpiry = new VerificationServiceJCache(cache, samplingPercentage, messageExpiryTimeInMillis);
 
@@ -104,7 +105,8 @@ MetricsManager metricsManager = new MetricsManager();
 VerificationServiceJCache serviceWithMetricSupport = new VerificationServiceJCache(cache, samplingPercentage, messageExpiryTimeInMillis, metricsManager);
 ```
 
-![N|Solid](ads-cert-jcache.png)
+Refer to the sequence diagram in the wiki here: [JSR 107 Cache Sequence Diagram](https://github.com/media-net/ads-cert-openrtb3-verifier/wiki/Sequence-Diagrams#jsr-107-cache)
+
 ***Guava:***
 
 ```java
@@ -120,7 +122,7 @@ VerificationServiceGuavaCache service = new VerificationServiceGuavaCache(cache)
 int samplingPercentage = 50; // Sampling Percentage is 50.
 VerificationServiceGuavaCache serviceWithCustomSampling = new VerificationServiceJCache(cache, samplingPercentage);
 
-// with custom message expiry 
+// with custom message expiry
 long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
 VerificationServiceGuavaCache serviceWithCustomSamplingAndExpiry = new VerificationServiceJCache(cache, samplingPercentage, messageExpiryTimeInMillis);
 
@@ -129,9 +131,9 @@ MetricsManager metricsManager = new MetricsManager();
 VerificationServiceGuavaCache serviceWithMetricSupport = new VerificationServiceGuavaCache(cache, samplingPercentage, messageExpiryTimeInMillis, metricsManager);
 ```
 
-![N|Solid](ads-cert-guava.png)
+Refer to the sequence diagram in the wiki here: [GUAVA Cache Sequence Diagram](https://github.com/media-net/ads-cert-openrtb3-verifier/wiki/Sequence-Diagrams#guava-cache)
 
-Both the default cache builders have default values set for fields. For example, one can write ``` DefaultGuavaCacheBuilder.newBuilder().build() ``` 
+Both the default cache builders have default values set for fields. For example, one can write ``` DefaultGuavaCacheBuilder.newBuilder().build() ```
 and it will return a cache created with parameters set to default values.
 
 
