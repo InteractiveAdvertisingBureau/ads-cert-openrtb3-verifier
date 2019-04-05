@@ -9,7 +9,7 @@ Ad Fraud has always been a big problem in the ad industry. Inventory spoofing is
  - The Signing Service generates the Digital Signature (ds) using the digest and the private key
  - The request is sent to the Exchanges/DSPs including the Digital Signature, DsMap and other fields
  - The Signature Verification Service creates a new digest from the request it receives using the fields present in the DsMap and the respective values
- - The digest and the public key (hosted on publisher domain) are then used to verify the Digital Signature present in the OpenRTB request
+ - The digest and the public key (hosted on publisher domain) are then used to verify the Digital Signature present in the OpenRTB request using ECDSA SHA 256 algorithm 
 
 ![N|Solid](flow.png)
 
