@@ -17,16 +17,14 @@ Read about Ads.Cert - Signed Bid Requests here: [IAB Ads.Cert](https://github.co
 
 ## Goal of this library:
 
-To allow for fast-track on-boarding for ads.cert, media.net is offering the verification service as an open-source solution.
-
-## Features:
+To allow for fast-track on-boarding for ads.cert, media.net is offering the verification service as an open-source solution. Following are the features supported:
 
  - Digital Signature Verification (via OpenRTB 3.0 object or Digest or Map of key-values)
- - Support for Sampling
- - Support for Message Expiry checks
- - Support for Offline Verification
- - Hooks for reporting
- - Support for in-memory caching to minimize latencies
+ - Sampling
+ - Message Expiry checks
+ - Offline Verification
+ - Reporting hooks
+ - In-memory caching to minimize latencies
 
 ## Usage
 
