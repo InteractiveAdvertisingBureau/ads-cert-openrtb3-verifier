@@ -143,5 +143,17 @@ Bulk verification can be performed by passing the path to the input file contain
 FileVerificationService.verify("input.txt", "output.txt");
 ```
 
+## Exception Handling
+
+| Scenario | Exception | Comment
+| ------ | ------ | ------ |
+| openrtb.request.source.digest == null | InvalidDataException: OpenRtb.source.digest: may not be null | Raised only in debug mode |
+| validation of dsmap in Open RTB fails | InvalidDataException: OpenRtb.source.dsmap: bad dsmap provided | Raised only when the verification is run on open RTB object |
+| dsmap validation fails when executed only on map of fields to values | InvalidDataException: bad dsmap provided | Raised only when the verification is run on the map of fields to values |
+| Message has expired | ProcessException: Message has expired. Time Difference (in millis):... |
+| openrtb == null | InvalidDataException: OpenRTB object is null |
+| openrtb.request == null | InvalidDataException: OpenRTB.Request object is null |
+| openrtb.request.source == null | InvalidDataException: OpenRTB.Request.Source is null |
+
 ## Requirements
 Java 8
