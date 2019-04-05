@@ -15,14 +15,9 @@ Ad Fraud has always been a big problem in the ad industry. Inventory spoofing is
 
 Read about Ads.Cert - Signed Bid Requests here: [IAB Ads.Cert](https://github.com/InteractiveAdvertisingBureau/openrtb/blob/master/ads.cert:%20Signed%20Bid%20Requests%201.0%20BETA.md)
 
-
 ## Goal of this library:
 
-To allow for fast-track on-boarding for ads.cert, media.net is offering the verification service as an open-source solution. The below features are supported. This service can be used for verification of the digital signature in OpenRTB requests.
-
-## Assumptions
- - Comments in the ads.cert file are not supported
- - Metric collection and reporting are not supported in debug mode (i.e. when the supplied digest is used for verification instead of creating it)  
+To allow for fast-track on-boarding for ads.cert, media.net is offering the verification service as an open-source solution.
 
 ## Features:
 
@@ -76,9 +71,9 @@ VerificationService serviceWithCustomSamplingAndExpiry = new VerificationService
 
 ### Cache
 
-We have also provided the functionality to fetch and cache the Public Keys for different domains,  saving time required for verification. Cache will expire after a preconfigured time (default 30 days). Two different cache implementations, using JCache and Guava, are provided for VerificationService. The corresponding classes are ``` VerificationServiceJCache ``` and ``` VerificationServiceGuavaCache ```.
+We have also provided the functionality to fetch and cache the Public Keys for different domains, thus saving time required for verification. Cache will expire after a preconfigured time (default 30 days). Two different cache implementations, using JCache and Guava, are provided for VerificationService. The corresponding classes are ``` VerificationServiceJCache ``` and ``` VerificationServiceGuavaCache ```.
 
-Additionally, default implementations for both caches are also provided. You can either use them or pass your own cache object to the constructor.
+Additionally, default implementations for both caches are also provided. Either can be used or a custom cache object can be passed to the constructor.
 
 ***JCache:***
 
@@ -144,6 +139,10 @@ Bulk verification can be performed by passing the path to the input file contain
 ```java
 FileVerificationService.verify("input.txt", "output.txt");
 ```
+
+## Assumptions
+ - Comments in the ads.cert file are not supported
+ - Metric collection and reporting are not supported in debug mode (i.e. when the supplied digest is used for verification instead of creating it)
 
 ## Exception Handling
 
