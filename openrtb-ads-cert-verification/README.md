@@ -125,6 +125,8 @@ MetricsManager metricsManager = new MetricsManager();
 VerificationServiceGuavaCache serviceWithMetricSupport = new VerificationServiceGuavaCache(cache, samplingPercentage, messageExpiryTimeInMillis, metricsManager);
 ```
 
+![N|Solid](ads-cert-guava.png)
+
 Both the default cache builders have default values set for fields. For example, one can write ``` DefaultGuavaCacheBuilder.newBuilder().build() ``` 
 and it will return a cache created with parameters set to default values.
 
@@ -139,10 +141,3 @@ FileVerificationService.verify("input.txt", "output.txt");
 
 ## Requirements
 Java 8
-
-
-
-
-
-
-
