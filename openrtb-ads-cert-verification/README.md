@@ -20,6 +20,9 @@ Read about Ads.Cert - Signed Bid Requests here: [IAB Ads.Cert](https://github.co
 
 To allow for fast-track on-boarding for ads.cert, media.net is offering the verification service as an open-source solution. The below features are supported. This service can be used for verification of the digital signature in OpenRTB requests.
 
+## Assumptions
+ - Comments in the ads.cert file are not supported
+ - Metric collection and reporting are not supported in debug mode (i.e. when the supplied digest is used for verification instead of creating it)  
 
 ## Features:
 
