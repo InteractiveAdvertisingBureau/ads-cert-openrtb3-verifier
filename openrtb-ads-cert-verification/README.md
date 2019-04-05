@@ -101,6 +101,7 @@ MetricsManager metricsManager = new MetricsManager();
 VerificationServiceJCache serviceWithMetricSupport = new VerificationServiceJCache(cache, samplingPercentage, messageExpiryTimeInMillis, metricsManager);
 ```
 
+![N|Solid](ads-cert-jcache.png)
 ***Guava:***
 
 ```java
