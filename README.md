@@ -73,8 +73,8 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    ***Note:***
    Only the following fields are supported in this approach:
    
-   | Key | Spec    | Object         | Example Value  |
-   |------------------|---------|----------------|----------------|
+   | Key | Spec    | Object         | Example Value  | Comments
+   |------------------|---------|----------------|----------------|----------------|
    | tid              | OpenRTB | Source         | ABC7E92FBD6A   |
    | ts               | OpenRTB | Source         |                |
    | cert             | OpenRTB | Source         | ads-cert.1.txt |
@@ -86,8 +86,8 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    | ipv6             | AdCOM   | Device         |                |
    | ifa              | AdCOM   | Device         |                |
    | ua               | AdCOM   | Device         |                |
-   | w                | AdCOM   | VideoPlacement | 480            |
-   | h                | AdCOM   | VideoPlacement | 360            |
+   | w                | AdCOM   | VideoPlacement | 480            | The video placement under first item is considered. |
+   | h                | AdCOM   | VideoPlacement | 360            | The video placement under first item is considered. | 
 
 ## Features
 
@@ -107,7 +107,8 @@ Support has also been provided to optionally check message expiry. The timestamp
 ```java
 int samplingPercentage = 50; // Sampling Percentage is 50.
 long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
-new VerificationService(samplingPercentage, messageExpiryTimeInMillis).verifyRequest(openRTB, debug, publicKey, checkMessageExpiry);
+VerificationService service = new VerificationService(samplingPercentage, messageExpiryTimeInMillis);
+service.verifyRequest(openRTB, debug, checkMessageExpiry);
 ```
 
 ### Metrics and Reporting
@@ -123,6 +124,7 @@ int samplingPercentage = 50; // Sampling Percentage is 50.
 long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
 VerificationService serviceWithCustomSamplingAndExpiry = new VerificationService(samplingPercentage, messageExpiryTimeInMillis, metricsManager);
 ```
+``` MetricsManager ``` has a method, ``` pushMetrics() ``` which accepts a map (where key is the dsMap entry) and status (whose valid values are "success" and "failure"). It is this method that is internally referred during verification. Refer ``` MetricsManager.java ``` for sample implementation. Note that the map will contain all the entries of dsMap.
 
  Refer to the sequence diagram in the wiki here: [Non Cache Sequence Diagram](https://github.com/media-net/ads-cert-openrtb3-verifier/wiki/Sequence-Diagrams#non-cache)
 
