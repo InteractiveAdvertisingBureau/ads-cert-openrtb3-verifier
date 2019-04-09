@@ -11,7 +11,7 @@ Ad Fraud has always been a big problem in the ad industry. Inventory spoofing is
  - The Signature Verification Service creates a new digest from the request it receives using the fields present in the DsMap and the respective values
  - The digest and the public key (hosted on publisher domain) are then used to verify the Digital Signature present in the OpenRTB request using ECDSA SHA 256 algorithm
 
-![N|Solid](flow.png)
+![N|Solid](openrtb-ads-cert-verification/flow.png)
 
 Read about Ads.Cert - Signed Bid Requests here: [IAB Ads.Cert](https://github.com/InteractiveAdvertisingBureau/openrtb/blob/master/ads.cert:%20Signed%20Bid%20Requests%201.0%20BETA.md)
 
