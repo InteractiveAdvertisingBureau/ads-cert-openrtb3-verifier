@@ -50,6 +50,7 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
     ```
     
  - Verification via key-value map of fields
+   
    In this case, the entire open RTB object need not be created. Simply pass, in a map, values against field names for creating digest and running verification. Along with this map, dsMap must be passed to enforce the order in which the fields from the map will be processed.
    ```java
    Map<String, String> map = new LinkedHashMap<>(); 
