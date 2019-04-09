@@ -62,7 +62,8 @@ public class VerificationServiceGuavaCacheTest {
 					Assert.fail(e.getMessage());
 				}
 			});
-		OpenRTB openRTB = TestUtil.getOpenRTBObject();
+		TestUtil testUtil = new TestUtil();
+		OpenRTB openRTB = testUtil.getOpenRTBObject();
 		openRTB.getRequest().getSource().setCert("ads1.cert");
 		String digest = DigestUtil.getDigest(openRTB);
 		openRTB.getRequest().getSource().setDs(SignatureUtil.signMessage(keyPair1.getPrivate(), digest));

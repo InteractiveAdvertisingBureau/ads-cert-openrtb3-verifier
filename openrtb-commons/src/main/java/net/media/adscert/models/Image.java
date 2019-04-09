@@ -1,6 +1,5 @@
 package net.media.adscert.models;
 
-
 public class Image {
 
   private String url;
