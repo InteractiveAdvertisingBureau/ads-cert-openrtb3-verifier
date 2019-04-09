@@ -8,7 +8,6 @@
     <artifactId>openrtb-ads-cert</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>openrtb-ads-cert-server</module>
         <module>openrtb-ads-cert-verification</module>
         <module>openrtb-commons</module>
     </modules>
