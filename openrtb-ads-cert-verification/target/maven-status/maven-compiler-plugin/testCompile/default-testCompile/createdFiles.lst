@@ -1,7 +1,0 @@
-META-INF/CompilerHints
-net/media/adscert/verification/VerificationServiceJCacheTest.class
-META-INF/BenchmarkList
-net/media/adscert/verification/VerificationServiceGuavaCacheTest.class
-net/media/adscert/verification/TestUtil.class
-net/media/adscert/verification/VerificationServiceTest.class
-net/media/adscert/verification/VerificationServiceJCacheTest$1.class
