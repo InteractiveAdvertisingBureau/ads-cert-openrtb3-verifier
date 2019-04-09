@@ -73,7 +73,7 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    ***Note:***
    Only the following fields are supported in this approach:
    
-   | Key | Spec    | Object         | Example Value  |
+   | Key | Spec    | Object         | Example Value  | Comments
    |------------------|---------|----------------|----------------|
    | tid              | OpenRTB | Source         | ABC7E92FBD6A   |
    | ts               | OpenRTB | Source         |                |
@@ -86,8 +86,8 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    | ipv6             | AdCOM   | Device         |                |
    | ifa              | AdCOM   | Device         |                |
    | ua               | AdCOM   | Device         |                |
-   | w                | AdCOM   | VideoPlacement | 480            |
-   | h                | AdCOM   | VideoPlacement | 360            |
+   | w                | AdCOM   | VideoPlacement | 480            | The video placement under first item is considered. |
+   | h                | AdCOM   | VideoPlacement | 360            | The video placement under first item is considered. | 
 
 ## Features
 
