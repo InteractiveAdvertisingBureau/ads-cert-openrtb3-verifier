@@ -107,7 +107,8 @@ Support has also been provided to optionally check message expiry. The timestamp
 ```java
 int samplingPercentage = 50; // Sampling Percentage is 50.
 long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
-new VerificationService(samplingPercentage, messageExpiryTimeInMillis).verifyRequest(openRTB, debug, publicKey, checkMessageExpiry);
+VerificationService service = new VerificationService(samplingPercentage, messageExpiryTimeInMillis);
+service.verifyRequest(openRTB, debug, publicKey, checkMessageExpiry);
 ```
 
 ### Metrics and Reporting
