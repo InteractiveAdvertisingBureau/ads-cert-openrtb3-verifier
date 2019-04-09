@@ -67,7 +67,7 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
     VerificationService service = new VerificationService();
     service.verifyRequest(publicKeyUrl, map, ds, map);
     
-    // Approach 3: If Public Key object is already available for verification.
+    // Approach 2: If Public Key object is already available for verification.
     service.verifyRequest(publicKey, map, ds, map);
    ```
    ***Note:***
