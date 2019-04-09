@@ -118,15 +118,26 @@ public class VerificationService {
 	 * @throws InvalidDataException if the parameters are null or empty
 	 * @throws ProcessException if an exception is thrown during the verification process
 	 */
-	private Boolean verifyRequest(String publicKeyURL,
+	public Boolean verifyRequest(String publicKeyURL,
 															 String dsMap,
 															 String ds,
 															 Map<String, Object> digestFieldMap) throws InvalidDataException, ProcessException {
-		if (publicKeyURL == null || publicKeyURL.isEmpty()) {
-			throw new InvalidDataException("Filename of certificate is empty");
+		boolean status = false;
+		try {
+			if (publicKeyURL == null || publicKeyURL.isEmpty()) {
+				throw new InvalidDataException("Filename of certificate is empty");
+			}
+			String digest = DigestUtil.getDigestFromDsMap(dsMap, digestFieldMap);
+			status = verifyRequest(publicKeyURL, ds, digest);
+			return status;
+		} catch (Exception e) {
+			status = false;
+			throw new ProcessException(e);
+		} finally{
+			if(digestFieldMap != null) {
+				metricsManager.pushMetrics(digestFieldMap, status ? "success" : "failed");
+			}
 		}
-		String digest = DigestUtil.getDigestFromDsMap(dsMap, digestFieldMap);
-		return verifyRequest(publicKeyURL, ds, digest);
 	}
 
 	/**

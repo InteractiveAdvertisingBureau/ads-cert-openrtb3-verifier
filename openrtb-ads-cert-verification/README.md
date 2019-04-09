@@ -30,6 +30,64 @@ To allow for fast-track on-boarding for ads.cert, media.net is offering the veri
 
 Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The class VerificationService is thread-safe and can be used as a singleton.
 
+### Examples
+
+ - Verification via Open RTB object
+    ```java
+    OpenRTB openRTB = ...  // Construct open RTB object 
+ 
+    // Approach 1: Non-Debug Mode (Digest will be created using fields present 
+    // in dsMap present at openrtb.request.source.dsmap).
+    VerificationService service = new VerificationService();
+    service.verifyRequest(openRTB); // or service.verifyRequest(openRTB, true);
+ 
+    // Approach 2: Debug Mode: Digest present at openrtb.request.source.digest
+    // will be used. DsMap will not be used for digest creation.
+    service.verifyRequest(openRTB, false);
+ 
+    // Approach 3: If Public Key object is already available for verification.
+    service.verifyRequest(openRTB, false, publicKey);
+    ```
+    
+ - Verification via key-value map of fields
+   In this case, the entire open RTB object need not be created. Simply pass, in a map, values against field names for creating digest and running verification. Along with this map, dsMap must be passed to enforce the order in which the fields from the map will be processed.
+   ```java
+   Map<String, String> map = new LinkedHashMap<>(); 
+   // Put values
+    map.put("domain", "newsite.com");
+    map.put("ft", "d");
+    map.put("tid", "ABC7E92FBD6A");
+ 
+    String dsMap = "domain=&ft=&tid=";
+    String publicKeyUrl = "http://www.newsite.com/ads.cert";
+    String ds = ... // digital signature to be verified.
+    
+    // Approach 1: Using Public Key URL.
+    VerificationService service = new VerificationService();
+    service.verifyRequest(publicKeyUrl, map, ds, map);
+    
+    // Approach 3: If Public Key object is already available for verification.
+    service.verifyRequest(publicKey, map, ds, map);
+   ```
+   ***Note:***
+   Only the following fields are supported in this approach:
+   
+   | Field/Param Name | Spec    | Object         | Example Value  |
+   |------------------|---------|----------------|----------------|
+   | tid              | OpenRTB | Source         | ABC7E92FBD6A   |
+   | ts               | OpenRTB | Source         |                |
+   | cert             | OpenRTB | Source         | ads-cert.1.txt |
+   | domain           | AdCOM   | Site           | newsite.com    |
+   | bundle           | AdCOM   | App            |                |
+   | consent          | AdCOM   | User           |                |
+   | ft               | AdCOM   | -              | vd             |
+   | ip               | AdCOM   | Device         | 192.168.1.1    |
+   | ipv6             | AdCOM   | Device         |                |
+   | ifa              | AdCOM   | Device         |                |
+   | ua               | AdCOM   | Device         |                |
+   | w                | AdCOM   | VideoPlacement | 480            |
+   | h                | AdCOM   | VideoPlacement | 360            |
+
 ## Features
 
 ### Sampling
@@ -48,7 +106,7 @@ Support has also been provided to optionally check message expiry. The timestamp
 ```java
 int samplingPercentage = 50; // Sampling Percentage is 50.
 long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
-new VerificationService(samplingPercentage, messageExpiryTimeInMillis).verifyRequest(openRTB, debug, publicKey, checkMessageExpiry
+new VerificationService(samplingPercentage, messageExpiryTimeInMillis).verifyRequest(openRTB, debug, publicKey, checkMessageExpiry);
 ```
 
 ### Metrics and Reporting
