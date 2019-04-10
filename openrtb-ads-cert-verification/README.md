@@ -155,6 +155,8 @@ MetricsManager metricsManager = new MetricsManager();
 VerificationServiceJCache serviceWithMetricSupport = new VerificationServiceJCache(cache, samplingPercentage, messageExpiryTimeInMillis, metricsManager);
 ```
 
+Closing ``` Cache ``` and ``` CacheManager ``` is the responsibility of the user.
+
 ***Guava:***
 
 ```java
