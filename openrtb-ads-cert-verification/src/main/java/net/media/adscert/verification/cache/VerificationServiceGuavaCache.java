@@ -4,7 +4,7 @@ import com.google.common.cache.Cache;
 import net.media.adscert.exceptions.InvalidDataException;
 import net.media.adscert.exceptions.ProcessException;
 import net.media.adscert.utils.SignatureUtil;
-import net.media.adscert.verification.MetricsManager;
+import net.media.adscert.verification.metrics.MetricsManager;
 
 import java.security.PublicKey;
 import java.util.concurrent.Callable;

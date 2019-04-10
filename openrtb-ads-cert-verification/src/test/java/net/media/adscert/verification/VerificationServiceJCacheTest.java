@@ -6,6 +6,7 @@ import net.media.adscert.utils.DigestUtil;
 import net.media.adscert.utils.SignatureUtil;
 import net.media.adscert.verification.cache.DefaultJCacheBuilder;
 import net.media.adscert.verification.cache.VerificationServiceJCache;
+import net.media.adscert.verification.metrics.MetricsManager;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -52,21 +53,16 @@ public class VerificationServiceJCacheTest {
           return null;
         }
       }).build();
-    MetricsManager metricsManager = new MetricsManager();
-    metricsManager.setJsonHandler(
-      json -> {
-        try {
-          ObjectMapper objectMapper = new ObjectMapper();
-          final Map map = objectMapper.readValue(json, Map.class);
-          assertTrue(map.size() == 4);
-          assertTrue(map.get("domain").toString().equals("newsite.com"));
-          assertTrue(map.get("ft").toString().equals("d"));
-          assertTrue(map.get("tid").toString().equals("ABC7E92FBD6A"));
-          assertTrue(map.get("status").toString().equals("success"));
-        } catch (IOException e) {
-          Assert.fail(e.getMessage());
-        }
-      });
+    MetricsManager metricsManager = new MetricsManager() {
+      @Override
+      public void pushMetrics(Map<String, Object> metricsMap, String status, String failureMessage) {
+        assertTrue(metricsMap.size() == 3);
+        assertTrue(metricsMap.get("domain").toString().equals("newsite.com"));
+        assertTrue(metricsMap.get("ft").toString().equals("d"));
+        assertTrue(metricsMap.get("tid").toString().equals("ABC7E92FBD6A"));
+        assertTrue(status.equals("success"));
+      }
+    };
     VerificationServiceJCache service = new VerificationServiceJCache(cache, 100, 400l, metricsManager);
     TestUtil testUtil = new TestUtil();
     OpenRTB openRTB = testUtil.getOpenRTBObject();

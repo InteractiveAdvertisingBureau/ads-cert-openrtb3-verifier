@@ -1,7 +1,7 @@
 package net.media.adscert.verification.cache;
 
 import net.media.adscert.exceptions.ProcessException;
-import net.media.adscert.verification.MetricsManager;
+import net.media.adscert.verification.metrics.MetricsManager;
 
 import javax.cache.Cache;
 import java.security.PublicKey;

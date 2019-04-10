@@ -7,7 +7,8 @@ import net.media.adscert.models.OpenRTB;
 import net.media.adscert.models.Source;
 import net.media.adscert.utils.DigestUtil;
 import net.media.adscert.utils.SignatureUtil;
-import net.media.adscert.verification.MetricsManager;
+import net.media.adscert.verification.metrics.BlackholeMetricsManager;
+import net.media.adscert.verification.metrics.MetricsManager;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -28,9 +29,11 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class VerificationService {
 
+	public static final String SUCCESS = "success";
+	public static final String FAILED = "failed";
 	protected int samplingPercentage = 100;
 	protected long messageExpiryTimeInMillis = 1000l;
-	protected MetricsManager metricsManager = new MetricsManager();
+	protected MetricsManager metricsManager = new BlackholeMetricsManager();
 
 	public VerificationService() {
 	}
@@ -62,7 +65,7 @@ public class VerificationService {
 	}
 
 	public boolean toConsider() {
-		return ThreadLocalRandom.current().nextInt(1, 101) < samplingPercentage;
+		return ThreadLocalRandom.current().nextInt(1, 101) <= samplingPercentage;
 	}
 
 	public PublicKey getPublicKey(String url) throws IOException, GeneralSecurityException {
@@ -119,23 +122,27 @@ public class VerificationService {
 															 String ds,
 															 Map<String, Object> digestFieldMap) throws InvalidDataException, ProcessException {
 		boolean status = false;
+		String message = null;
 		try {
 			if(!toConsider()) {
 				return true;
 			}
 
 			if (publicKeyURL == null || publicKeyURL.isEmpty()) {
-				throw new InvalidDataException("Filename of certificate is empty");
+				message = "Filename of certificate is empty";
+				status = false;
+				throw new InvalidDataException(message);
 			}
 			String digest = DigestUtil.getDigestFromDsMap(dsMap, digestFieldMap);
 			status = verifyRequest(publicKeyURL, ds, digest);
 			return status;
 		} catch (Exception e) {
 			status = false;
-			throw new ProcessException(e);
+			message = e.getMessage();
+			throw new ProcessException(e.getMessage(), e.getCause());
 		} finally{
 			if(digestFieldMap != null) {
-				metricsManager.pushMetrics(digestFieldMap, status ? "success" : "failed");
+				metricsManager.pushMetrics(digestFieldMap, status ? SUCCESS : FAILED, message);
 			}
 		}
 	}
@@ -157,23 +164,26 @@ public class VerificationService {
 															 String dsMap,
 															 String ds,
 															 Map<String, Object> digestFieldMap) throws InvalidDataException, ProcessException {
+		String status = FAILED;
+		String message = null;
 		if (dsMap == null || dsMap.isEmpty()) {
-			throw new InvalidDataException("DsMap is null");
+			message = "DsMap is null";
+			throw new InvalidDataException(message);
 		}
-		String status = "success";
 		try {
 			if(!toConsider()) {
 				return true;
 			}
 			String digest = DigestUtil.getDigestFromDsMap(dsMap, digestFieldMap);
 			boolean flag = verifyRequest(publicKey, ds, digest);
-			status = flag ? "success" : "failure";
+			status = flag ? SUCCESS : FAILED;
 			return flag;
 		} catch (Exception e) {
-			status = e.getMessage();
+			status = FAILED;
+			message = e.getMessage();
 			throw e;
 		} finally{
-			metricsManager.pushMetrics(digestFieldMap, status);
+			metricsManager.pushMetrics(digestFieldMap, status, message);
 		}
 	}
 
@@ -205,7 +215,7 @@ public class VerificationService {
 		try {
 			return SignatureUtil.verifySign(publicKey, digest, ds);
 		} catch (Exception e) {
-			throw new ProcessException("Error in verification", e);
+			throw new ProcessException("Error in verification:" + e.getMessage(), e);
 		}
 	}
 
@@ -286,9 +296,10 @@ public class VerificationService {
 															 Boolean debug,
 															 PublicKey publicKey,
 															 boolean checkMessageExpiry) throws InvalidDataException, ProcessException {
-		String status = "success";
-		boolean flag = false;
+		String status = SUCCESS;
+		String message = null;
 		Map<String, Object> map = null;
+		boolean flag = false;
 		try{
 			if(!toConsider()) {
 				return true;
@@ -296,25 +307,29 @@ public class VerificationService {
 			if(checkMessageExpiry) {
 				long diff = System.currentTimeMillis() - openRTB.getRequest().getSource().getTs();
 				if(diff > messageExpiryTimeInMillis) {
-					status = "Message has expired";
+					message = "Message has expired";
+					status = FAILED;
 					throw new ProcessException("Message has expired. Time Difference (in millis):" + diff);
 				}
 			}
 			if (openRTB == null) {
-				status = "OpenRTB object is null";
-				throw new InvalidDataException(status);
+				message = "OpenRTB object is null";
+				status = FAILED;
+				throw new InvalidDataException(message);
 			}
 
 			if (openRTB.getRequest() == null) {
-				status = "OpenRTB.Request object is null";
-				throw new InvalidDataException(status);
+				message = "OpenRTB.Request object is null";
+				status = FAILED;
+				throw new InvalidDataException(message);
 			}
 
 			Source source = openRTB.getRequest().getSource();
 
 			if (source == null) {
-				status = "OpenRTB.Request.Source is null";
-				throw new InvalidDataException(status);
+				message = "OpenRTB.Request.Source is null";
+				status = FAILED;
+				throw new InvalidDataException(message);
 			}
 			String cert  = source.getCert();
 			String domain = openRTB.getRequest().getContext().getSite().getDomain();
@@ -340,16 +355,16 @@ public class VerificationService {
 				}
 
 				flag = verifyRequest(publicKeyUrlToUse, ds, digest);
-				status = flag ? "success" : "failed";
+				status = flag ? SUCCESS : FAILED;
 				return flag;
 			}
 
 			flag = verifyRequest(publicKey, ds, digest);
-			status = flag ? "success" : "failed";
+			status = flag ? SUCCESS : FAILED;
 			return flag;
 		} finally{
 			if(map != null) {
-				metricsManager.pushMetrics(map, status);
+				metricsManager.pushMetrics(map, status, message);
 			}
 		}
 	}

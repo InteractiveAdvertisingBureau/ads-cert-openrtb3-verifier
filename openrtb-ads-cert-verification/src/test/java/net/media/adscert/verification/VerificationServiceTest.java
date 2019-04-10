@@ -5,6 +5,7 @@ import net.media.adscert.models.OpenRTB;
 import net.media.adscert.utils.DigestUtil;
 import net.media.adscert.utils.JacksonObjectMapper;
 import net.media.adscert.utils.SignatureUtil;
+import net.media.adscert.verification.metrics.MetricsManager;
 import net.media.adscert.verification.service.FileVerificationService;
 import net.media.adscert.verification.service.VerificationService;
 import org.junit.Assert;
@@ -96,21 +97,16 @@ public class VerificationServiceTest {
 
 	@Test
 	public void verifySignatureFromSpecificFields() throws NoSuchAlgorithmException, SignatureException, InvalidKeyException {
-		MetricsManager metricsManager = new MetricsManager();
-    metricsManager.setJsonHandler(
-        json -> {
-					try {
-						ObjectMapper objectMapper = new ObjectMapper();
-						final Map map = objectMapper.readValue(json, Map.class);
-						assertTrue(map.size() == 4);
-						assertTrue(map.get("domain").toString().equals("newsite.com"));
-						assertTrue(map.get("ft").toString().equals("d"));
-						assertTrue(map.get("tid").toString().equals("ABC7E92FBD6A"));
-						assertTrue(map.get("status").toString().equals("success"));
-					} catch (IOException e) {
-						Assert.fail(e.getMessage());
-					}
-				});
+		MetricsManager metricsManager = new MetricsManager() {
+			@Override
+			public void pushMetrics(Map<String, Object> metricsMap, String status, String failureMessage) {
+				assertTrue(metricsMap.size() == 3);
+				assertTrue(metricsMap.get("domain").toString().equals("newsite.com"));
+				assertTrue(metricsMap.get("ft").toString().equals("d"));
+				assertTrue(metricsMap.get("tid").toString().equals("ABC7E92FBD6A"));
+				assertTrue(status.equals("success"));
+			}
+		};
 		VerificationService verificationService = new VerificationService(100, 1000l, metricsManager);
 		KeyPair keyPair = SignatureUtil.generateKeyPair();
 		PublicKey publicKey = keyPair.getPublic();

@@ -1,16 +1,15 @@
 package net.media.adscert.verification;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import net.media.adscert.models.OpenRTB;
 import net.media.adscert.utils.DigestUtil;
 import net.media.adscert.utils.SignatureUtil;
 import net.media.adscert.verification.cache.DefaultGuavaCacheBuilder;
 import net.media.adscert.verification.cache.VerificationServiceGuavaCache;
+import net.media.adscert.verification.metrics.MetricsManager;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.security.*;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -26,7 +25,16 @@ public class VerificationServiceGuavaCacheTest {
 		final KeyPair keyPair1 = SignatureUtil.generateKeyPair();
 		final KeyPair keyPair2 = SignatureUtil.generateKeyPair();
 		final KeyPair keyPair3 = SignatureUtil.generateKeyPair();
-		MetricsManager metricsManager = new MetricsManager();
+		MetricsManager metricsManager = new MetricsManager() {
+			@Override
+			public void pushMetrics(Map<String, Object> metricsMap, String status, String failureMessage) {
+				assertTrue(metricsMap.size() == 3);
+				assertTrue(metricsMap.get("domain").toString().equals("newsite.com"));
+				assertTrue(metricsMap.get("ft").toString().equals("d"));
+				assertTrue(metricsMap.get("tid").toString().equals("ABC7E92FBD6A"));
+				assertTrue(status.equals("success"));
+			}
+		};
 
 		Cache<String, PublicKey> cache = DefaultGuavaCacheBuilder.newBuilder()
 				.setExpireAfterAccess(Duration.of(100, ChronoUnit.MILLIS))
@@ -48,20 +56,6 @@ public class VerificationServiceGuavaCacheTest {
 			}
 		}, metricsManager);
 
-		metricsManager.setJsonHandler(
-			json -> {
-				try {
-					ObjectMapper objectMapper = new ObjectMapper();
-					final Map map = objectMapper.readValue(json, Map.class);
-					assertTrue(map.size() == 4);
-					assertTrue(map.get("domain").toString().equals("newsite.com"));
-					assertTrue(map.get("ft").toString().equals("d"));
-					assertTrue(map.get("tid").toString().equals("ABC7E92FBD6A"));
-					assertTrue(map.get("status").toString().equals("success"));
-				} catch (IOException e) {
-					Assert.fail(e.getMessage());
-				}
-			});
 		TestUtil testUtil = new TestUtil();
 		OpenRTB openRTB = testUtil.getOpenRTBObject();
 		openRTB.getRequest().getSource().setCert("ads1.cert");
