@@ -94,6 +94,7 @@ MetricsManager metricsManager = new MetricsManager();
 VerificationService service = new VerificationServiceJCache(metricsManager);
 ```
 ```java
+MetricsManager metricsManager = new MetricsManager();
 // with custom sampling and message expiry time
 int metricSamplingPercentage = 50; // Sampling Percentage is 50.
 long messageExpiry = 2000l; // Value should be in milliseconds. In this case, message should be received under 2 seconds. 
