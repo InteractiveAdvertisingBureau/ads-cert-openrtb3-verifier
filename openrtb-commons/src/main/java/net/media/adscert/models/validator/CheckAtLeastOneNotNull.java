@@ -2,7 +2,10 @@ package net.media.adscert.models.validator;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
-import javax.validation.*;
+import javax.validation.Constraint;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import javax.validation.Payload;
 import java.lang.annotation.*;
 import java.util.Arrays;
 

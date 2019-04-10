@@ -2,7 +2,6 @@ package net.media.adscert.models;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 public class Media {
 

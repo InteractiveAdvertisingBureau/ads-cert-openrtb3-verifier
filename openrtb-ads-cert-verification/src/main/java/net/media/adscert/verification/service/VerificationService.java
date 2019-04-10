@@ -5,8 +5,8 @@ import net.media.adscert.exceptions.ProcessException;
 import net.media.adscert.exceptions.VerificationServiceException;
 import net.media.adscert.models.OpenRTB;
 import net.media.adscert.models.Source;
-import net.media.adscert.utils.SignatureUtil;
 import net.media.adscert.utils.DigestUtil;
+import net.media.adscert.utils.SignatureUtil;
 import net.media.adscert.verification.MetricsManager;
 
 import java.io.IOException;

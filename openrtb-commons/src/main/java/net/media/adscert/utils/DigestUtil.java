@@ -5,7 +5,6 @@ import com.google.common.base.Splitter;
 import net.media.adscert.exceptions.InvalidDataException;
 import net.media.adscert.models.OpenRTB;
 
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;

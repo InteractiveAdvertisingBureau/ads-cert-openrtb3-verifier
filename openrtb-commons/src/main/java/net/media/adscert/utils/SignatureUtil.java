@@ -5,15 +5,11 @@ import org.apache.commons.codec.binary.Base64;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

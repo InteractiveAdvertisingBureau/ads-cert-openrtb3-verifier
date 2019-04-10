@@ -1,6 +1,5 @@
 package net.media.adscert.models;
 
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Map;
 

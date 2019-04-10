@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public class Display {

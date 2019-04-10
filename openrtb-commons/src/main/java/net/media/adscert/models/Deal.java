@@ -1,11 +1,6 @@
 package net.media.adscert.models;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public class Deal {
