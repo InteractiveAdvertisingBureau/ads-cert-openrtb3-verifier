@@ -1,7 +1,5 @@
 package net.media.adscert.models;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.media.adscert.models.validator.CheckAtLeastOneNotNull;
 
 import java.util.Collection;

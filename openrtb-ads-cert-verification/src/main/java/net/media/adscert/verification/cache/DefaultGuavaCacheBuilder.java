@@ -6,8 +6,6 @@ import com.google.common.cache.CacheBuilder;
 import java.security.PublicKey;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Builder to create a ready-to-use Guava cache.

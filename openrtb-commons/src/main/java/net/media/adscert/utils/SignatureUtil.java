@@ -1,22 +1,15 @@
 package net.media.adscert.utils;
 
-import net.media.adscert.exceptions.ProcessException;
 import org.apache.commons.codec.binary.Base64;
-import org.bouncycastle.jce.ECNamedCurveTable;
-import org.bouncycastle.jce.ECPointUtil;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
-import org.bouncycastle.jce.spec.ECNamedCurveSpec;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.*;
-import java.security.interfaces.ECPublicKey;
-import java.security.spec.*;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.security.spec.ECGenParameterSpec;
+import java.security.spec.KeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

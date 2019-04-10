@@ -2,8 +2,6 @@ package net.media.adscert.verification;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.media.adscert.models.OpenRTB;
-import net.media.adscert.models.Request;
-import net.media.adscert.models.Source;
 import net.media.adscert.utils.DigestUtil;
 import net.media.adscert.utils.SignatureUtil;
 import net.media.adscert.verification.cache.DefaultJCacheBuilder;
@@ -17,7 +15,6 @@ import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 import java.io.IOException;
 import java.security.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 

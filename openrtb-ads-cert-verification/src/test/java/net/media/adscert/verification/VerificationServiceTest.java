@@ -1,31 +1,27 @@
 package net.media.adscert.verification;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.media.adscert.exceptions.VerificationServiceException;
 import net.media.adscert.models.OpenRTB;
-import net.media.adscert.models.Request;
-import net.media.adscert.models.Source;
 import net.media.adscert.utils.DigestUtil;
 import net.media.adscert.utils.JacksonObjectMapper;
 import net.media.adscert.utils.SignatureUtil;
-import net.media.adscert.verification.cache.DefaultJCacheBuilder;
-import net.media.adscert.verification.cache.VerificationServiceJCache;
 import net.media.adscert.verification.service.FileVerificationService;
 import net.media.adscert.verification.service.VerificationService;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

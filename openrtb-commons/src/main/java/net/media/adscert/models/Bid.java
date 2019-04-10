@@ -3,7 +3,6 @@ package net.media.adscert.models;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public class Bid {

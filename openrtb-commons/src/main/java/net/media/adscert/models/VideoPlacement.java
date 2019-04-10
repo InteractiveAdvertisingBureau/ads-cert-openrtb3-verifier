@@ -1,9 +1,6 @@
 package net.media.adscert.models;
 
-import lombok.Data;
-
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Map;
 

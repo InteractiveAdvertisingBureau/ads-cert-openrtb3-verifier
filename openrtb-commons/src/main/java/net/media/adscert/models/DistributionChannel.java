@@ -1,8 +1,5 @@
 package net.media.adscert.models;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.validation.constraints.NotNull;
 
 public abstract class DistributionChannel {

@@ -1,12 +1,7 @@
 package net.media.adscert.models;
 
-import lombok.Getter;
-import lombok.Setter;
-import net.media.adscert.models.validator.CheckAtLeastOneNotNull;
-
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.List;
 public class Placement {
 
   private static final Integer DEFAULT_SERVER_SIDE_AD_INSERTION = 0;
