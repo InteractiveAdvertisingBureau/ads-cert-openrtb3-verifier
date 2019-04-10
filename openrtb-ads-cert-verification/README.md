@@ -25,9 +25,9 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
     ```
  
    ```java
-    // Approach 3: If Public Key object is already available for verification.
-    boolean status = service.verifyRequest(openRTB, false, publicKey);
-    ```
+   // Approach 3: If Public Key object is already available for verification.
+   boolean status = service.verifyRequest(openRTB, false, publicKey);
+   ```
     
  - Verification via key-value map of fields
    
