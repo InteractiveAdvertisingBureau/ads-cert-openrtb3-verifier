@@ -9,18 +9,24 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
  - Verification via Open RTB object
     ```java
     OpenRTB openRTB = ...  // Construct open RTB object 
+    VerificationService service = new VerificationService();
+    ```
  
+    ```java
     // Approach 1: Non-Debug Mode (Digest will be created using fields present 
     // in dsMap present at openrtb.request.source.dsmap).
-    VerificationService service = new VerificationService();
-    service.verifyRequest(openRTB); // or service.verifyRequest(openRTB, true);
+    boolean status = service.verifyRequest(openRTB); // or service.verifyRequest(openRTB, true);
+    ```
  
+    ```java
     // Approach 2: Debug Mode: Digest present at openrtb.request.source.digest
     // will be used. DsMap will not be used for digest creation.
-    service.verifyRequest(openRTB, false);
+    boolean status = service.verifyRequest(openRTB, false);
+    ```
  
+   ```java
     // Approach 3: If Public Key object is already available for verification.
-    service.verifyRequest(openRTB, false, publicKey);
+    boolean service.verifyRequest(openRTB, false, publicKey);
     ```
     
  - Verification via key-value map of fields
@@ -37,12 +43,17 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
     String publicKeyUrl = "http://www.newsite.com/ads.cert";
     String ds = ... // digital signature to be verified.
     
-    // Approach 1: Using Public Key URL.
     VerificationService service = new VerificationService();
-    service.verifyRequest(publicKeyUrl, map, ds, map);
+    ```
+ 
+   ```java
+    // Approach 1: Using Public Key URL.
+    boolean status = service.verifyRequest(publicKeyUrl, map, ds, map);
+    ```
     
+    ```java
     // Approach 2: If Public Key object is already available for verification.
-    service.verifyRequest(publicKey, map, ds, map);
+    boolean status = service.verifyRequest(publicKey, map, ds, map);
    ```
    ***Note:***
    Only the following fields are supported in this approach:
