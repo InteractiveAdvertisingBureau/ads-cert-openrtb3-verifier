@@ -119,7 +119,6 @@ To run the code with a JSR - 107 compliant cache, a suitable dependency must be 
       <groupId>org.ehcache</groupId>
       <artifactId>ehcache</artifactId>
       <version>${version.ehcache}</version>
-      <scope>test</scope>
    </dependency>
    ```
    
