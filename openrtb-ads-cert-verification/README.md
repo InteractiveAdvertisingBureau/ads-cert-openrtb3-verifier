@@ -101,17 +101,17 @@ service.verifyRequest(openRTB, debug, checkMessageExpiry);
 A reporting hook through ``` MetricsManager ``` has been provided for collecting and pushing metrics to a suitable data sink. One can pass an implementation of ``` MetricsManager ``` to the constructor of ``` VerificationService ``` as below:
 
 ```java
-MetricsManager metricsManager = new MetricsManager();
+MetricsManager metricsManager = ....;
 VerificationService service = new VerificationServiceJCache(metricsManager);
 ```
 ```java
-MetricsManager metricsManager = new MetricsManager();
+MetricsManager metricsManager = ...;
 // with custom sampling and message expiry time
 int metricSamplingPercentage = 50; // Sampling Percentage is 50.
 long messageExpiry = 2000l; // Value should be in milliseconds. In this case, message should be received under 2 seconds. 
 VerificationService service = new VerificationService(metricSamplingPercentage, messageExpiry, metricsManager);
 ```
-``` MetricsManager ``` has a method, ``` pushMetrics() ``` which accepts a map (where key is the dsMap entry) and status (whose valid values are "success" and "failure"). It is this method that is internally referred during verification. Refer ``` MetricsManager.java ``` for sample implementation. Note that the map passed to ``` pushMetrics() ``` will contain all the entries of dsMap. Furthermore, the sample implementation of``` MetricsManager ``` also supports a sampling percentage which is *different* from that used for signature verification. Should this be not desired, the same can be dropped from the custom implementation.
+``` MetricsManager ``` has a method, ``` pushMetrics() ``` which accepts a map (where key is the metric name) and status (whose valid values are "success" and "failed"). It is this method that is internally referred during verification using dsMap. Note that the map passed to ``` pushMetrics() ``` will contain all the entries of dsMap. 
 
 
 ### Cache
