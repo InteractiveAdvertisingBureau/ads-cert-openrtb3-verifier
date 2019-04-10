@@ -35,25 +35,25 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    ```java
    Map<String, String> map = new LinkedHashMap<>(); 
    // Put values
-    map.put("domain", "newsite.com");
-    map.put("ft", "d");
-    map.put("tid", "ABC7E92FBD6A");
+   map.put("domain", "newsite.com");
+   map.put("ft", "d");
+   map.put("tid", "ABC7E92FBD6A");
  
-    String dsMap = "domain=&ft=&tid=";
-    String publicKeyUrl = "http://www.newsite.com/ads.cert";
-    String ds = ... // digital signature to be verified.
+   String dsMap = "domain=&ft=&tid=";
+   String publicKeyUrl = "http://www.newsite.com/ads.cert";
+   String ds = ... // digital signature to be verified.
     
-    VerificationService service = new VerificationService();
-    ```
+   VerificationService service = new VerificationService();
+   ```
  
    ```java
-    // Approach 1: Using Public Key URL.
-    boolean status = service.verifyRequest(publicKeyUrl, map, ds, map);
-    ```
+   // Approach 1: Using Public Key URL.
+   boolean status = service.verifyRequest(publicKeyUrl, map, ds, map);
+   ```
     
-    ```java
-    // Approach 2: If Public Key object is already available for verification.
-    boolean status = service.verifyRequest(publicKey, map, ds, map);
+   ```java
+   // Approach 2: If Public Key object is already available for verification.
+   boolean status = service.verifyRequest(publicKey, map, ds, map);
    ```
    ***Note:***
    Only the following fields are supported in this approach:
