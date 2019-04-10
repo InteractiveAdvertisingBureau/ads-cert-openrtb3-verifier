@@ -162,6 +162,9 @@ public class VerificationService {
 		}
 		String status = "success";
 		try {
+			if(!toConsider()) {
+				return true;
+			}
 			String digest = DigestUtil.getDigestFromDsMap(dsMap, digestFieldMap);
 			boolean flag = verifyRequest(publicKey, ds, digest);
 			status = flag ? "success" : "failure";
@@ -189,9 +192,6 @@ public class VerificationService {
 	private Boolean verifyRequest(PublicKey publicKey,
 															 String ds,
 															 String digest) throws InvalidDataException, ProcessException {
-		if(!toConsider()) {
-			return true;
-		}
 		if (publicKey == null) {
 			throw new InvalidDataException("Public Key is null");
 		}
