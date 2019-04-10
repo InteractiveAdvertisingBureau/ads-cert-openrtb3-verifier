@@ -42,7 +42,7 @@ public class MetricsManager {
   }
 
   public boolean toConsider() {
-    return ThreadLocalRandom.current().nextInt(1, samplingRate + 1) < samplingRate;
+    return ThreadLocalRandom.current().nextInt(1, 101) < samplingRate;
   }
 
   public void pushMetrics(Map<String, Object> metricsMap, String status) {

@@ -62,7 +62,7 @@ public class VerificationService {
 	}
 
 	public boolean toConsider() {
-		return ThreadLocalRandom.current().nextInt(1, samplingPercentage + 1) < samplingPercentage;
+		return ThreadLocalRandom.current().nextInt(1, 101) < samplingPercentage;
 	}
 
 	public PublicKey getPublicKey(String url) throws IOException, GeneralSecurityException {
@@ -84,10 +84,6 @@ public class VerificationService {
 	private Boolean verifyRequest(String publicKeyURL,
 															 String ds,
 															 String digest) throws InvalidDataException, ProcessException {
-		if(!toConsider()) {
-			return true;
-		}
-
 		if (publicKeyURL == null || publicKeyURL.isEmpty()) {
 			throw new InvalidDataException("Filename of certificate is empty");
 		}
@@ -124,6 +120,10 @@ public class VerificationService {
 															 Map<String, Object> digestFieldMap) throws InvalidDataException, ProcessException {
 		boolean status = false;
 		try {
+			if(!toConsider()) {
+				return true;
+			}
+
 			if (publicKeyURL == null || publicKeyURL.isEmpty()) {
 				throw new InvalidDataException("Filename of certificate is empty");
 			}
