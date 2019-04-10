@@ -100,7 +100,7 @@ int metricSamplingPercentage = 50; // Sampling Percentage is 50.
 long messageExpiry = 2000l; // Value should be in milliseconds. In this case, message should be received under 2 seconds. 
 VerificationService service = new VerificationService(metricSamplingPercentage, messageExpiry, metricsManager);
 ```
-``` MetricsManager ``` has a method, ``` pushMetrics() ``` which accepts a map (where key is the dsMap entry) and status (whose valid values are "success" and "failure"). It is this method that is internally referred during verification. Refer ``` MetricsManager.java ``` for sample implementation. Note that the map will contain all the entries of dsMap. Furthermore, ``` MetricsManager ``` also supports a sampling percentage which is *different* from that used for signature verification.
+``` MetricsManager ``` has a method, ``` pushMetrics() ``` which accepts a map (where key is the dsMap entry) and status (whose valid values are "success" and "failure"). It is this method that is internally referred during verification. Refer ``` MetricsManager.java ``` for sample implementation. Note that the map passed to ``` pushMetrics() ``` will contain all the entries of dsMap. Furthermore, the sample implementation of``` MetricsManager ``` also supports a sampling percentage which is *different* from that used for signature verification. Should this be not desired, the same can be dropped from the custom implementation.
 
  Refer to the sequence diagram in the wiki here: [Non Cache Sequence Diagram](https://github.com/media-net/ads-cert-openrtb3-verifier/wiki/Sequence-Diagrams#non-cache)
 
