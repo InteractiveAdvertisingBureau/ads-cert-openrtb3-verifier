@@ -96,8 +96,8 @@ VerificationService service = new VerificationServiceJCache(metricsManager);
 ```java
 // with custom sampling and message expiry time
 int metricSamplingPercentage = 50; // Sampling Percentage is 50.
-long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
-VerificationService service = new VerificationService(metricSamplingPercentage, messageExpiryTimeInMillis, metricsManager);
+long messageExpiry = 2000l; // Value should be in milliseconds. In this case, message should be received under 2 seconds. 
+VerificationService service = new VerificationService(metricSamplingPercentage, messageExpiry, metricsManager);
 ```
 ``` MetricsManager ``` has a method, ``` pushMetrics() ``` which accepts a map (where key is the dsMap entry) and status (whose valid values are "success" and "failure"). It is this method that is internally referred during verification. Refer ``` MetricsManager.java ``` for sample implementation. Note that the map will contain all the entries of dsMap.
 
