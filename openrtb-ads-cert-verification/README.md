@@ -136,6 +136,27 @@ Additionally, default implementations for both caches are also provided. Either 
 
 ***JCache:***
 
+To run the code with a JSR - 107 compliant cache, a suitable dependency must be added first. Here are a few examples:
+
+ - **EHCache**
+   ```xml
+   <dependency>
+      <groupId>org.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+      <version>${version.ehcache}</version>
+      <scope>test</scope>
+   </dependency>
+   ```
+   
+ - **Infinispan**
+   ```xml
+   <dependency>
+     <groupId>org.infinispan</groupId>
+     <artifactId>infinispan-jcache</artifactId>
+     <version>${version.infinispan}</version>
+   </dependency>
+   ```
+
 ```java
 Cache<String, PublicKey> cache = DefaultJCacheBuilder.newBuilder()
                                        .setExpiryForAccess(...)
