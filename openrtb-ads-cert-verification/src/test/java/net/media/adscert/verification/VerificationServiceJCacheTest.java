@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 public class VerificationServiceJCacheTest {
 
   @Test
-  public void test() throws NoSuchAlgorithmException, InterruptedException, SignatureException, InvalidKeyException {
+  public void test() throws NoSuchAlgorithmException, InterruptedException, SignatureException, InvalidKeyException, NoSuchProviderException, InvalidAlgorithmParameterException {
     final KeyPair keyPair1 = SignatureUtil.generateKeyPair();
     final KeyPair keyPair2 = SignatureUtil.generateKeyPair();
     final KeyPair keyPair3 = SignatureUtil.generateKeyPair();

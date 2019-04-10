@@ -12,6 +12,7 @@ import net.media.adscert.verification.cache.DefaultJCacheBuilder;
 import net.media.adscert.verification.cache.VerificationServiceJCache;
 import net.media.adscert.verification.service.FileVerificationService;
 import net.media.adscert.verification.service.VerificationService;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ public class VerificationServiceTest {
 	private ClassLoader classLoader = getClass().getClassLoader();
 
 	@Test
-	public void verifySignatureFromOpenRTBObject() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, InterruptedException {
+	public void verifySignatureFromOpenRTBObject() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, InterruptedException, NoSuchProviderException, InvalidAlgorithmParameterException {
 		VerificationService verificationService = new VerificationService(100, 500l);
 		TestUtil testUtil = new TestUtil();
 		OpenRTB openRTB = testUtil.getOpenRTBObject();
@@ -58,7 +59,7 @@ public class VerificationServiceTest {
 	}
 
 	@Test
-	public void verifySignatureFromFile() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, InterruptedException {
+	public void verifySignatureFromFile() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, InterruptedException, NoSuchProviderException, InvalidAlgorithmParameterException {
 		FileVerificationService verificationService = new FileVerificationService();
 		TestUtil testUtil = new TestUtil();
 		OpenRTB openRTB = testUtil.getOpenRTBObject();
@@ -99,7 +100,7 @@ public class VerificationServiceTest {
 	}
 
 	@Test
-	public void verifySignatureFromSpecificFields() throws NoSuchAlgorithmException, SignatureException, InvalidKeyException {
+	public void verifySignatureFromSpecificFields() throws GeneralSecurityException, IOException {
 		MetricsManager metricsManager = new MetricsManager();
     metricsManager.setJsonHandler(
         json -> {

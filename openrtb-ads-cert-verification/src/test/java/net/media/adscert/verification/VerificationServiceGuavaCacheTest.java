@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 public class VerificationServiceGuavaCacheTest {
 
 	@Test
-	public void test() throws NoSuchAlgorithmException, SignatureException, InvalidKeyException, InterruptedException {
+	public void test() throws NoSuchAlgorithmException, SignatureException, InvalidKeyException, InterruptedException, NoSuchProviderException, InvalidAlgorithmParameterException {
 		final KeyPair keyPair1 = SignatureUtil.generateKeyPair();
 		final KeyPair keyPair2 = SignatureUtil.generateKeyPair();
 		final KeyPair keyPair3 = SignatureUtil.generateKeyPair();
