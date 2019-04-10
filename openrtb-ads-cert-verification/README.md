@@ -92,15 +92,16 @@ A reporting hook through ``` MetricsManager ``` has been provided for collecting
 ```java
 MetricsManager metricsManager = new MetricsManager();
 VerificationService service = new VerificationServiceJCache(metricsManager);
-
-// with custom sampling and message expiry time
-int samplingPercentage = 50; // Sampling Percentage is 50.
-long messageExpiryTimeInMillis = 2000l; // Message should be received under 2 seconds.
-VerificationService serviceWithCustomSamplingAndExpiry = new VerificationService(samplingPercentage, messageExpiryTimeInMillis, metricsManager);
 ```
-``` MetricsManager ``` has a method, ``` pushMetrics() ``` which accepts a map (where key is the dsMap entry) and status (whose valid values are "success" and "failure"). It is this method that is internally referred during verification. Refer ``` MetricsManager.java ``` for sample implementation. Note that the map will contain all the entries of dsMap.
+```java
+MetricsManager metricsManager = new MetricsManager();
+// with custom sampling and message expiry time
+int metricSamplingPercentage = 50; // Sampling Percentage is 50.
+long messageExpiry = 2000l; // Value should be in milliseconds. In this case, message should be received under 2 seconds. 
+VerificationService service = new VerificationService(metricSamplingPercentage, messageExpiry, metricsManager);
+```
+``` MetricsManager ``` has a method, ``` pushMetrics() ``` which accepts a map (where key is the dsMap entry) and status (whose valid values are "success" and "failure"). It is this method that is internally referred during verification. Refer ``` MetricsManager.java ``` for sample implementation. Note that the map passed to ``` pushMetrics() ``` will contain all the entries of dsMap. Furthermore, the sample implementation of``` MetricsManager ``` also supports a sampling percentage which is *different* from that used for signature verification. Should this be not desired, the same can be dropped from the custom implementation.
 
- Refer to the sequence diagram in the wiki here: [Non Cache Sequence Diagram](https://github.com/media-net/ads-cert-openrtb3-verifier/wiki/Sequence-Diagrams#non-cache)
 
 ### Cache
 
@@ -154,7 +155,7 @@ MetricsManager metricsManager = new MetricsManager();
 VerificationServiceJCache serviceWithMetricSupport = new VerificationServiceJCache(cache, samplingPercentage, messageExpiryTimeInMillis, metricsManager);
 ```
 
-Refer to the sequence diagram in the wiki here: [JSR 107 Cache Sequence Diagram](https://github.com/media-net/ads-cert-openrtb3-verifier/wiki/Sequence-Diagrams#jsr-107-cache)
+Closing ``` Cache ``` and ``` CacheManager ``` is the responsibility of the user.
 
 ***Guava:***
 
@@ -179,8 +180,6 @@ VerificationServiceGuavaCache serviceWithCustomSamplingAndExpiry = new Verificat
 MetricsManager metricsManager = new MetricsManager();
 VerificationServiceGuavaCache serviceWithMetricSupport = new VerificationServiceGuavaCache(cache, samplingPercentage, messageExpiryTimeInMillis, metricsManager);
 ```
-
-Refer to the sequence diagram in the wiki here: [GUAVA Cache Sequence Diagram](https://github.com/media-net/ads-cert-openrtb3-verifier/wiki/Sequence-Diagrams#guava-cache)
 
 Both the default cache builders have default values set for fields. For example, one can write ``` DefaultGuavaCacheBuilder.newBuilder().build() ```
 and it will return a cache created with parameters set to default values.
