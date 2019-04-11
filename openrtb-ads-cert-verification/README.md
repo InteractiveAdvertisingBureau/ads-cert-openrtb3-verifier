@@ -57,7 +57,7 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    ```
   - ***Note:***
   
-    - ```service.verifyRequest``` can throw an exception for certain types of failure. See [Exception Handling] (Exception-Handling).
+    - ```service.verifyRequest``` can throw an exception for certain types of failure. See [Exception Handling] (#Exception-Handling).
    
     - Only the following fields are supported:
      
