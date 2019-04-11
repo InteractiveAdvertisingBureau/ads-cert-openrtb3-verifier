@@ -83,9 +83,12 @@ For instance, sampling percentage of 30 means that verification would be run for
 Please note that the default value of sampling percentage is 100, which means that all requests will be verified.
 
 ```java
-// Sampling Percentage is 30. This means that full verification would be run for only 30% of the requests!
+// Sampling Percentage is 30. This means that verification would be run for only 30% of the requests!
 int samplingPercentage = 30; 
 VerificationService service = new VerificationService(samplingPercentage);
+OpenRTB openRTB = ...  // Construct open RTB object 
+// There is a 30% chance that verification would be run! If the verification does not run, then simply true is returned.
+boolean status = service.verifyRequest(openRTB);
 ```
 
 ### Message Expiry
