@@ -78,11 +78,14 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
 
 ### Sampling
 
-Aditionally, a sampling percentage can be provided during instantiation to control the percentage of requests for which verification is desired. The default value of sampling percentage is 100, which means that all requests will be verified.
+Aditionally, a sampling percentage can be provided during instantiation to control the percentage of requests for which verification is desired. 
+For instance, sampling percentage of 30 means that verification would be run for 30% of the requests, and for the remaining 70%, service.verifyRequest will return true without running any kind of verification.
+Please note that the default value of sampling percentage is 100, which means that all requests will be verified.
 
 ```java
-int samplingPercentage = 50; // Sampling Percentage is 50.
-VerificationService service = new VerificationServiceJCache(samplingPercentage);
+// Sampling Percentage is 30. This means that full verification would be run for only 30% of the requests!
+int samplingPercentage = 30; 
+VerificationService service = new VerificationService(samplingPercentage);
 ```
 
 ### Message Expiry
