@@ -56,7 +56,9 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    boolean status = service.verifyRequest(publicKey, map, ds, map);
    ```
    ***Note:***
-   Only the following fields are supported in this approach:
+   - ```service.verifyRequest``` can throw an exception for certain types of failure. See Exception Handling.
+   
+   - Only the following fields are supported in this approach:
    
    | Key | Spec    | Object         | Example Value  | Comments
    |------------------|---------|----------------|----------------|----------------|
