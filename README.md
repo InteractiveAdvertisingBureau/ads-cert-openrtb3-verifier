@@ -28,4 +28,4 @@ To allow for fast-track on-boarding for ads.cert, media.net is offering the veri
 
 ## Usage
 
-Refer the documentation [here](openrtb-ads-cert-verification/README.md).
+Refer to the documentation [here](openrtb-ads-cert-verification/README.md).
