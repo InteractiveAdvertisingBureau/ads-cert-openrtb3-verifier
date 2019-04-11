@@ -22,8 +22,7 @@ import java.util.Map;
 
 public class Publisher {
 
-  @NotNull
-  private String id;
+  @NotNull private String id;
   private String name;
   private String domain;
   private Collection<String> cat;
@@ -34,44 +33,44 @@ public class Publisher {
     return this.id;
   }
 
-  public String getName() {
-    return this.name;
-  }
-
-  public String getDomain() {
-    return this.domain;
-  }
-
-  public Collection<String> getCat() {
-    return this.cat;
-  }
-
-  public Integer getCattax() {
-    return this.cattax;
-  }
-
-  public Map<String, Object> getExt() {
-    return this.ext;
-  }
-
   public void setId(@NotNull String id) {
     this.id = id;
+  }
+
+  public String getName() {
+    return this.name;
   }
 
   public void setName(String name) {
     this.name = name;
   }
 
+  public String getDomain() {
+    return this.domain;
+  }
+
   public void setDomain(String domain) {
     this.domain = domain;
+  }
+
+  public Collection<String> getCat() {
+    return this.cat;
   }
 
   public void setCat(Collection<String> cat) {
     this.cat = cat;
   }
 
+  public Integer getCattax() {
+    return this.cattax;
+  }
+
   public void setCattax(Integer cattax) {
     this.cattax = cattax;
+  }
+
+  public Map<String, Object> getExt() {
+    return this.ext;
   }
 
   public void setExt(Map<String, Object> ext) {

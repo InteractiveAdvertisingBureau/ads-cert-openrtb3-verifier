@@ -44,7 +44,7 @@ public class Util {
     BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
     String line;
     while ((line = rd.readLine()) != null) {
-      if(!line.isEmpty() && line.charAt(0)!='#' && line.charAt(0)!='-') {
+      if (!line.isEmpty() && line.charAt(0) != '#' && line.charAt(0) != '-') {
         result.append(line);
       }
     }
@@ -58,7 +58,7 @@ public class Util {
     BufferedReader br = new BufferedReader(new FileReader(filename));
     String line;
     while ((line = br.readLine()) != null) {
-      if(!line.isEmpty() && line.charAt(0)!='#' && line.charAt(0)!='-') {
+      if (!line.isEmpty() && line.charAt(0) != '#' && line.charAt(0) != '-') {
         strKeyPEM.append(line);
       }
     }
@@ -84,9 +84,10 @@ public class Util {
       if (classObj == BigDecimal.class) {
         return (T) new BigDecimal(value);
       }
-//      log.warn("getNumber : Unsupported class passed : '" + classObj.getName() + "' returning null");
+      //      log.warn("getNumber : Unsupported class passed : '" + classObj.getName() + "'
+      // returning null");
     } catch (NumberFormatException e) {
-//      log.warn("Exception occurred while converting, returning null", e);
+      //      log.warn("Exception occurred while converting, returning null", e);
     }
     return defaultValue;
   }

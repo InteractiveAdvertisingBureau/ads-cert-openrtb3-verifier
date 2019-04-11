@@ -16,40 +16,36 @@
 
 package net.media.adscert.models;
 
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 public class Banner {
 
-  @NotNull
-  private String img;
-  @Valid
-  private LinkAsset link;
-  private Map<String,Object> ext;
+  @NotNull private String img;
+  @Valid private LinkAsset link;
+  private Map<String, Object> ext;
 
-  public Banner() {
-  }
+  public Banner() {}
 
   public @NotNull String getImg() {
     return this.img;
-  }
-
-  public @Valid LinkAsset getLink() {
-    return this.link;
-  }
-
-  public Map<String, Object> getExt() {
-    return this.ext;
   }
 
   public void setImg(@NotNull String img) {
     this.img = img;
   }
 
+  public @Valid LinkAsset getLink() {
+    return this.link;
+  }
+
   public void setLink(@Valid LinkAsset link) {
     this.link = link;
+  }
+
+  public Map<String, Object> getExt() {
+    return this.ext;
   }
 
   public void setExt(Map<String, Object> ext) {
@@ -90,6 +86,12 @@ public class Banner {
   }
 
   public String toString() {
-    return "net.media.openrtb3.Banner(img=" + this.getImg() + ", link=" + this.getLink() + ", ext=" + this.getExt() + ")";
+    return "net.media.openrtb3.Banner(img="
+        + this.getImg()
+        + ", link="
+        + this.getLink()
+        + ", ext="
+        + this.getExt()
+        + ")";
   }
 }

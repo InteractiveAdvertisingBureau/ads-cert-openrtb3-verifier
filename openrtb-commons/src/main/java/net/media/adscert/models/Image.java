@@ -23,5 +23,4 @@ public class Image {
   private Integer h;
   private Integer type;
   private String ext;
-
 }

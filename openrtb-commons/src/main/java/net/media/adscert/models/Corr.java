@@ -16,7 +16,4 @@
 
 package net.media.adscert.models;
 
-
-public class Corr {
-
-}
+public class Corr {}

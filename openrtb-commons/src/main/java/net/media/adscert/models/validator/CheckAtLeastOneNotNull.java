@@ -38,8 +38,10 @@ public @interface CheckAtLeastOneNotNull {
 
   String[] fieldNames();
 
-  class CheckAtLeastOneNotNullValidator implements ConstraintValidator<CheckAtLeastOneNotNull, Object> {
+  class CheckAtLeastOneNotNullValidator
+      implements ConstraintValidator<CheckAtLeastOneNotNull, Object> {
     private String[] fieldNames;
+
     public void initialize(CheckAtLeastOneNotNull constraint) {
       this.fieldNames = constraint.fieldNames();
     }
@@ -49,16 +51,20 @@ public @interface CheckAtLeastOneNotNull {
         return true;
       }
       try {
-        for (String fieldName:fieldNames){
+        for (String fieldName : fieldNames) {
           Object property = PropertyUtils.getProperty(object, fieldName);
-          if (property!=null) {
+          if (property != null) {
             return true;
           }
         }
-        ValidatorErrorHandler.setErrorMessage(context, "atleast one of the following should be present: " + Arrays.toString(fieldNames));
+        ValidatorErrorHandler.setErrorMessage(
+            context,
+            "atleast one of the following should be present: " + Arrays.toString(fieldNames));
         return false;
       } catch (Exception e) {
-        ValidatorErrorHandler.setErrorMessage(context, "atleast one of the following should be present: " + Arrays.toString(fieldNames));
+        ValidatorErrorHandler.setErrorMessage(
+            context,
+            "atleast one of the following should be present: " + Arrays.toString(fieldNames));
         return false;
       }
     }

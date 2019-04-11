@@ -16,28 +16,25 @@
 
 package net.media.adscert.models;
 
-
 import javax.validation.constraints.NotNull;
 
 public class Macro {
 
-  @NotNull
-  private String key;
+  @NotNull private String key;
   private String value;
 
-  public Macro() {
-  }
+  public Macro() {}
 
   public @NotNull String getKey() {
     return this.key;
   }
 
-  public String getValue() {
-    return this.value;
-  }
-
   public void setKey(@NotNull String key) {
     this.key = key;
+  }
+
+  public String getValue() {
+    return this.value;
   }
 
   public void setValue(String value) {
@@ -75,5 +72,4 @@ public class Macro {
   public String toString() {
     return "net.media.openrtb3.Macro(key=" + this.getKey() + ", value=" + this.getValue() + ")";
   }
-
 }

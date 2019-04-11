@@ -38,99 +38,102 @@ import java.util.concurrent.TimeUnit;
  *
  * @author pranav.a
  * @author anupam.v
- *
  * @since 1.0
  */
 public class DefaultJCacheBuilder {
-	private Duration expiryForAccess = new Duration(TimeUnit.DAYS, 30);
-	private Duration expiryForCreation = new Duration(TimeUnit.DAYS, 30);
-	private Duration expiryForUpdate = new Duration(TimeUnit.DAYS, 30);
-	private CacheLoader<String, PublicKey> cacheLoader;
+  private Duration expiryForAccess = new Duration(TimeUnit.DAYS, 30);
+  private Duration expiryForCreation = new Duration(TimeUnit.DAYS, 30);
+  private Duration expiryForUpdate = new Duration(TimeUnit.DAYS, 30);
+  private CacheLoader<String, PublicKey> cacheLoader;
 
-	private DefaultJCacheBuilder() {
-		this.cacheLoader = new CacheLoader<String, PublicKey>() {
+  private DefaultJCacheBuilder() {
+    this.cacheLoader =
+        new CacheLoader<String, PublicKey>() {
 
-			@Override
-			public PublicKey load(String url) throws CacheLoaderException {
-				try {
-					return SignatureUtil.getPublicKeyFromUrl(url);
-				} catch (Exception e) {
-					throw new CacheLoaderException(e);
-				}
-			}
+          @Override
+          public PublicKey load(String url) throws CacheLoaderException {
+            try {
+              return SignatureUtil.getPublicKeyFromUrl(url);
+            } catch (Exception e) {
+              throw new CacheLoaderException(e);
+            }
+          }
 
-			@Override
-			public Map<String, PublicKey> loadAll(Iterable<? extends String> keys) throws CacheLoaderException {
-				Map<String, PublicKey> data = new HashMap<>();
-				for (String key : keys) {
-					try {
-						data.put(key, SignatureUtil.getPublicKeyFromUrl(key));
-					} catch (Exception ignored) {
+          @Override
+          public Map<String, PublicKey> loadAll(Iterable<? extends String> keys)
+              throws CacheLoaderException {
+            Map<String, PublicKey> data = new HashMap<>();
+            for (String key : keys) {
+              try {
+                data.put(key, SignatureUtil.getPublicKeyFromUrl(key));
+              } catch (Exception ignored) {
 
-					}
-				}
-				return data;
-			}
-		};
+              }
+            }
+            return data;
+          }
+        };
+  }
 
-	}
+  /**
+   * Constructs a {@link DefaultJCacheBuilder} for creating a JSR-107 compliant {@link Cache}.
+   *
+   * @return {@link DefaultJCacheBuilder}
+   */
+  public static DefaultJCacheBuilder newBuilder() {
+    return new DefaultJCacheBuilder();
+  }
 
-	/**
-	 * Constructs a {@link DefaultJCacheBuilder} for creating a JSR-107 compliant {@link Cache}.
-	 *
-	 * @return {@link DefaultJCacheBuilder}
-	 */
-	public static DefaultJCacheBuilder newBuilder() {
-		return new DefaultJCacheBuilder();
-	}
+  public DefaultJCacheBuilder setExpiryForAccess(Duration expiryForAccess) {
+    this.expiryForAccess = expiryForAccess;
+    return this;
+  }
 
-	public DefaultJCacheBuilder setExpiryForAccess(Duration expiryForAccess) {
-		this.expiryForAccess = expiryForAccess;
-		return this;
-	}
+  public DefaultJCacheBuilder setExpiryForCreation(Duration expiryForCreation) {
+    this.expiryForCreation = expiryForCreation;
+    return this;
+  }
 
-	public DefaultJCacheBuilder setExpiryForCreation(Duration expiryForCreation) {
-		this.expiryForCreation = expiryForCreation;
-		return this;
-	}
+  public DefaultJCacheBuilder setExpiryForUpdate(Duration expiryForUpdate) {
+    this.expiryForUpdate = expiryForUpdate;
+    return this;
+  }
 
-	public DefaultJCacheBuilder setExpiryForUpdate(Duration expiryForUpdate) {
-		this.expiryForUpdate = expiryForUpdate;
-		return this;
-	}
+  public DefaultJCacheBuilder setCacheLoader(CacheLoader<String, PublicKey> loader) {
+    this.cacheLoader = loader;
+    return this;
+  }
 
-	public DefaultJCacheBuilder setCacheLoader(CacheLoader<String, PublicKey> loader) {
-		this.cacheLoader = loader;
-		return this;
-	}
+  public Cache<String, PublicKey> build() {
+    CachingProvider cachingProvider = Caching.getCachingProvider();
+    CacheManager cacheManager = cachingProvider.getCacheManager();
 
+    ExpiryPolicy expiryPolicy =
+        new ExpiryPolicy() {
+          @Override
+          public Duration getExpiryForCreation() {
+            return expiryForCreation;
+          }
 
-	public Cache<String, PublicKey> build() {
-		CachingProvider cachingProvider = Caching.getCachingProvider();
-		CacheManager cacheManager = cachingProvider.getCacheManager();
+          @Override
+          public Duration getExpiryForAccess() {
+            return expiryForAccess;
+          }
 
-		ExpiryPolicy expiryPolicy = new ExpiryPolicy() {
-			@Override
-			public Duration getExpiryForCreation() {
-				return expiryForCreation;
-			}
+          @Override
+          public Duration getExpiryForUpdate() {
+            return expiryForUpdate;
+          }
+        };
 
-			@Override
-			public Duration getExpiryForAccess() {
-				return expiryForAccess;
-			}
+    final Cache<String, PublicKey> cache =
+        cacheManager.createCache(
+            "publicKeyCache",
+            new MutableConfiguration<String, PublicKey>()
+                .setReadThrough(true)
+                .setExpiryPolicyFactory(new FactoryBuilder.SingletonFactory<>(expiryPolicy))
+                .setCacheLoaderFactory(new FactoryBuilder.SingletonFactory<>(this.cacheLoader)));
 
-			@Override
-			public Duration getExpiryForUpdate() {
-				return expiryForUpdate;
-			}
-		};
-
-		final Cache<String, PublicKey> cache = cacheManager.createCache("publicKeyCache", new MutableConfiguration<String, PublicKey>()
-			.setReadThrough(true)
-			.setExpiryPolicyFactory(new FactoryBuilder.SingletonFactory<>(expiryPolicy))
-			.setCacheLoaderFactory(new FactoryBuilder.SingletonFactory<>(this.cacheLoader)));
-
-		return cache;
-	}
+    return cache;
+  }
 }

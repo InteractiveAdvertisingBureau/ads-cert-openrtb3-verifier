@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package net.media.adscert.models;
+package net.media.adscert.verification.metrics;
 
-import javax.validation.constraints.NotNull;
+import java.util.Map;
 
-/** Created by shiva.b on 14/12/18. */
-public class EventSpec {
-  @NotNull private Integer type;
-  private Integer[] method;
-  private Integer[] api;
-  private String[] jstrk;
-  private Integer wjs;
-  private String[] pxtrk;
-  private Integer wpx;
-  private Object ext;
+/**
+ * Acts as a sink for metrics by performing no operation.
+ *
+ * @author anupam verma
+ * @since 1.0
+ */
+public class BlackholeMetricsManager extends MetricsManager {
+
+  @Override
+  public void pushMetrics(Map<String, Object> metricsMap, String status, String failureMessage) {}
 }

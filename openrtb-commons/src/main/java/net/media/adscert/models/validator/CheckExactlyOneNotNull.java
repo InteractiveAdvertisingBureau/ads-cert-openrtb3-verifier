@@ -38,8 +38,10 @@ public @interface CheckExactlyOneNotNull {
 
   String[] fieldNames();
 
-  public class CheckExactlyOneNotNullValidator implements ConstraintValidator<CheckExactlyOneNotNull, Object> {
+  public class CheckExactlyOneNotNullValidator
+      implements ConstraintValidator<CheckExactlyOneNotNull, Object> {
     private String[] fieldNames;
+
     public void initialize(CheckExactlyOneNotNull constraint) {
       this.fieldNames = constraint.fieldNames();
     }
@@ -50,23 +52,27 @@ public @interface CheckExactlyOneNotNull {
       }
       boolean firstField = false;
       try {
-        for (String fieldName:fieldNames){
+        for (String fieldName : fieldNames) {
           Object property = PropertyUtils.getProperty(object, fieldName);
-          if(property!=null) {
-            if(firstField) {
-              ValidatorErrorHandler.setErrorMessage(context, "exactly one of the following should be present: " + Arrays.toString(fieldNames));
+          if (property != null) {
+            if (firstField) {
+              ValidatorErrorHandler.setErrorMessage(
+                  context,
+                  "exactly one of the following should be present: " + Arrays.toString(fieldNames));
               return false;
             }
             firstField = true;
           }
         }
-        if(firstField) {
+        if (firstField) {
           return true;
         }
-        ValidatorErrorHandler.setErrorMessage(context, "Exactly one of the following should be present: " + fieldNames);
+        ValidatorErrorHandler.setErrorMessage(
+            context, "Exactly one of the following should be present: " + fieldNames);
         return false;
       } catch (Exception e) {
-        ValidatorErrorHandler.setErrorMessage(context, "Exactly one of the following should be present: " + fieldNames);
+        ValidatorErrorHandler.setErrorMessage(
+            context, "Exactly one of the following should be present: " + fieldNames);
         return false;
       }
     }
