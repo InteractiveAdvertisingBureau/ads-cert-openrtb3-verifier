@@ -6,7 +6,7 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
 
 ### Examples
 
- - Verification via Open RTB object
+ - ***Verification via Open RTB object***
     ```java
     OpenRTB openRTB = ...  // Construct open RTB object 
     VerificationService service = new VerificationService();
@@ -29,7 +29,7 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    boolean status = service.verifyRequest(openRTB, false, publicKey);
    ```
     
- - Verification via key-value map of fields
+ - ***Verification via key-value map of fields***
    
    In this case, the entire open RTB object need not be created. Simply pass, in a map, values against field names for creating digest and running verification. Along with this map, dsMap must be passed to enforce the order in which the fields from the map will be processed.
    ```java
@@ -55,26 +55,27 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    // Approach 2: If Public Key object is already available for verification.
    boolean status = service.verifyRequest(publicKey, map, ds, map);
    ```
-   ***Note:***
+  - ***Note:***
    - ```service.verifyRequest``` can throw an exception for certain types of failure. See Exception Handling.
    
-   - Only the following fields are supported in this approach:
-   
-   | Key | Spec    | Object         | Example Value  | Comments
-   |------------------|---------|----------------|----------------|----------------|
-   | tid              | OpenRTB | Source         | ABC7E92FBD6A   |
-   | ts               | OpenRTB | Source         |                |
-   | cert             | OpenRTB | Source         | ads-cert.1.txt |
-   | domain           | AdCOM   | Site           | newsite.com    |
-   | bundle           | AdCOM   | App            |                |
-   | consent          | AdCOM   | User           |                |
-   | ft               | AdCOM   | -              | vd             |
-   | ip               | AdCOM   | Device         | 192.168.1.1    |
-   | ipv6             | AdCOM   | Device         |                |
-   | ifa              | AdCOM   | Device         |                |
-   | ua               | AdCOM   | Device         |                |
-   | w                | AdCOM   | VideoPlacement | 480            | The video placement under first item is considered. |
-   | h                | AdCOM   | VideoPlacement | 360            | The video placement under first item is considered. | 
+   - Only the following fields are supported:
+     
+     | Key | Spec    | Object         | Example Value  | Comments
+     |------------------|---------|----------------|----------------|----------------|
+     | tid              | OpenRTB | Source         | ABC7E92FBD6A   |
+     | ts               | OpenRTB | Source         |                |
+     | cert             | OpenRTB | Source         | ads-cert.1.txt |
+     | domain           | AdCOM   | Site           | newsite.com    |
+     | bundle           | AdCOM   | App            |                |
+     | consent          | AdCOM   | User           |                |
+     | ft               | AdCOM   | -              | vd             |
+     | ip               | AdCOM   | Device         | 192.168.1.1    |
+     | ipv6             | AdCOM   | Device         |                |
+     | ifa              | AdCOM   | Device         |                |
+     | ua               | AdCOM   | Device         |                |
+     | w                | AdCOM   | VideoPlacement | 480            | The video placement under first item is considered. |
+     | h                | AdCOM   | VideoPlacement | 360            | The video placement under first item is considered. | 
+     
 
 ## Features
 
