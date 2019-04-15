@@ -66,12 +66,12 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
  
    ```java
    // Approach 1: Using Public Key URL.
-   boolean status = service.verifyRequest(publicKeyUrl, map, ds, map);
+   boolean status = service.verifyRequest(publicKeyUrl, dsMap, ds, map);
    ```
     
    ```java
    // Approach 2: If Public Key object is already available for verification.
-   boolean status = service.verifyRequest(publicKey, map, ds, map);
+   boolean status = service.verifyRequest(publicKey, dsMap, ds, map);
    ```
   - ***Note:***
   
