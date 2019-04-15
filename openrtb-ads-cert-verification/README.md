@@ -79,21 +79,21 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    
    - Only the following fields are supported:
      
-    | Key | Spec    | Object         | Example Value  | Comments |
-    |------------------|---------|----------------|----------------|----------------|
-    | tid              | OpenRTB | Source         | ABC7E92FBD6A   |
-    | ts               | OpenRTB | Source         |                |
-    | cert             | OpenRTB | Source         | ads-cert.1.txt |
-    | domain           | AdCOM   | Site           | newsite.com    |
-    | bundle           | AdCOM   | App            |                |
-    | consent          | AdCOM   | User           |                |
-    | ft               | AdCOM   | -              | vd             |
-    | ip               | AdCOM   | Device         | 192.168.1.1    |
-    | ipv6             | AdCOM   | Device         |                |
-    | ifa              | AdCOM   | Device         |                |
-    | ua               | AdCOM   | Device         |                |
-    | w                | AdCOM   | VideoPlacement | 480            | The video placement under first item is considered. |
-    | h                | AdCOM   | VideoPlacement | 360            | The video placement under first item is considered. | 
+   | Key | Spec    | Object         | Example Value  | Comments |
+   |------------------|---------|----------------|----------------|----------------|
+   | tid              | OpenRTB | Source         | ABC7E92FBD6A   |
+   | ts               | OpenRTB | Source         |                |
+   | cert             | OpenRTB | Source         | ads-cert.1.txt |
+   | domain           | AdCOM   | Site           | newsite.com    |
+   | bundle           | AdCOM   | App            |                |
+   | consent          | AdCOM   | User           |                |
+   | ft               | AdCOM   | -              | vd             |
+   | ip               | AdCOM   | Device         | 192.168.1.1    |
+   | ipv6             | AdCOM   | Device         |                |
+   | ifa              | AdCOM   | Device         |                |
+   | ua               | AdCOM   | Device         |                |
+   | w                | AdCOM   | VideoPlacement | 480            | The video placement under first item is considered. |
+   | h                | AdCOM   | VideoPlacement | 360            | The video placement under first item is considered. | 
      
 
 ## Features
