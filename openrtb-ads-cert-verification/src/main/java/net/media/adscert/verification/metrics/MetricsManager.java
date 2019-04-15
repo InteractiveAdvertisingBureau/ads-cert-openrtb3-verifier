@@ -14,29 +14,25 @@
  * limitations under the License.
  */
 
-package net.media.adscert.models;
+package net.media.adscert.verification.metrics;
 
-import javax.validation.constraints.NotNull;
 import java.util.Map;
 
-/** Created by shiva.b on 14/12/18. */
-public class TitleAssetFormat {
-  @NotNull private Integer len;
-  private Map<String, Object> ext;
+/**
+ * This class can be used to handle metrics in the form of key-value pairs.
+ *
+ * @author anupam verma
+ * @since 1.0
+ */
+public abstract class MetricsManager {
 
-  public @NotNull Integer getLen() {
-    return this.len;
-  }
-
-  public void setLen(@NotNull Integer len) {
-    this.len = len;
-  }
-
-  public Map<String, Object> getExt() {
-    return this.ext;
-  }
-
-  public void setExt(Map<String, Object> ext) {
-    this.ext = ext;
-  }
+  /**
+   * Handles metric names and their values.
+   *
+   * @param metricsMap map of metrics and their corresponding values
+   * @param status status of the operation against which the metric was generated
+   * @param failureMessage message highlighting the failure cause
+   */
+  public abstract void pushMetrics(
+      Map<String, Object> metricsMap, String status, String failureMessage);
 }

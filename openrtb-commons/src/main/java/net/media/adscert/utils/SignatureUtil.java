@@ -1,3 +1,19 @@
+/*
+ * Copyright © 2019 - present. MEDIA.NET ADVERTISING FZ-LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.media.adscert.utils;
 
 import net.media.adscert.exceptions.ProcessException;
@@ -23,7 +39,6 @@ import java.security.spec.X509EncodedKeySpec;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SignatureUtil {
-
   /**
    * Generate new KeyPair for ECDSA( prime256v1 )
    */
@@ -34,9 +49,7 @@ public class SignatureUtil {
     return keyGen.generateKeyPair();
   }
 
-  /**
-   * Store key
-   */
+  /** Store key */
   public static void saveKeyPair(String path, KeyPair keyPair) throws IOException {
     PrivateKey privateKey = keyPair.getPrivate();
     PublicKey publicKey = keyPair.getPublic();
@@ -55,10 +68,9 @@ public class SignatureUtil {
     fos.close();
   }
 
-  /**
-   * Create a digital signature using private key
-   */
-  public static String signMessage(PrivateKey priv, String message) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+  /** Create a digital signature using private key */
+  public static String signMessage(PrivateKey priv, String message)
+      throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
     Signature ecdsaSign = Signature.getInstance("SHA256withECDSA");
     ecdsaSign.initSign(priv);
     ecdsaSign.update(message.getBytes(UTF_8));
@@ -66,34 +78,35 @@ public class SignatureUtil {
     return new String(Base64.encodeBase64(sign), UTF_8);
   }
 
-  /**
-   * Now that all the data to be signed has been read in, generate a
-   * signature for it
-   */
+  /** Now that all the data to be signed has been read in, generate a signature for it */
   public static boolean verifySign(PublicKey pub, String digest, String signature)
-    throws ProcessException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+      throws ProcessException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
     Signature ecdsaVerify = Signature.getInstance("SHA256withECDSA");
     ecdsaVerify.initVerify(pub);
     ecdsaVerify.update(digest.getBytes(UTF_8));
     return ecdsaVerify.verify(Base64.decodeBase64(signature.getBytes(UTF_8)));
   }
 
-  public static PublicKey getPublicKeyFromUrl(String urlName) throws IOException, GeneralSecurityException {
+  public static PublicKey getPublicKeyFromUrl(String urlName)
+      throws IOException, GeneralSecurityException {
     String publicKeyPEM = Util.getKeyFromUrl(urlName);
     return getPublicKeyFromString(publicKeyPEM);
   }
 
-  public static PrivateKey getPrivateKey(String filename) throws IOException, GeneralSecurityException {
+  public static PrivateKey getPrivateKey(String filename)
+      throws IOException, GeneralSecurityException {
     String privateKeyPEM = Util.getKeyFromFile(filename);
     return getPrivateKeyFromString(privateKeyPEM);
   }
 
-  public static PublicKey getPublicKey(String filename) throws IOException, GeneralSecurityException {
+  public static PublicKey getPublicKey(String filename)
+      throws IOException, GeneralSecurityException {
     String publicKeyPEM = Util.getKeyFromFile(filename);
     return getPublicKeyFromString(publicKeyPEM);
   }
 
-  private static PrivateKey getPrivateKeyFromString(String privateKeyPEM) throws GeneralSecurityException {
+  private static PrivateKey getPrivateKeyFromString(String privateKeyPEM)
+      throws GeneralSecurityException {
     byte[] encoded = Base64.decodeBase64(privateKeyPEM);
 
     KeyFactory kf = KeyFactory.getInstance("EC");
@@ -101,12 +114,12 @@ public class SignatureUtil {
     return kf.generatePrivate(privKeySpec);
   }
 
-  private static PublicKey getPublicKeyFromString(String publicKeyPEM) throws GeneralSecurityException {
+  private static PublicKey getPublicKeyFromString(String publicKeyPEM)
+      throws GeneralSecurityException {
     byte[] encoded = Base64.decodeBase64(publicKeyPEM);
 
     KeyFactory kf = KeyFactory.getInstance("EC");
     KeySpec pubKeySpec = new X509EncodedKeySpec(encoded);
     return kf.generatePublic(pubKeySpec);
   }
-
 }

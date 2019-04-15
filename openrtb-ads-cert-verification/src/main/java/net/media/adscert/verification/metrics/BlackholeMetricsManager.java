@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package net.media.adscert.utils;
+package net.media.adscert.verification.metrics;
 
-public class CommonConstants {
-  public static final String JSON_CONTENT_TYPE = "application/json";
-  public static final String UTF8_CHARACTER_ENCODING = "UTF-8";
+import java.util.Map;
 
-  public static final String OPEN_RTB = "OpenRtb";
-  public static final String QUERY_PARAM_SEPERATOR = "&";
-  public static final String KEY_VALUE_SEPERATOR = "=";
-  public static final Integer MAX_REDIRECTS = 5;
+/**
+ * Acts as a sink for metrics by performing no operation.
+ *
+ * @author anupam verma
+ * @since 1.0
+ */
+public class BlackholeMetricsManager extends MetricsManager {
 
-
-  public static final String ONE = "1";
-  public static final String ZERO = "0";
-
-  public static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
-  public static final String TIME_ZONE = "UTC";
+  @Override
+  public void pushMetrics(Map<String, Object> metricsMap, String status, String failureMessage) {}
 }
