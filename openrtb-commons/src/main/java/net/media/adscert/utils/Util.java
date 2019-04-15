@@ -1,3 +1,19 @@
+/*
+ * Copyright © 2019 - present. MEDIA.NET ADVERTISING FZ-LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.media.adscert.utils;
 
 import com.google.common.primitives.Doubles;
@@ -28,7 +44,7 @@ public class Util {
     BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
     String line;
     while ((line = rd.readLine()) != null) {
-      if(!line.isEmpty() && line.charAt(0)!='#' && line.charAt(0)!='-') {
+      if (!line.isEmpty() && line.charAt(0) != '#' && line.charAt(0) != '-') {
         result.append(line);
       }
     }
@@ -42,7 +58,7 @@ public class Util {
     BufferedReader br = new BufferedReader(new FileReader(filename));
     String line;
     while ((line = br.readLine()) != null) {
-      if(!line.isEmpty() && line.charAt(0)!='#' && line.charAt(0)!='-') {
+      if (!line.isEmpty() && line.charAt(0) != '#' && line.charAt(0) != '-') {
         strKeyPEM.append(line);
       }
     }
@@ -68,9 +84,10 @@ public class Util {
       if (classObj == BigDecimal.class) {
         return (T) new BigDecimal(value);
       }
-//      log.warn("getNumber : Unsupported class passed : '" + classObj.getName() + "' returning null");
+      //      log.warn("getNumber : Unsupported class passed : '" + classObj.getName() + "'
+      // returning null");
     } catch (NumberFormatException e) {
-//      log.warn("Exception occurred while converting, returning null", e);
+      //      log.warn("Exception occurred while converting, returning null", e);
     }
     return defaultValue;
   }

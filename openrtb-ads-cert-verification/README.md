@@ -1,12 +1,30 @@
 # Verification Service for Signed Bid Requests
 
+We are already in the process of registering the library as maven repository. Till that time, the below can be used
+for openrtb-ads-cert-verification module:
+
+- In your project's pom, add the following dependency:
+
+```java
+<dependency>
+   <groupId>net.media.adscert</groupId>
+   <artifactId>openrtb-ads-cert-verification</artifactId>
+   <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+
+- Now all you need is to have its jar in your local maven repo 
+- Clone the ads-cert-openrtb3-verifier project (https://github.com/media-net/ads-cert-openrtb3-verifier)
+- Build it using maven on your system - "mvn clean install"
+- This will automatically add the jar to your local maven repo
+
 ## Usage Guidelines
 
 Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The class VerificationService is thread-safe and can be used as a singleton.
 
 ### Examples
 
- - Verification via Open RTB object
+ - ***Verification via Open RTB object***
     ```java
     OpenRTB openRTB = ...  // Construct open RTB object 
     VerificationService service = new VerificationService();
@@ -25,40 +43,43 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
     ```
  
    ```java
-    // Approach 3: If Public Key object is already available for verification.
-    boolean service.verifyRequest(openRTB, false, publicKey);
-    ```
+   // Approach 3: If Public Key object is already available for verification.
+   boolean status = service.verifyRequest(openRTB, false, publicKey);
+   ```
     
- - Verification via key-value map of fields
+ - ***Verification via key-value map of fields***
    
    In this case, the entire open RTB object need not be created. Simply pass, in a map, values against field names for creating digest and running verification. Along with this map, dsMap must be passed to enforce the order in which the fields from the map will be processed.
    ```java
    Map<String, String> map = new LinkedHashMap<>(); 
    // Put values
-    map.put("domain", "newsite.com");
-    map.put("ft", "d");
-    map.put("tid", "ABC7E92FBD6A");
+   map.put("domain", "newsite.com");
+   map.put("ft", "d");
+   map.put("tid", "ABC7E92FBD6A");
  
-    String dsMap = "domain=&ft=&tid=";
-    String publicKeyUrl = "http://www.newsite.com/ads.cert";
-    String ds = ... // digital signature to be verified.
+   String dsMap = "domain=&ft=&tid=";
+   String publicKeyUrl = "http://www.newsite.com/ads.cert";
+   String ds = ... // digital signature to be verified.
     
-    VerificationService service = new VerificationService();
-    ```
+   VerificationService service = new VerificationService();
+   ```
  
    ```java
-    // Approach 1: Using Public Key URL.
-    boolean status = service.verifyRequest(publicKeyUrl, map, ds, map);
-    ```
-    
-    ```java
-    // Approach 2: If Public Key object is already available for verification.
-    boolean status = service.verifyRequest(publicKey, map, ds, map);
+   // Approach 1: Using Public Key URL.
+   boolean status = service.verifyRequest(publicKeyUrl, dsMap, ds, map);
    ```
-   ***Note:***
-   Only the following fields are supported in this approach:
+    
+   ```java
+   // Approach 2: If Public Key object is already available for verification.
+   boolean status = service.verifyRequest(publicKey, dsMap, ds, map);
+   ```
+  ### Note
+  
+   - ```service.verifyRequest``` can throw an exception for certain types of failure. See [Exception Handling](#Exception-Handling).
    
-   | Key | Spec    | Object         | Example Value  | Comments
+   - Only the following fields are supported:
+     
+   | Key | Spec    | Object         | Example Value  | Comments |
    |------------------|---------|----------------|----------------|----------------|
    | tid              | OpenRTB | Source         | ABC7E92FBD6A   |
    | ts               | OpenRTB | Source         |                |
@@ -73,16 +94,27 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    | ua               | AdCOM   | Device         |                |
    | w                | AdCOM   | VideoPlacement | 480            | The video placement under first item is considered. |
    | h                | AdCOM   | VideoPlacement | 360            | The video placement under first item is considered. | 
+     
 
 ## Features
 
 ### Sampling
 
-Aditionally, a sampling percentage can be provided during instantiation to control the percentage of requests for which verification is desired. The default value of sampling percentage is 100, which means that all requests will be verified.
+Aditionally, a sampling percentage can be provided during instantiation to control the percentage of requests for which verification is desired. 
+For instance, sampling percentage of 30 means that verification would be run for 30% of the requests, and for the remaining 70%, service.verifyRequest will return true without running any kind of verification.
+Please note that the default value of sampling percentage is 100, which means that all requests will be verified.
 
 ```java
-int samplingPercentage = 50; // Sampling Percentage is 50.
-VerificationService service = new VerificationServiceJCache(samplingPercentage);
+// Sampling Percentage is 30. This means that verification would be run for only 30% of the requests!
+int samplingPercentage = 30; 
+
+VerificationService service = new VerificationService(samplingPercentage);
+
+OpenRTB openRTB = ...  // Construct open RTB object 
+
+// There is a 30% chance that verification would be run! 
+// If the verification does not run, then simply true is returned.
+boolean status = service.verifyRequest(openRTB);
 ```
 
 ### Message Expiry
@@ -101,17 +133,17 @@ service.verifyRequest(openRTB, debug, checkMessageExpiry);
 A reporting hook through ``` MetricsManager ``` has been provided for collecting and pushing metrics to a suitable data sink. One can pass an implementation of ``` MetricsManager ``` to the constructor of ``` VerificationService ``` as below:
 
 ```java
-MetricsManager metricsManager = new MetricsManager();
+MetricsManager metricsManager = ....;
 VerificationService service = new VerificationServiceJCache(metricsManager);
 ```
 ```java
-MetricsManager metricsManager = new MetricsManager();
+MetricsManager metricsManager = ...;
 // with custom sampling and message expiry time
-int metricSamplingPercentage = 50; // Sampling Percentage is 50.
+int samplingPercentage = 50; // Sampling Percentage is 50.
 long messageExpiry = 2000l; // Value should be in milliseconds. In this case, message should be received under 2 seconds. 
-VerificationService service = new VerificationService(metricSamplingPercentage, messageExpiry, metricsManager);
+VerificationService service = new VerificationService(samplingPercentage, messageExpiry, metricsManager);
 ```
-``` MetricsManager ``` has a method, ``` pushMetrics() ``` which accepts a map (where key is the dsMap entry) and status (whose valid values are "success" and "failure"). It is this method that is internally referred during verification. Refer ``` MetricsManager.java ``` for sample implementation. Note that the map passed to ``` pushMetrics() ``` will contain all the entries of dsMap. Furthermore, the sample implementation of``` MetricsManager ``` also supports a sampling percentage which is *different* from that used for signature verification. Should this be not desired, the same can be dropped from the custom implementation.
+``` MetricsManager ``` has a method, ``` pushMetrics() ``` which accepts a map (where key is the metric name) and status (whose valid values are "success" and "failed"). It is this method that is internally referred during verification using dsMap. Note that the map passed to ``` pushMetrics() ``` will contain all the entries of dsMap. 
 
 
 ### Cache

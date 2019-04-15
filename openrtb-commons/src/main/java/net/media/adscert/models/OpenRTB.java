@@ -1,3 +1,19 @@
+/*
+ * Copyright © 2019 - present. MEDIA.NET ADVERTISING FZ-LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.media.adscert.models;
 
 import javax.validation.Valid;
@@ -7,47 +23,44 @@ import javax.validation.constraints.NotNull;
 public class OpenRTB {
   private String ver;
   private String domainspec;
-  @NotEmpty
-  private String domainver;
-  @NotNull
-  @Valid
-  private Request request;
+  @NotEmpty private String domainver;
+  @NotNull @Valid private Request request;
   private Response response;
 
   public String getVer() {
     return this.ver;
   }
 
-  public String getDomainspec() {
-    return this.domainspec;
-  }
-
-  public @NotEmpty String getDomainver() {
-    return this.domainver;
-  }
-
-  public @NotNull @Valid Request getRequest() {
-    return this.request;
-  }
-
-  public Response getResponse() {
-    return this.response;
-  }
-
   public void setVer(String ver) {
     this.ver = ver;
+  }
+
+  public String getDomainspec() {
+    return this.domainspec;
   }
 
   public void setDomainspec(String domainspec) {
     this.domainspec = domainspec;
   }
 
+  public @NotEmpty String getDomainver() {
+    return this.domainver;
+  }
+
   public void setDomainver(@NotEmpty String domainver) {
     this.domainver = domainver;
   }
 
+  public @NotNull @Valid Request getRequest() {
+    return this.request;
+  }
+
   public void setRequest(@NotNull @Valid Request request) {
     this.request = request;
+  }
+
+  public Response getResponse() {
+    return this.response;
   }
 
   public void setResponse(Response response) {

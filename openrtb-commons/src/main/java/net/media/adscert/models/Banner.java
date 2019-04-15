@@ -1,5 +1,20 @@
-package net.media.adscert.models;
+/*
+ * Copyright © 2019 - present. MEDIA.NET ADVERTISING FZ-LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
+package net.media.adscert.models;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -7,33 +22,30 @@ import java.util.Map;
 
 public class Banner {
 
-  @NotNull
-  private String img;
-  @Valid
-  private LinkAsset link;
-  private Map<String,Object> ext;
+  @NotNull private String img;
+  @Valid private LinkAsset link;
+  private Map<String, Object> ext;
 
-  public Banner() {
-  }
+  public Banner() {}
 
   public @NotNull String getImg() {
     return this.img;
-  }
-
-  public @Valid LinkAsset getLink() {
-    return this.link;
-  }
-
-  public Map<String, Object> getExt() {
-    return this.ext;
   }
 
   public void setImg(@NotNull String img) {
     this.img = img;
   }
 
+  public @Valid LinkAsset getLink() {
+    return this.link;
+  }
+
   public void setLink(@Valid LinkAsset link) {
     this.link = link;
+  }
+
+  public Map<String, Object> getExt() {
+    return this.ext;
   }
 
   public void setExt(Map<String, Object> ext) {
@@ -74,6 +86,12 @@ public class Banner {
   }
 
   public String toString() {
-    return "net.media.openrtb3.Banner(img=" + this.getImg() + ", link=" + this.getLink() + ", ext=" + this.getExt() + ")";
+    return "net.media.openrtb3.Banner(img="
+        + this.getImg()
+        + ", link="
+        + this.getLink()
+        + ", ext="
+        + this.getExt()
+        + ")";
   }
 }
