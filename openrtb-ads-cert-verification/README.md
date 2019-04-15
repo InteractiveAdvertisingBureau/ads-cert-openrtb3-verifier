@@ -73,7 +73,7 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    // Approach 2: If Public Key object is already available for verification.
    boolean status = service.verifyRequest(publicKey, dsMap, ds, map);
    ```
-  - ***Note:***
+  ### Note
   
     - ```service.verifyRequest``` can throw an exception for certain types of failure. See [Exception Handling](#Exception-Handling).
    
