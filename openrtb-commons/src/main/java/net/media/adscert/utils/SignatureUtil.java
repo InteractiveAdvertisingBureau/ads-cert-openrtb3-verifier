@@ -5,26 +5,24 @@ import org.apache.commons.codec.binary.Base64;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.*;
-import java.security.spec.InvalidKeySpecException;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SignatureUtil {
-
-  public static void main(String[] args) throws Exception {
-//    KeyPair kp = generateKeyPair();
-//    saveKeyPair("/Users/aditya.ja/Desktop", kp);
-//    PrivateKey priv = getPrivateKey("/Users/aditya.ja/Desktop/private.txt");
-//    PublicKey pub = getPublicKey("/Users/aditya.ja/Desktop/public.txt");
-  }
 
   /**
    * Generate new KeyPair for ECDSA( prime256v1 )
@@ -95,23 +93,12 @@ public class SignatureUtil {
     return getPublicKeyFromString(publicKeyPEM);
   }
 
-  private static Key getKey(String keyPEM, Function<byte[], KeySpec> f1, Function<KeySpec, Key> f2) throws NoSuchAlgorithmException {
-    byte[] encoded = Base64.decodeBase64(keyPEM);
-
-    KeyFactory kf = KeyFactory.getInstance("EC");
-    KeySpec keySpec = f1.apply(encoded);
-    return f2.apply(keySpec);
-  }
-
   private static PrivateKey getPrivateKeyFromString(String privateKeyPEM) throws GeneralSecurityException {
-//    KeyFactory kf = KeyFactory.getInstance("EC");
-//    return (PrivateKey) getKey(privateKeyPEM, PKCS8EncodedKeySpec::new, KeyFactory::generatePrivate);
     byte[] encoded = Base64.decodeBase64(privateKeyPEM);
 
     KeyFactory kf = KeyFactory.getInstance("EC");
     KeySpec privKeySpec = new PKCS8EncodedKeySpec(encoded);
     return kf.generatePrivate(privKeySpec);
-//    return null;
   }
 
   private static PublicKey getPublicKeyFromString(String publicKeyPEM) throws GeneralSecurityException {

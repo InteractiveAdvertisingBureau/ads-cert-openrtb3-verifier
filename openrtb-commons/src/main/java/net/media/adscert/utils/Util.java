@@ -1,14 +1,20 @@
 package net.media.adscert.utils;
 
+import com.google.common.net.InternetDomainName;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
+
+import static net.media.adscert.utils.CommonConstants.MAX_REDIRECTS;
 
 public class Util {
 
@@ -23,8 +29,44 @@ public class Util {
     // Read key from url
     StringBuilder result = new StringBuilder();
     URL url = new URL(urlToRead);
-    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    final String rootDomain = InternetDomainName.from(url.getHost()).topPrivateDomain().toString();
+
+    if (!url.getProtocol().equals("https")) {
+      return null;
+    }
+
+    HttpURLConnection conn = (HttpsURLConnection) url.openConnection();
     conn.setRequestMethod("GET");
+
+    int responseCode = conn.getResponseCode();
+    int totalRedirects = 0;
+
+    while(responseCode >= 300 && responseCode < 400) {
+      totalRedirects += 1;
+
+      if (totalRedirects > MAX_REDIRECTS) {
+        return null;
+      }
+
+      String newUrlToRead = conn.getHeaderField("Location");
+      url = new URL(newUrlToRead);
+
+      if (!url.getProtocol().equals("https")) {
+        return null;
+      }
+
+      String newRootDomain = InternetDomainName.from(url.getHost()).topPrivateDomain().toString();
+      if (!newRootDomain.equals(rootDomain)) {
+        return null;
+      }
+
+      conn = (HttpsURLConnection) url.openConnection();
+      responseCode = conn.getResponseCode();
+
+    }
+    if (responseCode != HttpURLConnection.HTTP_OK) {
+      return null;
+    }
     BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
     String line;
     while ((line = rd.readLine()) != null) {
@@ -73,5 +115,11 @@ public class Util {
 //      log.warn("Exception occurred while converting, returning null", e);
     }
     return defaultValue;
+  }
+
+  public static void main(String[] args) throws IOException {
+    URL url = new URL("https://google.co.uk/");
+
+    System.out.println(InternetDomainName.from(url.getHost()).topPrivateDomain().toString());
   }
 }

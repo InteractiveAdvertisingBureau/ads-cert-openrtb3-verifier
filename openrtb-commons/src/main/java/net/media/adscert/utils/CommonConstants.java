@@ -7,6 +7,8 @@ public class CommonConstants {
   public static final String OPEN_RTB = "OpenRtb";
   public static final String QUERY_PARAM_SEPERATOR = "&";
   public static final String KEY_VALUE_SEPERATOR = "=";
+  public static final Integer MAX_REDIRECTS = 5;
+
 
   public static final String ONE = "1";
   public static final String ZERO = "0";
