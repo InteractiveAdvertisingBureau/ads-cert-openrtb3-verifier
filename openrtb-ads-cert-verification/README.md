@@ -79,7 +79,7 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
    
    - Only the following fields are supported:
      
-    | Key | Spec    | Object         | Example Value  | Comments
+    | Key | Spec    | Object         | Example Value  | Comments |
     |------------------|---------|----------------|----------------|----------------|
     | tid              | OpenRTB | Source         | ABC7E92FBD6A   |
     | ts               | OpenRTB | Source         |                |
