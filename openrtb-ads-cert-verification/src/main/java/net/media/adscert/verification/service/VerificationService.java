@@ -104,7 +104,7 @@ public class VerificationService {
    * @param publicKeyURL url of the public key of the signing authority
    * @param ds digital signature in the request
    * @param digest a string with concatenated field and value pairs (f1=v1&f2=v2)
-   * @return a boolean stating whether the verification of the signature succeeded or not
+   * @return see {@link Result}
    * @throws InvalidDataException if the parameters are null or empty
    * @throws ProcessException if an exception is thrown during the verification process
    */
@@ -139,7 +139,7 @@ public class VerificationService {
    * @param ds digital signature in the request
    * @param digestFieldMap map of fields that were used for generating the signature and their
    *     values
-   * @return a boolean stating whether the verification of the signature succeeded or not
+   * @return see {@link Result}
    * @throws InvalidDataException if the parameters are null or empty
    * @throws ProcessException if an exception is thrown during the verification process
    */
@@ -179,7 +179,7 @@ public class VerificationService {
    * @param ds digital signature in the request
    * @param digestFieldMap map of fields that were used for generating the signature and their
    *     values
-   * @return a boolean stating whether the verification of the signature succeeded or not
+   * @return see {@link Result}
    * @throws InvalidDataException if the parameters are null or empty
    * @throws ProcessException if an exception is thrown during the verification process
    */
@@ -225,7 +225,7 @@ public class VerificationService {
    * @param publicKey {@link PublicKey} of the signing authority
    * @param ds digital signature in the request
    * @param digest a string with concatenated field and value pairs (f1=v1&f2=v2)
-   * @return a boolean stating whether the verification of the signature succeeded or not
+   * @return see {@link Result}
    * @throws InvalidDataException if the parameters are null or empty
    * @throws ProcessException if an exception is thrown during the verification process
    */
@@ -249,7 +249,7 @@ public class VerificationService {
    * Verifies an {@link OpenRTB} request.
    *
    * @param openRTB {@link OpenRTB} request
-   * @return a boolean stating whether the verification of the signature succeeded or not
+   * @return see {@link Result}
    * @throws InvalidDataException if the parameters are null or empty
    * @throws ProcessException if an exception is thrown during the verification process
    */
@@ -261,7 +261,7 @@ public class VerificationService {
    * @param openRTB {@link OpenRTB} request
    * @param debug a boolean used to decide whether the digest from {@link OpenRTB} should be used or
    *     not
-   * @return a boolean stating whether the verification of the signature succeeded or not
+   * @return see {@link Result}
    * @throws InvalidDataException if the parameters are null or empty
    * @throws ProcessException if an exception is thrown during the verification process
    */
@@ -275,7 +275,7 @@ public class VerificationService {
    * @param debug a boolean used to decide whether the digest from {@link OpenRTB} should be used or
    *     not
    * @param checkMessageExpiry flag to decide whether message expiry checks be performed or not
-   * @return a boolean stating whether the verification of the signature succeeded or not
+   * @return see {@link Result}
    * @throws InvalidDataException if the parameters are null or empty
    * @throws ProcessException if an exception is thrown during the verification process
    */
@@ -287,7 +287,7 @@ public class VerificationService {
   /**
    * @param openRTB {@link OpenRTB} request
    * @param publicKey {@link PublicKey} of the signing authority
-   * @return a boolean stating whether the verification of the signature succeeded or not
+   * @return see {@link Result}
    * @throws InvalidDataException if the parameters are null or empty
    * @throws ProcessException if an exception is thrown during the verification process
    */
@@ -302,7 +302,7 @@ public class VerificationService {
    *     not
    * @param publicKey {@link PublicKey} of the signing authority
    * @param checkMessageExpiry flag to decide whether message expiry checks be performed or not
-   * @return a boolean stating whether the verification of the signature succeeded or not
+   * @return see {@link Result}
    * @throws InvalidDataException if the parameters are null or empty
    * @throws ProcessException if an exception is thrown during the verification process
    */
