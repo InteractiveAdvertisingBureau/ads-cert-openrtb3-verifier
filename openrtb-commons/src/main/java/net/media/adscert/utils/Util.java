@@ -52,6 +52,7 @@ public class Util {
     }
 
     HttpURLConnection conn = (HttpsURLConnection) url.openConnection();
+    conn.setInstanceFollowRedirects(false);
     conn.setRequestMethod("GET");
 
     int responseCode = conn.getResponseCode();
@@ -65,6 +66,7 @@ public class Util {
       }
 
       String newUrlToRead = conn.getHeaderField("Location");
+      conn.disconnect();
       url = new URL(newUrlToRead);
 
       if (!url.getProtocol().equals("https")) {
@@ -75,6 +77,7 @@ public class Util {
       if (!newRootDomain.equals(rootDomain)) {
         return null;
       }
+
 
       conn = (HttpsURLConnection) url.openConnection();
       responseCode = conn.getResponseCode();
@@ -91,6 +94,7 @@ public class Util {
       }
     }
     rd.close();
+    conn.disconnect();
     return result.toString();
   }
 
