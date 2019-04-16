@@ -20,7 +20,7 @@ for openrtb-ads-cert-verification module:
 
 ## Usage Guidelines
 
-Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The output of verification is an object of type ``` Result ``` whose field, ``` status ``` indicates whether the verification succeeded or not. Note that ``` status ``` can have any of these values- `` SUCCESS ``, `` FAILURE `` and `` SAMPLED ``. In case of `` FAILURE ``, appropriate message and exception can be retrieved from ``` message ``` and ``` exception ``` fields, respectively.
+Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The output of verification is an object of type ``` Result ``` whose field, ``` status ``` indicates whether the verification succeeded or not. Note that ``` status ``` can have any of these values- `` SUCCESS ``, `` FAILURE `` and `` SAMPLED ``. In case of `` FAILURE ``, appropriate message and exception can be retrieved from ``` message ``` and ``` exception ``` fields, respectively. For ``` status = SAMPLED ```, refer to [Sampling](#sampling)
 
 The class VerificationService is thread-safe and can be used as a singleton.
 
