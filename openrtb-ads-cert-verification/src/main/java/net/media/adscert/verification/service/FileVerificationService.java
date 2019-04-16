@@ -57,10 +57,11 @@ public class FileVerificationService {
           line -> {
             try {
               outputStream.write(
-                  ((service.verifyRequest(
+                  ((service
+                              .verifyRequest(
                                   mapper.readValue(line, OpenRTB.class), false, publicKey, false)
-                              ? "Success"
-                              : "Failed")
+                              .getStatus()
+                              .name())
                           + System.getProperty("line.separator"))
                       .getBytes());
             } catch (Exception e) {
