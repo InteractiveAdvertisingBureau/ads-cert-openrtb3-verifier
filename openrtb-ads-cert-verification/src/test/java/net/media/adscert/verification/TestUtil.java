@@ -18,17 +18,24 @@ package net.media.adscert.verification;
 
 import net.media.adscert.models.*;
 import net.media.adscert.utils.JacksonObjectMapper;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.security.*;
+import java.security.spec.ECGenParameterSpec;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TestUtil {
 
-  private ClassLoader classLoader = getClass().getClassLoader();
+  static {
+    Security.addProvider(new BouncyCastleProvider());
+  }
+
+  private static ClassLoader classLoader = TestUtil.class.getClassLoader();
 
   public static Map<String, Object> getMapOfDigestFields() {
     Map<String, Object> digestFields = new HashMap<>();
@@ -38,7 +45,7 @@ public class TestUtil {
     return digestFields;
   }
 
-  public OpenRTB getOpenRTBObject() {
+  public static OpenRTB getOpenRTBObject() {
 
     File inputFile = new File(classLoader.getResource("request").getPath() + "/request30.json");
     byte[] jsonData = new byte[0];
@@ -68,5 +75,14 @@ public class TestUtil {
     openRTB.getRequest().getContext().setSite(new Site());
     openRTB.getRequest().getContext().getSite().setDomain("newsite.com");
     return openRTB;
+  }
+
+  /** Generate new KeyPair for ECDSA( prime256v1 ) */
+  public static KeyPair generateKeyPair()
+      throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+    ECGenParameterSpec ecGenSpec = new ECGenParameterSpec("prime256v1");
+    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("ECDSA", "BC");
+    keyPairGenerator.initialize(ecGenSpec, new SecureRandom());
+    return keyPairGenerator.generateKeyPair();
   }
 }

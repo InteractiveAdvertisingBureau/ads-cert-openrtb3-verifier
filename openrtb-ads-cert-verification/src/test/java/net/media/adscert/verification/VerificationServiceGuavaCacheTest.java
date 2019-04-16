@@ -39,11 +39,10 @@ public class VerificationServiceGuavaCacheTest {
 
   @Test
   public void test()
-      throws NoSuchAlgorithmException, SignatureException, InvalidKeyException,
-          InterruptedException {
-    final KeyPair keyPair1 = SignatureUtil.generateKeyPair();
-    final KeyPair keyPair2 = SignatureUtil.generateKeyPair();
-    final KeyPair keyPair3 = SignatureUtil.generateKeyPair();
+		  throws GeneralSecurityException, InterruptedException {
+    final KeyPair keyPair1 = TestUtil.generateKeyPair();
+    final KeyPair keyPair2 = TestUtil.generateKeyPair();
+    final KeyPair keyPair3 = TestUtil.generateKeyPair();
     MetricsManager metricsManager =
         new MetricsManager() {
           @Override
@@ -80,8 +79,7 @@ public class VerificationServiceGuavaCacheTest {
                 },
             metricsManager);
 
-    TestUtil testUtil = new TestUtil();
-    OpenRTB openRTB = testUtil.getOpenRTBObject();
+    OpenRTB openRTB = TestUtil.getOpenRTBObject();
     openRTB.getRequest().getSource().setCert("ads1.cert");
     String digest = DigestUtil.getDigest(openRTB);
     openRTB
