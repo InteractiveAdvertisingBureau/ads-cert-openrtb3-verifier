@@ -16,6 +16,8 @@
 
 package net.media.adscert.verification.metrics;
 
+import net.media.adscert.verification.enums.Result;
+
 import java.util.Map;
 
 /**
@@ -27,5 +29,5 @@ import java.util.Map;
 public class BlackholeMetricsManager extends MetricsManager {
 
   @Override
-  public void pushMetrics(Map<String, Object> metricsMap, String status, String failureMessage) {}
+  public void pushMetrics(Map<String, Object> metricsMap, Result result) {}
 }

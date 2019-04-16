@@ -22,6 +22,7 @@ import net.media.adscert.utils.DigestUtil;
 import net.media.adscert.utils.SignatureUtil;
 import net.media.adscert.verification.cache.DefaultGuavaCacheBuilder;
 import net.media.adscert.verification.cache.VerificationServiceGuavaCache;
+import net.media.adscert.verification.enums.Result;
 import net.media.adscert.verification.metrics.MetricsManager;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,13 +47,12 @@ public class VerificationServiceGuavaCacheTest {
     MetricsManager metricsManager =
         new MetricsManager() {
           @Override
-          public void pushMetrics(
-              Map<String, Object> metricsMap, String status, String failureMessage) {
+          public void pushMetrics(Map<String, Object> metricsMap, Result result) {
             assertTrue(metricsMap.size() == 3);
             assertTrue(metricsMap.get("domain").toString().equals("newsite.com"));
             assertTrue(metricsMap.get("ft").toString().equals("d"));
             assertTrue(metricsMap.get("tid").toString().equals("ABC7E92FBD6A"));
-            assertTrue(status.equals("success"));
+            assertTrue(result.getStatus() == Result.Status.SUCCESS);
           }
         };
 
@@ -89,8 +89,8 @@ public class VerificationServiceGuavaCacheTest {
         .getSource()
         .setDs(SignatureUtil.signMessage(keyPair1.getPrivate(), digest));
 
-    Assert.assertTrue(service.verifyRequest(openRTB, true));
-    Assert.assertTrue(service.verifyRequest(openRTB, false));
+    Assert.assertTrue(service.verifyRequest(openRTB, true).getStatus() == Result.Status.SUCCESS);
+    Assert.assertTrue(service.verifyRequest(openRTB, false).getStatus() == Result.Status.SUCCESS);
 
     Thread.sleep(560);
 
@@ -99,8 +99,8 @@ public class VerificationServiceGuavaCacheTest {
         .getRequest()
         .getSource()
         .setDs(SignatureUtil.signMessage(keyPair2.getPrivate(), digest));
-    Assert.assertTrue(service.verifyRequest(openRTB, true));
-    Assert.assertTrue(service.verifyRequest(openRTB, false));
+    Assert.assertTrue(service.verifyRequest(openRTB, true).getStatus() == Result.Status.SUCCESS);
+    Assert.assertTrue(service.verifyRequest(openRTB, false).getStatus() == Result.Status.SUCCESS);
 
     cache.invalidateAll();
 
@@ -109,7 +109,7 @@ public class VerificationServiceGuavaCacheTest {
         .getRequest()
         .getSource()
         .setDs(SignatureUtil.signMessage(keyPair3.getPrivate(), digest));
-    Assert.assertTrue(service.verifyRequest(openRTB, true));
-    Assert.assertTrue(service.verifyRequest(openRTB, false));
+    Assert.assertTrue(service.verifyRequest(openRTB, true).getStatus() == Result.Status.SUCCESS);
+    Assert.assertTrue(service.verifyRequest(openRTB, false).getStatus() == Result.Status.SUCCESS);
   }
 }

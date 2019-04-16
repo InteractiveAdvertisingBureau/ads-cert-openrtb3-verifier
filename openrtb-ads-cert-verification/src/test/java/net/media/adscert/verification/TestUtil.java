@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TestUtil {
+
   private ClassLoader classLoader = getClass().getClassLoader();
 
   public static Map<String, Object> getMapOfDigestFields() {

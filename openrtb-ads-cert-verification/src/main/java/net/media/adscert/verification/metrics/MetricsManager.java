@@ -16,6 +16,8 @@
 
 package net.media.adscert.verification.metrics;
 
+import net.media.adscert.verification.enums.Result;
+
 import java.util.Map;
 
 /**
@@ -30,9 +32,7 @@ public abstract class MetricsManager {
    * Handles metric names and their values.
    *
    * @param metricsMap map of metrics and their corresponding values
-   * @param status status of the operation against which the metric was generated
-   * @param failureMessage message highlighting the failure cause
+   * @param result see {@link Result}
    */
-  public abstract void pushMetrics(
-      Map<String, Object> metricsMap, String status, String failureMessage);
+  public abstract void pushMetrics(Map<String, Object> metricsMap, Result result);
 }
