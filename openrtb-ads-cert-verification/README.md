@@ -1,6 +1,6 @@
 # Verification Service for Signed Bid Requests
 
-We are already in the process of registering the library as maven repository. Till that time, the below can be used
+We are already in the process of registering the library as maven repository. Until then, the below can be used
 for openrtb-ads-cert-verification module:
 
 - In your project's pom, add the following dependency:
@@ -20,7 +20,9 @@ for openrtb-ads-cert-verification module:
 
 ## Usage Guidelines
 
-Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The class VerificationService is thread-safe and can be used as a singleton.
+Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The output of verification is an object of type ``` Result ``` whose field, ``` status ``` indicates whether the verification succeeded or not. Note that ``` status ``` can have any of these values- `` SUCCESS ``, `` FAILURE `` and `` SAMPLED ``. In case of `` FAILURE ``, appropriate message and exception can be retrieved from ``` message ``` and ``` exception ``` fields, respectively.
+
+The class VerificationService is thread-safe and can be used as a singleton.
 
 ### Examples
 
@@ -33,18 +35,18 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
     ```java
     // Approach 1: Non-Debug Mode (Digest will be created using fields present 
     // in dsMap present at openrtb.request.source.dsmap).
-    boolean status = service.verifyRequest(openRTB); // or service.verifyRequest(openRTB, true);
+    Result result = service.verifyRequest(openRTB); // or service.verifyRequest(openRTB, true);
     ```
  
     ```java
     // Approach 2: Debug Mode: Digest present at openrtb.request.source.digest
     // will be used. DsMap will not be used for digest creation.
-    boolean status = service.verifyRequest(openRTB, false);
+    Result result = service.verifyRequest(openRTB, false);
     ```
  
    ```java
    // Approach 3: If Public Key object is already available for verification.
-   boolean status = service.verifyRequest(openRTB, false, publicKey);
+   Result result = service.verifyRequest(openRTB, false, publicKey);
    ```
     
  - ***Verification via key-value map of fields***
@@ -66,12 +68,12 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
  
    ```java
    // Approach 1: Using Public Key URL.
-   boolean status = service.verifyRequest(publicKeyUrl, dsMap, ds, map);
+   Result result = service.verifyRequest(publicKeyUrl, dsMap, ds, map);
    ```
     
    ```java
    // Approach 2: If Public Key object is already available for verification.
-   boolean status = service.verifyRequest(publicKey, dsMap, ds, map);
+   Result result = service.verifyRequest(publicKey, dsMap, ds, map);
    ```
   ### Note
   
@@ -101,7 +103,7 @@ Instantiate an object of ``` VerificationService ``` to access the methods for v
 ### Sampling
 
 Aditionally, a sampling percentage can be provided during instantiation to control the percentage of requests for which verification is desired. 
-For instance, sampling percentage of 30 means that verification would be run for 30% of the requests, and for the remaining 70%, service.verifyRequest will return true without running any kind of verification.
+For instance, sampling percentage of 30 means that verification would be run for 30% of the requests, and for the remaining 70%, service.verifyRequest will return ``` Result ``` with ``` status = SAMPLED ``` without running any kind of verification.
 Please note that the default value of sampling percentage is 100, which means that all requests will be verified.
 
 ```java
@@ -114,7 +116,7 @@ OpenRTB openRTB = ...  // Construct open RTB object
 
 // There is a 30% chance that verification would be run! 
 // If the verification does not run, then simply true is returned.
-boolean status = service.verifyRequest(openRTB);
+Result result = service.verifyRequest(openRTB);
 ```
 
 ### Message Expiry
