@@ -48,9 +48,8 @@ public class VerificationServiceTest {
   public void verifySignatureFromOpenRTBObject()
       throws GeneralSecurityException, InterruptedException {
     VerificationService verificationService = new VerificationService(100, 500l);
-    TestUtil testUtil = new TestUtil();
-    OpenRTB openRTB = testUtil.getOpenRTBObject();
-    KeyPair keyPair = SignatureUtil.generateKeyPair();
+    OpenRTB openRTB = TestUtil.getOpenRTBObject();
+    KeyPair keyPair = TestUtil.generateKeyPair();
     PublicKey publicKey = keyPair.getPublic();
     PrivateKey privateKey = keyPair.getPrivate();
 
@@ -74,10 +73,9 @@ public class VerificationServiceTest {
   public void verifySignatureFromFile()
       throws GeneralSecurityException {
     FileVerificationService verificationService = new FileVerificationService();
-    TestUtil testUtil = new TestUtil();
-    OpenRTB openRTB = testUtil.getOpenRTBObject();
-    OpenRTB openRTB1 = testUtil.getOpenRTBObject();
-    KeyPair keyPair = SignatureUtil.generateKeyPair();
+    OpenRTB openRTB = TestUtil.getOpenRTBObject();
+    OpenRTB openRTB1 = TestUtil.getOpenRTBObject();
+    KeyPair keyPair = TestUtil.generateKeyPair();
     PublicKey publicKey = keyPair.getPublic();
     PrivateKey privateKey = keyPair.getPrivate();
 
@@ -132,7 +130,7 @@ public class VerificationServiceTest {
           }
         };
     VerificationService verificationService = new VerificationService(100, 1000l, metricsManager);
-    KeyPair keyPair = SignatureUtil.generateKeyPair();
+    KeyPair keyPair = TestUtil.generateKeyPair();
     PublicKey publicKey = keyPair.getPublic();
     PrivateKey privateKey = keyPair.getPrivate();
 

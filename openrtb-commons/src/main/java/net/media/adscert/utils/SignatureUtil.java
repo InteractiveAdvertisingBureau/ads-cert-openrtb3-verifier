@@ -17,25 +17,19 @@
 package net.media.adscert.utils;
 
 import org.apache.commons.codec.binary.Base64;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.Security;
 import java.security.Signature;
 import java.security.SignatureException;
-import java.security.spec.ECGenParameterSpec;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -43,27 +37,6 @@ import java.security.spec.X509EncodedKeySpec;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SignatureUtil {
-
-  static {
-    Security.addProvider(new BouncyCastleProvider());
-  }
-
-  public static void main(String[] args) throws Exception {
-        KeyPair kp = generateKeyPair();
-        saveKeyPair("/home/pranava/Desktop", kp);
-    //    PrivateKey priv = getPrivateKey("/Users/aditya.ja/Desktop/private.txt");
-    //    PublicKey pub = getPublicKey("/Users/aditya.ja/Desktop/public.txt");
-  }
-
-  /** Generate new KeyPair for ECDSA( prime256v1 ) */
-  public static KeyPair generateKeyPair()
-      throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
-    ECGenParameterSpec ecGenSpec = new ECGenParameterSpec("prime256v1");
-    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("ECDSA", "BC");
-    keyPairGenerator.initialize(ecGenSpec, new SecureRandom());
-    return keyPairGenerator.generateKeyPair();
-  }
-
   /** Store key */
   public static void saveKeyPair(String path, KeyPair keyPair) throws IOException {
     PrivateKey privateKey = keyPair.getPrivate();
@@ -86,7 +59,7 @@ public class SignatureUtil {
   /** Create a digital signature using private key */
   public static String signMessage(PrivateKey priv, String message)
       throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, NoSuchProviderException {
-    Signature ecdsaSign = Signature.getInstance("SHA256withECDSA", "BC");
+    Signature ecdsaSign = Signature.getInstance("SHA256withECDSA");
     ecdsaSign.initSign(priv);
     ecdsaSign.update(message.getBytes(UTF_8));
     byte[] sign = ecdsaSign.sign();
@@ -97,7 +70,7 @@ public class SignatureUtil {
    */
   public static boolean verifySign(PublicKey pub, String digest, String signature)
       throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, NoSuchProviderException {
-    Signature ecdsaVerify = Signature.getInstance("SHA256withECDSA", "BC");
+    Signature ecdsaVerify = Signature.getInstance("SHA256withECDSA");
     ecdsaVerify.initVerify(pub);
     ecdsaVerify.update(digest.getBytes(UTF_8));
     return ecdsaVerify.verify(Base64.decodeBase64(signature.getBytes(UTF_8)));
@@ -125,7 +98,7 @@ public class SignatureUtil {
       throws GeneralSecurityException {
     byte[] encoded = Base64.decodeBase64(privateKeyPEM);
 
-    KeyFactory kf = KeyFactory.getInstance("ECDSA", "BC");
+    KeyFactory kf = KeyFactory.getInstance("EC");
     KeySpec privKeySpec = new PKCS8EncodedKeySpec(encoded);
     return kf.generatePrivate(privKeySpec);
   }
@@ -134,7 +107,7 @@ public class SignatureUtil {
       throws GeneralSecurityException {
     byte[] encoded = Base64.decodeBase64(publicKeyPEM);
 
-    KeyFactory kf = KeyFactory.getInstance("ECDSA", "BC");
+    KeyFactory kf = KeyFactory.getInstance("EC");
     KeySpec pubKeySpec = new X509EncodedKeySpec(encoded);
     return kf.generatePublic(pubKeySpec);
   }

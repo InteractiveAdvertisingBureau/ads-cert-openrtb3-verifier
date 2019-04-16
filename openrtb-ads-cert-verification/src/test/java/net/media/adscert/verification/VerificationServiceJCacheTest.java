@@ -40,9 +40,9 @@ public class VerificationServiceJCacheTest {
   @Test
   public void test()
       throws GeneralSecurityException, InterruptedException {
-    final KeyPair keyPair1 = SignatureUtil.generateKeyPair();
-    final KeyPair keyPair2 = SignatureUtil.generateKeyPair();
-    final KeyPair keyPair3 = SignatureUtil.generateKeyPair();
+    final KeyPair keyPair1 = TestUtil.generateKeyPair();
+    final KeyPair keyPair2 = TestUtil.generateKeyPair();
+    final KeyPair keyPair3 = TestUtil.generateKeyPair();
 
     final Cache<String, PublicKey> cache =
         DefaultJCacheBuilder.newBuilder()
@@ -87,8 +87,7 @@ public class VerificationServiceJCacheTest {
         };
     VerificationServiceJCache service =
         new VerificationServiceJCache(cache, 100, 400l, metricsManager);
-    TestUtil testUtil = new TestUtil();
-    OpenRTB openRTB = testUtil.getOpenRTBObject();
+    OpenRTB openRTB = TestUtil.getOpenRTBObject();
     openRTB.getRequest().getSource().setCert("ads1.cert");
     String digest = DigestUtil.getDigest(openRTB);
 
