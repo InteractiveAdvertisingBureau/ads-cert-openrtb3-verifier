@@ -21,6 +21,7 @@ import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
+import net.media.adscert.exceptions.ProcessException;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
@@ -41,14 +42,20 @@ public class Util {
     return sw.toString();
   }
 
-  public static String getKeyFromUrl(String urlToRead) throws IOException {
-    // Read key from url
-    StringBuilder result = new StringBuilder();
-    URL url = new URL(urlToRead);
-    final String rootDomain = InternetDomainName.from(url.getHost()).topPrivateDomain().toString();
+  private static String getKeyFromUrl(URL url, String rootDomain, int remainingRedirects) throws IOException {
+
+    String newRootDomain = InternetDomainName.from(url.getHost()).topPrivateDomain().toString();
+
+    if (!newRootDomain.equals(rootDomain)) {
+      throw new ProcessException("Redirection to a new domain");
+    }
+
+    if (remainingRedirects < 0) {
+      throw new ProcessException("Redirection limit is exceeded");
+    }
 
     if (!url.getProtocol().equals("https")) {
-      return null;
+      throw new ProcessException("Protocol is not https");
     }
 
     HttpURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -56,46 +63,37 @@ public class Util {
     conn.setRequestMethod("GET");
 
     int responseCode = conn.getResponseCode();
-    int totalRedirects = 0;
 
-    while(responseCode >= 300 && responseCode < 400) {
-      totalRedirects += 1;
-
-      if (totalRedirects > MAX_REDIRECTS) {
-        return null;
-      }
-
+    if (responseCode >= 300 && responseCode < 400) {
       String newUrlToRead = conn.getHeaderField("Location");
       conn.disconnect();
-      url = new URL(newUrlToRead);
-
-      if (!url.getProtocol().equals("https")) {
-        return null;
-      }
-
-      String newRootDomain = InternetDomainName.from(url.getHost()).topPrivateDomain().toString();
-      if (!newRootDomain.equals(rootDomain)) {
-        return null;
-      }
-
-
-      conn = (HttpsURLConnection) url.openConnection();
-      responseCode = conn.getResponseCode();
-
+      return getKeyFromUrl(new URL(newUrlToRead), rootDomain, remainingRedirects - 1);
     }
+
     if (responseCode != HttpURLConnection.HTTP_OK) {
-      return null;
+      throw new ProcessException("Invalid Response");
     }
-    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-    String line;
-    while ((line = rd.readLine()) != null) {
-      if (!line.isEmpty() && line.charAt(0) != '#' && line.charAt(0) != '-') {
-        result.append(line);
+
+    StringBuilder result = new StringBuilder();
+
+    try(BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+      String line;
+      while ((line = rd.readLine()) != null) {
+        if (!line.isEmpty() && line.charAt(0) != '#' && line.charAt(0) != '-') {
+          result.append(line);
+        }
       }
+    } finally {
+      conn.disconnect();
     }
-    rd.close();
-    conn.disconnect();
     return result.toString();
+  }
+
+  public static String getKeyFromUrl(String urlToRead) throws IOException {
+    // Read key from url
+    URL url = new URL(urlToRead);
+    String rootDomain = InternetDomainName.from(url.getHost()).topPrivateDomain().toString();
+    return getKeyFromUrl(url, rootDomain, MAX_REDIRECTS);
   }
 
   public static String getKeyFromFile(String filename) throws IOException {
@@ -110,28 +108,5 @@ public class Util {
     }
     br.close();
     return strKeyPEM.toString();
-  }
-
-  public static <T extends Number> T getNumber(Class<T> classObj, String value, T defaultValue) {
-    if (value == null) return defaultValue;
-    try {
-      if (classObj == Integer.class) {
-        return (T) Ints.tryParse(value);
-      }
-      if (classObj == Float.class) {
-        return (T) Floats.tryParse(value);
-      }
-      if (classObj == Double.class) {
-        return (T) Doubles.tryParse(value);
-      }
-      if (classObj == Long.class) {
-        return (T) Longs.tryParse(value);
-      }
-      if (classObj == BigDecimal.class) {
-        return (T) new BigDecimal(value);
-      }
-    } catch (NumberFormatException e) {
-    }
-    return defaultValue;
   }
 }
