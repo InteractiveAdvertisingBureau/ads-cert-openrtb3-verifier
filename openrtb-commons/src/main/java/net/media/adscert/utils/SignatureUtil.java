@@ -16,7 +16,6 @@
 
 package net.media.adscert.utils;
 
-import net.media.adscert.exceptions.ProcessException;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.FileOutputStream;
@@ -25,11 +24,10 @@ import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.KeySpec;
@@ -39,16 +37,6 @@ import java.security.spec.X509EncodedKeySpec;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SignatureUtil {
-  /**
-   * Generate new KeyPair for ECDSA( prime256v1 )
-   */
-  public static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
-    KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
-    SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-    keyGen.initialize(256, random);
-    return keyGen.generateKeyPair();
-  }
-
   /** Store key */
   public static void saveKeyPair(String path, KeyPair keyPair) throws IOException {
     PrivateKey privateKey = keyPair.getPrivate();
@@ -70,7 +58,7 @@ public class SignatureUtil {
 
   /** Create a digital signature using private key */
   public static String signMessage(PrivateKey priv, String message)
-      throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+      throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, NoSuchProviderException {
     Signature ecdsaSign = Signature.getInstance("SHA256withECDSA");
     ecdsaSign.initSign(priv);
     ecdsaSign.update(message.getBytes(UTF_8));
@@ -78,9 +66,10 @@ public class SignatureUtil {
     return new String(Base64.encodeBase64(sign), UTF_8);
   }
 
-  /** Now that all the data to be signed has been read in, generate a signature for it */
+  /** Now that all the data to be signed has been read in, generate a signature for it
+   */
   public static boolean verifySign(PublicKey pub, String digest, String signature)
-      throws ProcessException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+      throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, NoSuchProviderException {
     Signature ecdsaVerify = Signature.getInstance("SHA256withECDSA");
     ecdsaVerify.initVerify(pub);
     ecdsaVerify.update(digest.getBytes(UTF_8));

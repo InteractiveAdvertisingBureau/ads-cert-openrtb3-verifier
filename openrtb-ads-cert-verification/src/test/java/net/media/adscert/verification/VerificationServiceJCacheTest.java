@@ -21,6 +21,7 @@ import net.media.adscert.utils.DigestUtil;
 import net.media.adscert.utils.SignatureUtil;
 import net.media.adscert.verification.cache.DefaultJCacheBuilder;
 import net.media.adscert.verification.cache.VerificationServiceJCache;
+import net.media.adscert.verification.enums.Result;
 import net.media.adscert.verification.metrics.MetricsManager;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,11 +40,10 @@ public class VerificationServiceJCacheTest {
 
   @Test
   public void test()
-      throws NoSuchAlgorithmException, InterruptedException, SignatureException,
-          InvalidKeyException {
-    final KeyPair keyPair1 = SignatureUtil.generateKeyPair();
-    final KeyPair keyPair2 = SignatureUtil.generateKeyPair();
-    final KeyPair keyPair3 = SignatureUtil.generateKeyPair();
+      throws GeneralSecurityException, InterruptedException {
+    final KeyPair keyPair1 = TestUtil.generateKeyPair();
+    final KeyPair keyPair2 = TestUtil.generateKeyPair();
+    final KeyPair keyPair3 = TestUtil.generateKeyPair();
 
     final Cache<String, PublicKey> cache =
         DefaultJCacheBuilder.newBuilder()
@@ -77,19 +77,17 @@ public class VerificationServiceJCacheTest {
     MetricsManager metricsManager =
         new MetricsManager() {
           @Override
-          public void pushMetrics(
-              Map<String, Object> metricsMap, String status, String failureMessage) {
+          public void pushMetrics(Map<String, Object> metricsMap, Result result) {
             assertTrue(metricsMap.size() == 3);
             assertTrue(metricsMap.get("domain").toString().equals("newsite.com"));
             assertTrue(metricsMap.get("ft").toString().equals("d"));
             assertTrue(metricsMap.get("tid").toString().equals("ABC7E92FBD6A"));
-            assertTrue(status.equals("success"));
+            assertTrue(result.getStatus() == Result.Status.SUCCESS);
           }
         };
     VerificationServiceJCache service =
         new VerificationServiceJCache(cache, 100, 400l, metricsManager);
-    TestUtil testUtil = new TestUtil();
-    OpenRTB openRTB = testUtil.getOpenRTBObject();
+    OpenRTB openRTB = TestUtil.getOpenRTBObject();
     openRTB.getRequest().getSource().setCert("ads1.cert");
     String digest = DigestUtil.getDigest(openRTB);
 
@@ -97,8 +95,8 @@ public class VerificationServiceJCacheTest {
         .getRequest()
         .getSource()
         .setDs(SignatureUtil.signMessage(keyPair1.getPrivate(), digest));
-    Assert.assertTrue(service.verifyRequest(openRTB, true));
-    Assert.assertTrue(service.verifyRequest(openRTB, false));
+    Assert.assertTrue(service.verifyRequest(openRTB, true).getStatus() == Result.Status.SUCCESS);
+    Assert.assertTrue(service.verifyRequest(openRTB, false).getStatus() == Result.Status.SUCCESS);
 
     Thread.sleep(560);
 
@@ -107,8 +105,8 @@ public class VerificationServiceJCacheTest {
         .getRequest()
         .getSource()
         .setDs(SignatureUtil.signMessage(keyPair2.getPrivate(), digest));
-    Assert.assertTrue(service.verifyRequest(openRTB, true));
-    Assert.assertTrue(service.verifyRequest(openRTB, false));
+    Assert.assertTrue(service.verifyRequest(openRTB, true).getStatus() == Result.Status.SUCCESS);
+    Assert.assertTrue(service.verifyRequest(openRTB, false).getStatus() == Result.Status.SUCCESS);
 
     cache.clear();
 
@@ -117,19 +115,16 @@ public class VerificationServiceJCacheTest {
         .getRequest()
         .getSource()
         .setDs(SignatureUtil.signMessage(keyPair3.getPrivate(), digest));
-    Assert.assertTrue(service.verifyRequest(openRTB, true));
-    Assert.assertTrue(service.verifyRequest(openRTB, false));
+    Assert.assertTrue(service.verifyRequest(openRTB, true).getStatus() == Result.Status.SUCCESS);
+    Assert.assertTrue(service.verifyRequest(openRTB, false).getStatus() == Result.Status.SUCCESS);
 
     // Testing message expiry
     openRTB.getRequest().getSource().setTs((int) System.currentTimeMillis());
     Thread.sleep(500l);
-
-    try {
-      service.verifyRequest(openRTB, true, true);
-      service.verifyRequest(openRTB, false);
-      assertTrue("Timestamp check did not fail", false);
-    } catch (Exception e) {
-      assertTrue(true);
-    }
+    // Message expired
+    Assert.assertTrue(
+        service.verifyRequest(openRTB, true, true).getStatus() == Result.Status.FAILURE);
+    // Do not check message expiry
+    Assert.assertTrue(service.verifyRequest(openRTB, false).getStatus() == Result.Status.SUCCESS);
   }
 }
