@@ -149,6 +149,10 @@ VerificationService service = new VerificationService(samplingPercentage, messag
 ``` MetricsManager ``` has a method, ``` pushMetrics() ``` which accepts a ``` map (where key is the metric name) ``` and a ``` result ``` object whose ``` status ``` field can have values - ``` SUCCESS ```, ``` FAILURE ``` and ``` SAMPLED ```. It is this method that is internally referred during verification using dsMap. Note that the map passed to ``` pushMetrics() ``` will contain all the entries of dsMap. 
 
 
+### Redirection
+
+The library supports redirection within the same domain, and supports only https protocol for redirection. The number of redirections is restricted to 5.
+
 ### Cache
 
 We have also provided the functionality to fetch and cache the Public Keys for different domains, thus saving time required for verification. Cache will expire after a preconfigured time (default 30 days). Two different cache implementations, using JCache and Guava, are provided for VerificationService. The corresponding classes are ``` VerificationServiceJCache ``` and ``` VerificationServiceGuavaCache ```.
