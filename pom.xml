@@ -28,7 +28,7 @@
     <description>Core library offering Digital Signature Verification (via OpenRTB 3.0 object or Digest or Map of
         key-values)
     </description>
-    <url>https://github.com/media-net/openrtb3-adscert-verifier/tree/master/</url>
+    <url>https://github.com/media-net/ads-cert-openrtb3-verifier/tree/master/</url>
 
     <licenses>
         <license>
@@ -68,9 +68,9 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:git:git://github.com/media-net/openrtb3-adscert-verifier.git</connection>
-        <developerConnection>scm:git:https://github.com/media-net/openrtb3-adscert-verifier.git</developerConnection>
-        <url>https://github.com/media-net/openrtb3-adscert-verifier/tree/master</url>
+        <connection>scm:git:git://github.com/media-net/ads-cert-openrtb3-verifier.git</connection>
+        <developerConnection>scm:git:https://github.com/media-net/ads-cert-openrtb3-verifier.git</developerConnection>
+        <url>https://github.com/media-net/ads-cert-openrtb3-verifier/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 
