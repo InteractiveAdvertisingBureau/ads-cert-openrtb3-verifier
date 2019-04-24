@@ -21,18 +21,94 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.media</groupId>
-    <artifactId>openrtb-adscert-verifier</artifactId>
+    <artifactId>openrtb3-adscert-verifier</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <name>openrtb3-adscert-verifier</name>
+    <description>Core library offering Digital Signature Verification (via OpenRTB 3.0 object or Digest or Map of
+        key-values)
+    </description>
+    <url>https://github.com/media-net/openrtb3-adscert-verifier/tree/master/</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Anupam Verma</name>
+            <email>anupam.v@media.net</email>
+            <organization>Media Net</organization>
+            <organizationUrl>http://www.media.net</organizationUrl>
+        </developer>
+        <developer>
+            <name>Pranav Arora</name>
+            <email>pranav.a@media.net</email>
+            <organization>Media Net</organization>
+            <organizationUrl>http://www.media.net</organizationUrl>
+        </developer>
+    </developers>
+
+    <packaging>jar</packaging>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <scm>
+        <connection>scm:git:git://github.com/media-net/openrtb3-adscert-verifier.git</connection>
+        <developerConnection>scm:git:https://github.com/media-net/openrtb3-adscert-verifier.git</developerConnection>
+        <url>https://github.com/media-net/openrtb3-adscert-verifier/tree/master</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <build>
         <finalName>${project.artifactId}##${project.version}</finalName>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <prefix>git</prefix>
+                    <dateFormat>dd.MM.yyyy '@' HH:mm:ss z</dateFormat>
+                    <verbose>true</verbose>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>./target/classes/git.properties
+                    </generateGitPropertiesFilename>
+                    <abbrevLength>10</abbrevLength>
+                    <gitDescribe>
+                        <skip>false</skip>
+                        <always>false</always>
+                        <dirty>-dirty</dirty>
+                        <tags>true</tags>
+                        <forceLongFormat>false</forceLongFormat>
+                    </gitDescribe>
                 </configuration>
+
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -42,7 +118,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.2</version>
+                <version>2.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -50,13 +126,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>${uberjar.name}</finalName>
-                            <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.openjdk.jmh.Main</mainClass>
-                                </transformer>
-                            </transformers>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -64,7 +133,6 @@
                                         <exclude>META-INF/*.SF</exclude>
                                         <exclude>META-INF/*.DSA</exclude>
                                         <exclude>META-INF/*.RSA</exclude>
-                                        <exclude>*.png</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
@@ -72,9 +140,35 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>eot</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>otf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>svg</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>ico</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
 
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*.*</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
+
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
