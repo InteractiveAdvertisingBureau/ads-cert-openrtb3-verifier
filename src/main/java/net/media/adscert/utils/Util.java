@@ -25,11 +25,12 @@ import net.media.adscert.exceptions.ProcessException;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
-import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static net.media.adscert.utils.CommonConstants.MAX_REDIRECTS;
 
@@ -41,6 +42,8 @@ public class Util {
     t.printStackTrace(pw);
     return sw.toString();
   }
+
+  static final Set<Integer> redirectionCodes = new HashSet<>(Arrays.asList(301, 302, 303, 307, 308));
 
   private static String getKeyFromUrl(URL url, String rootDomain, int remainingRedirects) throws IOException {
 
@@ -64,10 +67,20 @@ public class Util {
 
     int responseCode = conn.getResponseCode();
 
-    if (responseCode >= 300 && responseCode < 400) {
+    if (redirectionCodes.contains(responseCode)) {
       String newUrlToRead = conn.getHeaderField("Location");
       conn.disconnect();
-      return getKeyFromUrl(new URL(newUrlToRead), rootDomain, remainingRedirects - 1);
+
+      URL newUrl;
+	    try {
+		    newUrl = new URL(newUrlToRead);
+		    if (!url.getProtocol().equalsIgnoreCase(newUrl.getProtocol())) {
+			    throw new ProcessException("Redirection to a different protocol");
+		    }
+	    } catch (MalformedURLException mue) {
+		    newUrl = new URL(url, newUrlToRead);
+	    }
+      return getKeyFromUrl(newUrl, rootDomain, remainingRedirects - 1);
     }
 
     if (responseCode != HttpURLConnection.HTTP_OK) {
@@ -108,5 +121,10 @@ public class Util {
     }
     br.close();
     return strKeyPEM.toString();
+  }
+
+  public static void main(String[] args) throws IOException {
+	  System.out.println(new URL(new URL("https://google.com"), "ffggg.html"));
+//    System.out.println(getKeyFromUrl(new URL("https://bit.ly/1bImP3b"), null, 5));
   }
 }
