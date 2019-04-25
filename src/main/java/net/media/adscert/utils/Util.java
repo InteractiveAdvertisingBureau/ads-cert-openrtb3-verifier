@@ -17,10 +17,6 @@
 package net.media.adscert.utils;
 
 import com.google.common.net.InternetDomainName;
-import com.google.common.primitives.Doubles;
-import com.google.common.primitives.Floats;
-import com.google.common.primitives.Ints;
-import com.google.common.primitives.Longs;
 import net.media.adscert.exceptions.ProcessException;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -43,15 +39,15 @@ public class Util {
     return sw.toString();
   }
 
-  static final Set<Integer> redirectionCodes = new HashSet<>(Arrays.asList(301, 302, 303, 307, 308));
+  private static final Set<Integer> redirectionCodes = new HashSet<>(Arrays.asList(301, 302, 303, 307, 308));
 
   private static String getKeyFromUrl(URL url, String rootDomain, int remainingRedirects) throws IOException {
 
     String newRootDomain = InternetDomainName.from(url.getHost()).topPrivateDomain().toString();
 
-    if (!newRootDomain.equals(rootDomain)) {
-      throw new ProcessException("Redirection to a new domain");
-    }
+//    if (!newRootDomain.equals(rootDomain)) {
+//      throw new ProcessException("Redirection to a new domain");
+//    }
 
     if (remainingRedirects < 0) {
       throw new ProcessException("Redirection limit is exceeded");
@@ -66,6 +62,7 @@ public class Util {
     conn.setRequestMethod("GET");
 
     int responseCode = conn.getResponseCode();
+	  System.out.println(responseCode);
 
     if (redirectionCodes.contains(responseCode)) {
       String newUrlToRead = conn.getHeaderField("Location");
