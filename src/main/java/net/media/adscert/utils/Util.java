@@ -122,9 +122,4 @@ public class Util {
     br.close();
     return strKeyPEM.toString();
   }
-
-  public static void main(String[] args) throws IOException {
-	  System.out.println(new URL(new URL("https://google.com"), "ffggg.html"));
-//    System.out.println(getKeyFromUrl(new URL("https://bit.ly/1bImP3b"), null, 5));
-  }
 }
