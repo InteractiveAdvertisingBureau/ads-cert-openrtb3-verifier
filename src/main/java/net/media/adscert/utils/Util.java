@@ -45,9 +45,9 @@ public class Util {
 
     String newRootDomain = InternetDomainName.from(url.getHost()).topPrivateDomain().toString();
 
-//    if (!newRootDomain.equals(rootDomain)) {
-//      throw new ProcessException("Redirection to a new domain");
-//    }
+    if (!newRootDomain.equals(rootDomain)) {
+      throw new ProcessException("Redirection to a new domain");
+    }
 
     if (remainingRedirects < 0) {
       throw new ProcessException("Redirection limit is exceeded");
@@ -62,7 +62,6 @@ public class Util {
     conn.setRequestMethod("GET");
 
     int responseCode = conn.getResponseCode();
-	  System.out.println(responseCode);
 
     if (redirectionCodes.contains(responseCode)) {
       String newUrlToRead = conn.getHeaderField("Location");
