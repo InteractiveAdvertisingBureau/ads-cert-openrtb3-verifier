@@ -17,18 +17,16 @@
 package net.media.adscert.utils;
 
 import com.google.common.net.InternetDomainName;
-import com.google.common.primitives.Doubles;
-import com.google.common.primitives.Floats;
-import com.google.common.primitives.Ints;
-import com.google.common.primitives.Longs;
+import net.media.adscert.exceptions.ProcessException;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
-import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static net.media.adscert.utils.CommonConstants.MAX_REDIRECTS;
 
@@ -41,49 +39,52 @@ public class Util {
     return sw.toString();
   }
 
-  public static String getKeyFromUrl(String urlToRead) throws IOException {
-    // Read key from url
-    StringBuilder result = new StringBuilder();
-    URL url = new URL(urlToRead);
-    final String rootDomain = InternetDomainName.from(url.getHost()).topPrivateDomain().toString();
+  private static final Set<Integer> redirectionCodes = new HashSet<>(Arrays.asList(301, 302, 303, 307, 308));
 
-    if (!url.getProtocol().equals("https")) {
-      return null;
+  private static String getKeyFromUrl(URL url, String rootDomain, int remainingRedirects) throws IOException {
+
+    String newRootDomain = InternetDomainName.from(url.getHost()).topPrivateDomain().toString();
+
+    if (!newRootDomain.equals(rootDomain)) {
+      throw new ProcessException("Redirection to a new domain");
     }
 
-    HttpURLConnection conn = (HttpsURLConnection) url.openConnection();
+    if (remainingRedirects < 0) {
+      throw new ProcessException("Redirection limit is exceeded");
+    }
+
+    if (!url.getProtocol().equals("https")) {
+      throw new ProcessException("Protocol is not https");
+    }
+
+    HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
     conn.setInstanceFollowRedirects(false);
     conn.setRequestMethod("GET");
 
     int responseCode = conn.getResponseCode();
-    int totalRedirects = 0;
 
-    while(responseCode >= 300 && responseCode < 400) {
-      totalRedirects = totalRedirects + 1;
-
-      if (totalRedirects > MAX_REDIRECTS) {
-        return null;
-      }
-
+    if (redirectionCodes.contains(responseCode)) {
       String newUrlToRead = conn.getHeaderField("Location");
       conn.disconnect();
-      url = new URL(newUrlToRead);
 
-      if (!url.getProtocol().equals("https")) {
-        return null;
-      }
-
-      String newRootDomain = InternetDomainName.from(url.getHost()).topPrivateDomain().toString();
-      if (!newRootDomain.equals(rootDomain)) {
-        return null;
-      }
-
-      conn = (HttpsURLConnection) url.openConnection();
-      responseCode = conn.getResponseCode();
+      URL newUrl;
+	    try {
+		    newUrl = new URL(newUrlToRead);
+		    if (!url.getProtocol().equalsIgnoreCase(newUrl.getProtocol())) {
+			    throw new ProcessException("Redirection to a different protocol");
+		    }
+	    } catch (MalformedURLException mue) {
+		    newUrl = new URL(url, newUrlToRead);
+	    }
+      return getKeyFromUrl(newUrl, rootDomain, remainingRedirects - 1);
     }
+
     if (responseCode != HttpURLConnection.HTTP_OK) {
-      return null;
+      throw new ProcessException("Invalid Response");
     }
+
+    StringBuilder result = new StringBuilder();
+
     try(BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
       String line;
       while ((line = rd.readLine()) != null) {
@@ -91,10 +92,17 @@ public class Util {
           result.append(line);
         }
       }
-    } finally{
+    } finally {
       conn.disconnect();
     }
     return result.toString();
+  }
+
+  public static String getKeyFromUrl(String urlToRead) throws IOException {
+    // Read key from url
+    URL url = new URL(urlToRead);
+    String rootDomain = InternetDomainName.from(url.getHost()).topPrivateDomain().toString();
+    return getKeyFromUrl(url, rootDomain, MAX_REDIRECTS);
   }
 
   public static String getKeyFromFile(String filename) throws IOException {
@@ -109,28 +117,5 @@ public class Util {
     }
     br.close();
     return strKeyPEM.toString();
-  }
-
-  public static <T extends Number> T getNumber(Class<T> classObj, String value, T defaultValue) {
-    if (value == null) return defaultValue;
-    try {
-      if (classObj == Integer.class) {
-        return (T) Ints.tryParse(value);
-      }
-      if (classObj == Float.class) {
-        return (T) Floats.tryParse(value);
-      }
-      if (classObj == Double.class) {
-        return (T) Doubles.tryParse(value);
-      }
-      if (classObj == Long.class) {
-        return (T) Longs.tryParse(value);
-      }
-      if (classObj == BigDecimal.class) {
-        return (T) new BigDecimal(value);
-      }
-    } catch (NumberFormatException e) {
-    }
-    return defaultValue;
   }
 }
