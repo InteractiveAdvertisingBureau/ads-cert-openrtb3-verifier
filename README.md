@@ -30,17 +30,14 @@ To allow for fast-track on-boarding for ads.cert, media.net is offering the veri
 
 ## Build Notes
 
-
-We are already in the process of registering the library as maven repository. Until then, the below can be used
-for openrtb-ads-cert-verification module:
-
-- In your project's pom, add the following dependency:
+### Maven
+In your project's pom, add the following dependency:
 
 ```java
 <dependency>
    <groupId>net.media.adscert</groupId>
    <artifactId>openrtb-ads-cert-verification</artifactId>
-   <version>1.0-SNAPSHOT</version>
+   <version>1.0</version>
 </dependency>
 ```
 
@@ -59,7 +56,7 @@ The class VerificationService is thread-safe and can be used as a singleton.
 
  - ***Verification via Open RTB object***
     ```java
-    OpenRTB openRTB = ...  // Construct open RTB object 
+    OpenRTB3_X openRTB = ...  // Construct open RTB object 
     VerificationService service = new VerificationService();
     ```
  
@@ -144,7 +141,7 @@ int samplingPercentage = 30;
 
 VerificationService service = new VerificationService(samplingPercentage);
 
-OpenRTB openRTB = ...  // Construct open RTB object 
+OpenRTB3_X openRTB = ...  // Construct open RTB object 
 
 // There is a 30% chance that verification would be run! 
 // If the verification does not run, then result with status = SAMPLED is returned.
