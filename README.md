@@ -1,3 +1,5 @@
+[![build_status](https://travis-ci.org/media-net/ads-cert-openrtb3-verifier.svg?branch=master)](https://travis-ci.org/media-net/ads-cert-openrtb3-verifier)
+
 # Verification Service for Signed Bid Requests
 
 Ad Fraud has always been a big problem in the ad industry. Inventory spoofing is a problem that still exists where a request can be modified by any entity in the supply chain to pose it as premium inventory. This is the problem which ads.cert tries to solve.
