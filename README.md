@@ -41,11 +41,6 @@ In your project's pom, add the following dependency:
 </dependency>
 ```
 
-- Now all you need is to have its jar in your local maven repo 
-- Clone the ads-cert-openrtb3-verifier project (https://github.com/media-net/ads-cert-openrtb3-verifier)
-- Build it using maven on your system - "mvn clean install"
-- This will automatically add the jar to your local maven repo
-
 ## Usage Guidelines
 
 Instantiate an object of ``` VerificationService ``` to access the methods for verifying the request. The output of verification is an object of type ``` Result ``` whose field, ``` status ``` indicates whether the verification succeeded or not. Note that ``` status ``` can have any of these values- `` SUCCESS ``, `` FAILURE `` and `` SAMPLED ``. In case of `` FAILURE ``, appropriate message and exception can be retrieved from ``` message ``` and ``` exception ``` fields, respectively. For ``` status = SAMPLED ```, refer to [Sampling](#sampling).
