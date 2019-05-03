@@ -18,7 +18,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.media</groupId>
+    <groupId>com.iabtechlab</groupId>
     <artifactId>openrtb3-adscert-verifier</artifactId>
     <version>1.2-SNAPSHOT</version>
 
@@ -26,7 +26,7 @@
     <description>Core library offering Digital Signature Verification (via OpenRTB 3.0 object or Digest or Map of
         key-values)
     </description>
-    <url>https://github.com/media-net/ads-cert-openrtb3-verifier/tree/master/</url>
+    <url>https://github.com/InteractiveAdvertisingBureau/ads-cert-openrtb3-verifier/tree/master/</url>
 
     <licenses>
         <license>
@@ -48,6 +48,12 @@
             <organization>Media Net</organization>
             <organizationUrl>http://www.media.net</organizationUrl>
         </developer>
+        <developer>
+            <name>Sam Tingleff</name>
+            <email>sam@iabtechlab.com</email>
+            <organization>IAB Tech Lab</organization>
+            <organizationUrl>https://www.iabtechlab.com</organizationUrl>
+        </developer>
     </developers>
 
     <packaging>jar</packaging>
@@ -66,9 +72,9 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:git:git://github.com/media-net/ads-cert-openrtb3-verifier.git</connection>
-        <developerConnection>scm:git:https://github.com/media-net/ads-cert-openrtb3-verifier.git</developerConnection>
-        <url>https://github.com/media-net/ads-cert-openrtb3-verifier/tree/master</url>
+        <connection>scm:git:git://github.com/InteractiveAdvertisingBureau/ads-cert-openrtb3-verifier.git</connection>
+        <developerConnection>scm:git:https://github.com/InteractiveAdvertisingBureau/ads-cert-openrtb3-verifier.git</developerConnection>
+        <url>https://github.com/InteractiveAdvertisingBureau/ads-cert-openrtb3-verifier/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -359,9 +365,9 @@
             <version>2.9.8</version>
         </dependency>
         <dependency>
-            <groupId>net.media</groupId>
+            <groupId>com.iabtechlab</groupId>
             <artifactId>openrtb-model</artifactId>
-            <version>1.4</version>
+            <version>1.6-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
